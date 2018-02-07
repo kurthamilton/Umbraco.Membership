@@ -251,6 +251,34 @@
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.controller.js" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.htm" />
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.resource.js" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Images\Example.png" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Images\Logo.png" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Images\m1.png" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Images\m2.png" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Images\m3.png" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Images\m4.png" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Images\m5.png" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Lang\en-us.xml" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\readme.txt" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\markerclusterer.js" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\markerclusterer.min.js" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\Terratype.GoogleMapsV3.js" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Scripts\Terratype.GoogleMapsV3.Renderer.js" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\config.appearance.html" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\config.definition.html" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\config.search.html" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\editor.appearance.html" />
+    <Content Include="App_Plugins\Terratype.GoogleMapsV3\Views\grid.appearance.html" />
+    <Content Include="App_Plugins\Terratype\Css\label.standard.css" />
+    <Content Include="App_Plugins\Terratype\Images\Terratype.png" />
+    <Content Include="App_Plugins\Terratype\Lang\en-us.xml" />
+    <Content Include="App_Plugins\Terratype\readme.txt" />
+    <Content Include="App_Plugins\Terratype\Scripts\terratype.js" />
+    <Content Include="App_Plugins\Terratype\Views\config.html" />
+    <Content Include="App_Plugins\Terratype\Views\editor.html" />
+    <Content Include="App_Plugins\Terratype\Views\grid.html" />
+    <Content Include="App_Plugins\Terratype\Views\grid.overlay.html" />
+    <Content Include="App_Plugins\Terratype\Views\label.standard.html" />
     <Content Include="config\grid.editors.config.js" />
     <Content Include="config\imageprocessor\security.config" />
     <Content Include="config\imageprocessor\processing.config" />
@@ -274,6 +302,7 @@
     <Content Include="config\Lang\ru-RU.user.xml" />
     <Content Include="config\Lang\sv-SE.user.xml" />
     <Content Include="config\Lang\zh-CN.user.xml" />
+    <Content Include="css\umbraco-starterkit-style.css" />
     <Content Include="default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Media\Web.config" />
@@ -295,7 +324,10 @@
     <Content Include="config\BackOfficeTours\getting-started.json" />
     <Content Include="config\applications.config" />
     <Content Include="config\404handlers.config" />
+    <Content Include="App_Plugins\Terratype\package.manifest" />
+    <Content Include="App_Plugins\Terratype\Views\grid.cshtml" />
     <None Include="packages.config" />
+    <Content Include="scripts\umbraco-starterkit-app.js" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Partials\Grid\Editors\Textstring.cshtml" />
     <Content Include="Views\Partials\Grid\Editors\Rte.cshtml" />
@@ -307,6 +339,24 @@
     <Content Include="Views\Partials\Grid\Bootstrap3-Fluid.cshtml" />
     <Content Include="Views\Partials\Grid\Bootstrap2.cshtml" />
     <Content Include="Views\Partials\Grid\Bootstrap2-Fluid.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Views\MacroPartials\FeaturedProducts.cshtml" />
+    <Content Include="Views\MacroPartials\LatestBlogposts.cshtml" />
+    <Content Include="Views\Blog.cshtml" />
+    <Content Include="Views\Blogpost.cshtml" />
+    <Content Include="Views\Contact.cshtml" />
+    <Content Include="Views\ContentPage.cshtml" />
+    <Content Include="Views\Home.cshtml" />
+    <Content Include="Views\Master.cshtml" />
+    <Content Include="Views\People.cshtml" />
+    <Content Include="Views\Person.cshtml" />
+    <Content Include="Views\Product.cshtml" />
+    <Content Include="Views\Products.cshtml" />
+    <Content Include="Views\RestrictedContentPage.cshtml" />
+    <Content Include="Views\Partials\Navigation\SubNavigation.cshtml" />
+    <Content Include="Views\Partials\Navigation\TopNavigation.cshtml" />
+    <Content Include="Views\Partials\CategoryLinks.cshtml" />
+    <Content Include="Views\Partials\SectionHeader.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -315,7 +365,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />

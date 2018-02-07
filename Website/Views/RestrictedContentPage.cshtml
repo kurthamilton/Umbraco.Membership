@@ -1,0 +1,15 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    Layout = "ContentPage.cshtml";
+
+    bool loggedIn = Umbraco.MemberIsLoggedOn();
+}
+
+@if (loggedIn)
+{
+    <div>Restricted Content</div>
+}
+else
+{
+    <div>You must be logged in to do that</div>
+}
