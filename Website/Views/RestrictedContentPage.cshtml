@@ -1,15 +1,27 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.RestrictedContentPage>
+@using ContentModels = Umbraco.Web.PublishedContentModels;
 @{
-    Layout = "ContentPage.cshtml";
+    Layout = "Master.cshtml";
 
-    bool loggedIn = Umbraco.MemberIsLoggedOn();
+    bool isAllowed = Umbraco.MemberIsLoggedOn();    
 }
 
-@if (loggedIn)
-{
-    <div>Restricted Content</div>
-}
-else
-{
-    <div>You must be logged in to do that</div>
-}
+@Html.Partial("~/Views/Partials/SectionHeader.cshtml")
+
+<section class="section">
+    <div class="container">
+        <div class="col-md-3">
+            <nav class="nav-bar nav-bar--list">
+                @Html.Partial("~/Views/Partials/Navigation/SubNavigation.cshtml")
+            </nav>
+        </div>
+        <div class="col-md-9">
+            @if (isAllowed)
+            {
+                <article>
+                    @Html.GetGridHtml(Model.Content, "bodyText", "bootstrap3-fluid")
+                </article>
+            }            
+        </div>
+    </div>
+</section>
