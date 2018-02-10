@@ -1,8 +1,9 @@
 ﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.People>
 @using ContentModels = Umbraco.Web.PublishedContentModels;
 @{
-    Layout = "Master.cshtml";
+    Layout = "ChapterMaster.cshtml";
 }
+
 @helper SocialLink(string content, string service)
 {
     if (!string.IsNullOrEmpty(content))
@@ -11,7 +12,7 @@
     }
 }       
 
-@Html.Partial("~/Views/Partials/SectionHeader.cshtml")
+@Html.Partial("SectionHeader")
 
 <section class="section">
 

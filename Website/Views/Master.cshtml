@@ -1,9 +1,16 @@
-﻿@using ContentModels = Umbraco.Web.PublishedContentModels;
+﻿@using Umbraco.Membership
+@using ContentModels = Umbraco.Web.PublishedContentModels;
 @using Umbraco.Core
 @inherits Umbraco.Web.Mvc.UmbracoTemplatePage
 @{
     Layout = null;
 
+    IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
+    if (Model.Content.IsRestricted(member))
+    {
+        Response.Redirect(Model.Content.Parent.Url);
+    }
+    
     // Get basic design settings from the homepage
     ContentModels.Home home = Model.Content.Site() as ContentModels.Home;
     var colorTheme = Umbraco.GetPreValueAsString(home.ColorTheme);
@@ -28,7 +35,7 @@
 <body class="frontpage theme-font-@font theme-color-@colorTheme">
     <div class="mobile-nav">
         <nav class="nav-bar">
-            @Html.Partial("~/views/partials/navigation/topNavigation.cshtml")
+            @*@RenderSection("Navigation", required: false)*@
         </nav>
     </div>
 
@@ -48,7 +55,7 @@
         </div>
 
         <nav class="nav-bar top-nav">
-            @Html.Partial("~/Views/Partials/Navigation/TopNavigation.cshtml")
+            @RenderSection("Navigation", required: false)
         </nav>
 
         <div class="mobile-nav-handler">

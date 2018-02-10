@@ -1,0 +1,13 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+	Layout = "Master.cshtml";
+	
+	var chapter = Model.Content.AncestorOrSelf(2);
+}
+
+@RenderBody()
+
+@section Navigation
+{
+    @Html.Partial("navigation/topNavigation", chapter)
+}

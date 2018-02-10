@@ -1,26 +1,9 @@
-﻿@using Umbraco.Membership;
-@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.ContentPage>
+@using ContentModels = Umbraco.Web.PublishedContentModels;
 @{
     Layout = "Master.cshtml";
-
-    IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
-    bool isRestricted = Model.Content.IsRestricted(member);
 }
-@Html.Partial("~/Views/Partials/SectionHeader.cshtml")
-<section class="section">
-    <div class="container">
-        <div class="col-md-3">
-            <nav class="nav-bar nav-bar--list">
-                @Html.Partial("~/Views/Partials/Navigation/SubNavigation.cshtml")
-            </nav>
-        </div>
-        @if (!isRestricted)
-        {
-            <div class="col-md-9">
-                <article>
-                    @Html.GetGridHtml(Model.Content, "bodyText", "bootstrap3-fluid")
-                </article>
-            </div>
-        }
-    </div>
-</section>
+
+@Html.Partial("SectionHeader")
+
+@Html.Partial("Content")

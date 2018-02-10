@@ -301,7 +301,14 @@
     <Content Include="Views\Product.cshtml" />
     <Content Include="Views\Products.cshtml" />
     <Content Include="Views\ContentPage.cshtml" />
-    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Views\Partials\Content.cshtml" />
+    <Content Include="Views\ChapterContentPage.cshtml" />
+    <Content Include="Views\ChapterMaster.cshtml" />
+    <Content Include="Views\ContentMaster.cshtml" />
+    <Content Include="Views\Login.cshtml" />
+    <Content Include="Views\ChapterPage.cshtml" />
+    <None Include="Properties\PublishProfiles\PrecompiledWeb.pubxml" />
+    <None Include="Properties\PublishProfiles\PrecompiledWebUmbraco.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
