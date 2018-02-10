@@ -1,13 +1,22 @@
-﻿using Umbraco.Core.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Umbraco.Core.Models;
+using Umbraco.Web;
 
 namespace Umbraco.Membership
 {
     public static class PublishedContentExtensions
     {
+        
+        public static IEnumerable<IPublishedContent> PermittedChildren(this IPublishedContent content, IPublishedContent member)
+        {
+            return content.Children.Where(x => x.IsVisible() && !x.IsRestricted(member));
+        }
+
         public static bool IsRestricted(this IPublishedContent content, IPublishedContent member)
         {
-            string value = content.GetProperty("restricted")?.Value?.ToString();
-            if (!bool.TryParse(value, out bool restricted) || !restricted)
+            bool restricted = content.GetPropertyValue<bool>(Constants.Restricted);
+            if (!restricted)
             {
                 return false;
             }
