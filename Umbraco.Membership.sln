@@ -5,9 +5,7 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website", "Website\Website.csproj", "{41E808E0-3A47-45DF-8634-2CBA94A19783}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.Membership", "Umbraco.Membership.Library\Umbraco.Membership.csproj", "{81F2DD71-46D7-4D52-A571-324CC799C8F2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.Membership.Tests", "Umbraco.Membership.Tests\Umbraco.Membership.Tests.csproj", "{6D40D24A-8558-4114-991A-8D36F5E54BBA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODK.Umbraco", "Umbraco.Membership.Library\ODK.Umbraco.csproj", "{81F2DD71-46D7-4D52-A571-324CC799C8F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		{81F2DD71-46D7-4D52-A571-324CC799C8F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81F2DD71-46D7-4D52-A571-324CC799C8F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81F2DD71-46D7-4D52-A571-324CC799C8F2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6D40D24A-8558-4114-991A-8D36F5E54BBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6D40D24A-8558-4114-991A-8D36F5E54BBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6D40D24A-8558-4114-991A-8D36F5E54BBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6D40D24A-8558-4114-991A-8D36F5E54BBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

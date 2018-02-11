@@ -4,11 +4,11 @@ using Moq;
 using NUnit.Framework;
 using Umbraco.Core.Models;
 
-namespace Umbraco.Membership.Tests
+namespace ODK.Umbraco.Tests
 {
     [TestFixture]
     [Parallelizable(ParallelScope.Fixtures)]
-    public static class PublishedContentExtensionsTests
+    public static class MembershipTests
     {
         [TestCase(true)]
         [TestCase(false)]
@@ -86,7 +86,7 @@ namespace Umbraco.Membership.Tests
             if (restricted.HasValue)
             {
                 IPublishedProperty restrictedProperty = CreateMockProperty(restricted.Value);
-                mock.Setup(x => x.GetProperty("restricted", It.IsAny<bool>())).Returns(restrictedProperty);
+                mock.Setup(x => x.GetProperty(PropertyNames.Restricted, It.IsAny<bool>())).Returns(restrictedProperty);
             }
 
             IPublishedProperty visibleProperty = CreateMockProperty((!visible).ToString());

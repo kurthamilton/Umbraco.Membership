@@ -1,19 +1,20 @@
 ﻿@using System.Web.Mvc;
+@using ODK.Umbraco.Settings;
 @inherits Umbraco.Web.Mvc.UmbracoTemplatePage
 @{
-	Layout = "Master.cshtml";
+    Layout = "Master.cshtml";
+
+    HomePageSettings chapterPageSettings = Model.Content.HomePageSettings();
 }
 
 @Html.Partial("SectionHeader")
 
-
-
 <section class="section">
     <div class="container">
-        @using (Html.BeginUmbracoForm("Login", "account", FormMethod.Post, new { id="login" }))
-        {           
+        @using (Html.BeginUmbracoForm("Register", "Account", FormMethod.Post))
+        {
             @Html.AntiForgeryToken()
-            
+
             <div class="form-group">
                 <label for="email">Email</label>
                 <input type="text" id="email" name="email" />
@@ -22,11 +23,20 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" />
             </div>
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" />
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" />
+            </div>
             
             @Html.ValidationSummary()
+
             <div>
-                <button type="submit">Login</button>
+                <button type="submit">Register</button>
             </div>
         }
     </div>
-</div>
+</section>

@@ -1,11 +1,9 @@
 ﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.ChapterPage>
 @using ContentModels = Umbraco.Web.PublishedContentModels;
 @{
-    Layout = "ChapterMaster.cshtml";
+    Layout = "Master.cshtml";
 }
 
 @Html.Partial("SectionHeader")
 
-<p>
-    Welcome to the @Model.Content.Location page!
-</p>
+@Html.Partial("Content")
