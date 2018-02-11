@@ -1,0 +1,13 @@
+﻿@using ODK.Umbraco.Membership;
+@using ODK.Umbraco.Settings;
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    IPublishedContent home = Model.Content.HomePageSettings().Content;
+    IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
+    IEnumerable<IPublishedContent> selection = home.MenuItems(member);
+}
+
+@foreach (var item in selection)
+{
+    <a class="nav-link @(item.IsAncestorOrSelf(Model.Content) ? "nav-link--active" : null)" href="@item.Url">@item.Name</a>
+}

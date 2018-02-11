@@ -1,0 +1,28 @@
+﻿@using ODK.Umbraco.Settings;
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    @* TODO - move into code *@
+    HomePageSettings homePageSettings = Model.Content.HomePageSettings();
+    if (homePageSettings == null)
+    {
+        return;
+    }
+
+    string style = "";
+
+    if (!string.IsNullOrEmpty(homePageSettings.ThemeColour))
+    {
+        style += "background-color: " + homePageSettings.ThemeColour +";";
+    }
+
+    if (!string.IsNullOrEmpty(homePageSettings.ThemeFontColour))
+    {
+        style += "color: " + homePageSettings.ThemeFontColour + ";";
+    }    
+}
+
+<section class="section section--themed section--header section--content-center-bottom" style="@style">
+    <div class="section__hero-content">
+        <h1 class="no-air">@Model.Content.GetPropertyValue("PageTitle")</h1>
+    </div>
+</section>

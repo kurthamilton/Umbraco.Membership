@@ -1,0 +1,32 @@
+﻿@using System.Web.Mvc;
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+	Layout = "Master.cshtml";
+}
+
+@Html.Partial("SectionHeader")
+
+
+
+<section class="section">
+    <div class="container">
+        @using (Html.BeginUmbracoForm("Login", "account", FormMethod.Post, new { id="login" }))
+        {           
+            @Html.AntiForgeryToken()
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" id="email" name="email" />
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" />
+            </div>
+            
+            @Html.ValidationSummary()
+            <div>
+                <button type="submit">Login</button>
+            </div>
+        }
+    </div>
+</div>

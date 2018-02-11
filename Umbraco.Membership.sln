@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website", "Website\Website.csproj", "{2C5E5A7A-818D-4411-A845-9EEF824A0110}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website", "Website\Website.csproj", "{41E808E0-3A47-45DF-8634-2CBA94A19783}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODK.Umbraco", "Umbraco.Membership.Library\ODK.Umbraco.csproj", "{81F2DD71-46D7-4D52-A571-324CC799C8F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2C5E5A7A-818D-4411-A845-9EEF824A0110}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2C5E5A7A-818D-4411-A845-9EEF824A0110}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2C5E5A7A-818D-4411-A845-9EEF824A0110}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2C5E5A7A-818D-4411-A845-9EEF824A0110}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41E808E0-3A47-45DF-8634-2CBA94A19783}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41E808E0-3A47-45DF-8634-2CBA94A19783}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41E808E0-3A47-45DF-8634-2CBA94A19783}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41E808E0-3A47-45DF-8634-2CBA94A19783}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81F2DD71-46D7-4D52-A571-324CC799C8F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81F2DD71-46D7-4D52-A571-324CC799C8F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81F2DD71-46D7-4D52-A571-324CC799C8F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81F2DD71-46D7-4D52-A571-324CC799C8F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
