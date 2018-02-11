@@ -1,0 +1,65 @@
+﻿@using ODK.Umbraco.Membership;
+@using ODK.Umbraco.Settings;
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    HomePageSettings homePageSettings = Model.Content.HomePageSettings();
+
+    IPublishedContent home = homePageSettings.Content;
+    IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
+    IEnumerable<IPublishedContent> selection = home.MenuItems(member);
+}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="@homePageSettings.Content.Url">
+            @if (homePageSettings.Logo != null && !string.IsNullOrEmpty(homePageSettings.Content.Url))
+            {
+                <img src="@homePageSettings.Logo.Url" alt="@homePageSettings.Name" height="40">
+            }
+            else
+            {
+                @homePageSettings.Name
+            }
+        </a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                @foreach (var item in selection)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(item.IsAncestorOrSelf(Model.Content) ? "active" : null)" href="@item.Url">@item.Name</a>
+                    </li>
+                }
+
+                <li class="nav-item d-md-none">
+                    @LogoutLink("", homePageSettings.LogoutButtonText)
+                </li>
+            </ul>
+
+            <div>
+                @if (member == null)
+                {
+                    <a class="btn btn-primary" href="@homePageSettings.LoginUrl">@homePageSettings.LoginButtonText</a>
+
+                    if (!string.IsNullOrEmpty(homePageSettings.RegisterUrl))
+                    {
+                        <a class="btn btn-success" href="@homePageSettings.RegisterUrl">@homePageSettings.RegisterButtonText</a>
+                    }
+                }
+                else
+                {
+                    @LogoutLink("btn btn-light d-none d-lg-block", homePageSettings.LogoutButtonText)
+                }
+            </div>
+        </div>
+    </div>
+</nav>
+
+@helper LogoutLink(string cssClass, string text)
+{
+    <a class="@cssClass" href="/umbraco/surface/account/logout">@text</a>
+}
