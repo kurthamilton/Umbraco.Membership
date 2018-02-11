@@ -5,7 +5,7 @@ using Umbraco.Web;
 namespace ODK.Umbraco.Membership
 {
     public static class ContentExtensions
-    {                
+    {
         public static bool IsRestricted(this IPublishedContent content, IPublishedContent member)
         {
             if (member != null)

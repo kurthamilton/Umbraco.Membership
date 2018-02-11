@@ -8,7 +8,7 @@ using Umbraco.Web.Security;
 namespace ODK.Umbraco.Membership
 {
     public class MembershipService
-    { 
+    {
         private readonly MembershipHelper _membershipHelper;
 
         public MembershipService(MembershipHelper membershipHelper)
@@ -48,10 +48,10 @@ namespace ODK.Umbraco.Membership
             MembershipUser membershipUser = _membershipHelper.RegisterMember(registerModel, out MembershipCreateStatus status);
             if (membershipUser == null || status != MembershipCreateStatus.Success)
             {
-                return new ServiceResult(status.ToString());                
-            }                
+                return new ServiceResult(status.ToString());
+            }
 
-            return new ServiceResult(true);            
+            return new ServiceResult(true);
         }
 
         public void UpdateChapter(IPublishedContent chapterContent)
@@ -66,6 +66,6 @@ namespace ODK.Umbraco.Membership
             profile.SetProperty(MemberPropertyNames.ChapterId, chapterUdi);
 
             _membershipHelper.UpdateMemberProfile(profile);
-        }        
+        }
     }
 }

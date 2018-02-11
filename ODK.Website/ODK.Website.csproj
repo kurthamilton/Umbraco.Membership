@@ -278,6 +278,7 @@
     <Content Include="App_Plugins\Terratype\Views\grid.cshtml" />
     <Content Include="App_Plugins\SpectrumColorPicker\package.manifest" />
     <None Include="packages.config" />
+    <Content Include="css\style.css" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Partials\Grid\Editors\Textstring.cshtml" />
     <Content Include="Views\Partials\Grid\Editors\Rte.cshtml" />
@@ -305,14 +306,11 @@
     <Content Include="Views\Products.cshtml" />
     <Content Include="Views\ContentPage.cshtml" />
     <Content Include="Views\Partials\Content.cshtml" />
-    <Content Include="Views\ChapterContentPage.cshtml" />
     <Content Include="Views\Login.cshtml" />
-    <Content Include="Views\ChapterPage.cshtml" />
     <None Include="Properties\PublishProfiles\PrecompiledWeb.pubxml" />
     <None Include="Properties\PublishProfiles\PrecompiledWebUmbraco.pubxml" />
-    <Content Include="Views\Partials\Navigation\Home.cshtml" />
-    <Content Include="Views\Partials\Navigation\Account.cshtml" />
     <Content Include="Views\Register.cshtml" />
+    <Content Include="Views\Partials\Footer.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -373,10 +371,8 @@
     <Content Include="config\Lang\zh-CN.user.xml" />
     <Content Include="config\splashes\booting.aspx" />
     <Content Include="config\splashes\noNodes.aspx" />
-    <Content Include="css\umbraco-starterkit-style.css" />
     <Content Include="default.aspx" />
     <Content Include="Global.asax" />
-    <Content Include="scripts\umbraco-starterkit-app.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -396,7 +392,9 @@
       <Name>ODK.Umbraco</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="scripts\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

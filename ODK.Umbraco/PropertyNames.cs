@@ -3,7 +3,10 @@
     public static class PropertyNames
     {
         public const string HideWhenLoggedIn = "hideWhenLoggedIn";
-        public const string LoginPage = "loginPage";        
+        public const string LoginButtonText = "loginButtonText";
+        public const string LoginPage = "loginPage";
+        public const string LogoutButtonText = "logoutButtonText";
+        public const string RegisterButtonText = "registerButtonText";
         public const string RegisterPage = "registerPage";
         public const string Restricted = "restricted";
         public const string SiteLogo = "siteLogo";

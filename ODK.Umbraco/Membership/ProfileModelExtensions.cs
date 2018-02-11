@@ -21,7 +21,7 @@ namespace ODK.Umbraco.Membership
             UmbracoProperty property = profile.GetProperty(name);
             if (property == null && value == null)
             {
-                return;                
+                return;
             }
 
             if (property != null && value == null)

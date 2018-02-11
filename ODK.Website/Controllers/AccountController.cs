@@ -20,7 +20,7 @@ namespace ODK.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel viewModel)
-        {            
+        {
             HandleLoggedOnUser();
 
             if (ModelState.IsValid)
@@ -37,19 +37,19 @@ namespace ODK.Website.Controllers
             return CurrentUmbracoPage();
         }
 
-        [HttpPost]
+        [HttpGet]
         public ActionResult Logout()
         {
             int? chapterId = _membershipService.GetChapterId(Umbraco.MembershipHelper.CurrentUserName);
-            Umbraco.MembershipHelper.Logout();                        
+            Umbraco.MembershipHelper.Logout();
             return RedirectToChapter(chapterId);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Register(RegisterMember member)
-        {            
-            HandleLoggedOnUser();         
+        {
+            HandleLoggedOnUser();
 
             if (!ModelState.IsValid)
             {
@@ -61,7 +61,7 @@ namespace ODK.Website.Controllers
             ServiceResult result = _membershipService.Register(member);
 
             if (!result.Success)
-            {                
+            {
                 return CurrentUmbracoPage();
             }
 
@@ -72,12 +72,12 @@ namespace ODK.Website.Controllers
         public ActionResult SetChapter(int id)
         {
             IPublishedContent chapterContent = Umbraco.ContentQuery.TypedContent(id);
-            
+
             _membershipService.UpdateChapter(chapterContent);
 
             return RedirectToChapter(id);
         }
-        
+
         private void HandleLoggedOnUser()
         {
             if (Umbraco.MemberIsLoggedOn())
@@ -93,7 +93,7 @@ namespace ODK.Website.Controllers
                     ? RedirectToUmbracoPage(chapterId.Value)
                     : RedirectToHome();
         }
-        
+
         private ActionResult RedirectToHome()
         {
             HomePageSettings homePageSettings = Umbraco.UmbracoContext.PublishedContentRequest.PublishedContent.HomePageSettings();

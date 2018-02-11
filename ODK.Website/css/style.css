@@ -1,0 +1,8 @@
+.section {
+    padding: 90px 20px
+}
+
+.section--header {
+    min-height: 320px;
+    padding-top: 130px
+}
