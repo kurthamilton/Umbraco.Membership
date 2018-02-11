@@ -4,9 +4,9 @@ using ODK.Umbraco.Membership;
 using ODK.Umbraco.Settings;
 using Umbraco.Core.Models;
 using Umbraco.Web.Mvc;
-using Website.ViewModels.Account;
+using ODK.Website.ViewModels.Account;
 
-namespace Website.Controllers
+namespace ODK.Website.Controllers
 {
     public class AccountController : SurfaceController
     {
