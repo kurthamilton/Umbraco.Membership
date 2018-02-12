@@ -39,11 +39,6 @@ namespace ODK.Umbraco.Membership
                 return false;
             }
 
-            if (member != null)
-            {
-                return !content.GetPropertyValue(PropertyNames.HideWhenLoggedIn, recurse: true, defaultValue: false);
-            }
-
             return true;
         }
     }

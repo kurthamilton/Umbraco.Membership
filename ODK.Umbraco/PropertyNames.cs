@@ -2,7 +2,6 @@
 {
     public static class PropertyNames
     {
-        public const string HideWhenLoggedIn = "hideWhenLoggedIn";
         public const string LoginButtonText = "loginButtonText";
         public const string LoginPage = "loginPage";
         public const string LogoutButtonText = "logoutButtonText";
