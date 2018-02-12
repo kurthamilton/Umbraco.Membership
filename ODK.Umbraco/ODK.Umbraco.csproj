@@ -217,7 +217,7 @@
     <Compile Include="ServiceResult.cs" />
     <Compile Include="Settings\PublishedContentExtensions.cs" />
     <Compile Include="Settings\HomePageSettings.cs" />
-    <Compile Include="Membership\ContentExtensions.cs" />
+    <Compile Include="Membership\PublishedContentExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

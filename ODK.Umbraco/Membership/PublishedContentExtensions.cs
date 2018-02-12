@@ -4,16 +4,16 @@ using Umbraco.Web;
 
 namespace ODK.Umbraco.Membership
 {
-    public static class ContentExtensions
+    public static class PublishedContentExtensions
     {
-        public static bool IsRestricted(this IPublishedContent content, IPublishedContent member)
+        public static bool IsRestricted(this IPublishedContent content, IPublishedContent member, bool recurse = true)
         {
             if (member != null)
             {
                 return false;
             }
 
-            return content.GetPropertyValue(PropertyNames.Restricted, recurse: true, defaultValue: false);
+            return content.GetPropertyValue(PropertyNames.Restricted, recurse: recurse, defaultValue: false);
         }
 
         public static IEnumerable<IPublishedContent> MenuItems(this IPublishedContent content, IPublishedContent member)
