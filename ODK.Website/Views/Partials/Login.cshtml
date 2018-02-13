@@ -1,0 +1,39 @@
+﻿@using ODK.Website.Controllers;
+@using ODK.Umbraco.Settings;
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
+    if (member != null)
+    {
+        return;
+    }
+
+    HomePageSettings homePageSettings = Model.Content.HomePageSettings();
+}
+
+@using (Html.BeginUmbracoForm<AccountController>("Login", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal" tabindex="-1" role="dialog" id="login-modal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="text" id="email" name="email" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" />
+            </div>
+
+            @Html.ValidationSummary()
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">@homePageSettings.Content.GetPropertyValue("loginButtonText", recurse: true)</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+}

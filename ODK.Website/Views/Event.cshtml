@@ -1,20 +1,30 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+﻿@using ODK.Umbraco.Events;
+@using ODK.Umbraco.Settings;
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
 @{
 	Layout = "Master.cshtml";
-	
-	string date = Model.Content.GetPropertyValue<DateTime>("eventDate").ToString("dd MMMM yyyy HH:mm");
-	string description = Model.Content.GetPropertyValue("eventDescription").ToString();
+
+	EventModel eventModel = new EventModel(Model.Content);
+
+	bool restricted = Umbraco.MembershipHelper.GetCurrentMember() == null && !eventModel.Public;
+	if (restricted)
+	{
+	    Response.Redirect(Model.Content.Parent.Url);
+	}
+
+	HomePageSettings homePageSettings = Model.Content.HomePageSettings();
+
+	string mapApiKey = Model.Content.Site().GetPropertyValue<string>("googleMapsApiKey");
+	string mapUrl = "https://www.google.com/maps/embed/v1/place?key=" + mapApiKey + "&q=" + eventModel.MapQuery;
 }
 
 @Html.Partial("SectionHeader")
 
 <div class="container">
-    <h1>@Model.Content.Name</h1>
-    <h2>@date</h2>
-        
-    <div class="row">
-        <section class="section">
-            @Html.Raw(description)
-        </section>
-    </div>
+    <h2>@eventModel.Location</h2>
+    <h2>@eventModel.Date.ToString("dd MMMM yyyy")</h2>
+
+    @Html.Raw(eventModel.Description)
+
+    <iframe width="600" height="450" frameborder="0" style="border:0" src="@mapUrl" allowfullscreen></iframe>
 </div>

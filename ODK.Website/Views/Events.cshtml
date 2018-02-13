@@ -1,35 +1,44 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+﻿@using System.Collections.Generic;
+@using ODK.Umbraco.Events;
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
 @{
 	Layout = "Master.cshtml";
+	
+	IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
+	EventService eventService = new EventService(Model.Content, member);
+	
+	EventSearchCriteria criteria = new EventSearchCriteria
+	{
+	    
+	};
+	IEnumerable<EventModel> events = eventService.SearchEvents(criteria);
 }
 
 @Html.Partial("SectionHeader")
 
 <div class="container">
-    <div>
-        TODO - EVENTS CALENDAR
-    </div>
     
-    <div class="row">
+    <section class="section">
+        <div id="calendar"></div>
+    </section>
+    
+    <div class="d-none">
         <section class="section">
-            <table>
+            <table id="events">
                 <thead>
                     <tr>
+                        <th>Url</th>
                         <th>Date</th>
                         <th>Location</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (IPublishedContent ev in Model.Content.Children)
+                    @foreach (EventModel ev in events)
                     {
-                        string eventDate = ev.GetPropertyValue<DateTime>("eventDate").ToString("dd MMMM yyyy");
                         <tr>
-                            <td>
-                                @eventDate
-                            </td>
-                            <td>
-                                <a href="@ev.Url">@ev.GetPropertyValue("eventLocation")</a>
-                            </td>
+                            <td>@ev.Url</td>
+                            <td>@ev.Date.ToString("yyyy-MM-dd")</td>
+                            <td>@ev.Location</td>
                         </tr>   
                     }
                 </tbody>
@@ -37,3 +46,17 @@
         </section>
     </div>
 </div>
+
+@section Header
+{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.2/fullcalendar.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.2/fullcalendar.print.css" />
+    <link rel="stylesheet" href="@Url.Content("~/css/calendar.css")" />
+}
+
+@section Scripts
+{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.2/fullcalendar.min.js"></script>
+    <script src="@Url.Content("~/Scripts/calendar.js")"></script>
+}

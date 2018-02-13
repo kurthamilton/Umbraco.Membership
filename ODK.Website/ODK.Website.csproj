@@ -278,7 +278,11 @@
     <Content Include="App_Plugins\Terratype\Views\grid.cshtml" />
     <Content Include="App_Plugins\SpectrumColorPicker\package.manifest" />
     <None Include="packages.config" />
+    <Content Include="css\calendar.css" />
     <Content Include="css\style.css" />
+    <Content Include="css\theme-base.css" />
+    <Content Include="css\theme-oxford.css" />
+    <Content Include="scripts\calendar.js" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Partials\Grid\Editors\Textstring.cshtml" />
     <Content Include="Views\Partials\Grid\Editors\Rte.cshtml" />
@@ -306,13 +310,14 @@
     <Content Include="Views\Products.cshtml" />
     <Content Include="Views\ContentPage.cshtml" />
     <Content Include="Views\Partials\Content.cshtml" />
-    <Content Include="Views\Login.cshtml" />
     <None Include="Properties\PublishProfiles\PrecompiledWeb.pubxml" />
     <None Include="Properties\PublishProfiles\PrecompiledWebUmbraco.pubxml" />
     <Content Include="Views\Register.cshtml" />
     <Content Include="Views\Partials\Footer.cshtml" />
     <Content Include="Views\Event.cshtml" />
     <Content Include="Views\Events.cshtml" />
+    <Content Include="Views\Partials\Login.cshtml" />
+    <Content Include="Views\Members.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -394,9 +399,7 @@
       <Name>ODK.Umbraco</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="scripts\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

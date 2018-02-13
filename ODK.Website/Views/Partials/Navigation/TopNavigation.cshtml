@@ -1,4 +1,4 @@
-﻿@using ODK.Umbraco.Membership;
+﻿@using ODK.Umbraco.Members;
 @using ODK.Umbraco.Settings;
 @inherits Umbraco.Web.Mvc.UmbracoTemplatePage
 @{
@@ -7,10 +7,8 @@
     IPublishedContent home = homePageSettings.Content;
     IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
     IEnumerable<IPublishedContent> selection = home.MenuItems(member);
-    
+
     string loginButtonText = homePageSettings.GetPropertyValue<string>("loginButtonText");
-    IPublishedContent loginPage = homePageSettings.GetPropertyValue<IPublishedContent>("loginPage");
-    string loginUrl = loginPage != null ? loginPage.Url : null;
     IPublishedContent logo = homePageSettings.GetPropertyValue<IPublishedContent>("siteLogo");
     string logoutButtonText = homePageSettings.GetPropertyValue<string>("logoutButtonText");
     string logoutUrl = "/umbraco/surface/account/logout";
@@ -19,18 +17,21 @@
     string registerUrl = registerPage != null ? registerPage.Url : null;
 }
 
+@if (logo != null)
+{
+    <div class="bg-dark text-center">
+        <img src="@logo.Url" />
+    </div>
+}
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="@homePageSettings.Content.Url">
-            @if (logo != null && !string.IsNullOrEmpty(homePageSettings.Content.Url))
-            {
-                <img src="@logo.Url" alt="@homePageSettings.Name" height="40">
-            }
-            else
-            {
+        @if (logo == null)
+        {
+            <a class="navbar-brand" href="@homePageSettings.Content.Url">
                 @homePageSettings.Name
-            }
-        </a>
+            </a>
+        }
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -53,10 +54,7 @@
             <div>
                 @if (member == null)
                 {
-                    if (!string.IsNullOrEmpty(loginUrl))
-                    {
-                        <a class="btn btn-primary" href="@loginUrl">@loginButtonText</a>
-                    }
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#login-modal">@loginButtonText</button>
 
                     if (!string.IsNullOrEmpty(registerUrl))
                     {
