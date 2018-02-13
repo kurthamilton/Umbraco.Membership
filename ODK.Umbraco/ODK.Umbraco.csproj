@@ -209,6 +209,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Content\PublishedContentExtensions.cs" />
+    <Compile Include="Events\EventModel.cs" />
+    <Compile Include="Events\EventPropertyNames.cs" />
+    <Compile Include="Events\EventSearchCriteria.cs" />
+    <Compile Include="Events\EventService.cs" />
     <Compile Include="Membership\RegisterMember.cs" />
     <Compile Include="Membership\MemberPropertyNames.cs" />
     <Compile Include="Membership\MembershipService.cs" />
