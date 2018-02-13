@@ -27,8 +27,7 @@ namespace ODK.Website.Controllers
             {
                 if (Umbraco.MembershipHelper.Login(viewModel.Email, viewModel.Password))
                 {
-                    int? chapterId = _membershipService.GetChapterId(viewModel.Email);
-                    return RedirectToChapter(chapterId);
+                    return RedirectToCurrentUmbracoPage();
                 }
             }
 
@@ -40,9 +39,8 @@ namespace ODK.Website.Controllers
         [HttpGet]
         public ActionResult Logout()
         {
-            int? chapterId = _membershipService.GetChapterId(Umbraco.MembershipHelper.CurrentUserName);
             Umbraco.MembershipHelper.Logout();
-            return RedirectToChapter(chapterId);
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
         [HttpPost]

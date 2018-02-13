@@ -213,6 +213,7 @@
     <Compile Include="Membership\MemberPropertyNames.cs" />
     <Compile Include="Membership\MembershipService.cs" />
     <Compile Include="Membership\ProfileModelExtensions.cs" />
+    <Compile Include="Web\Mvc\OdkUmbracoTemplatePage.cs" />
     <Compile Include="PropertyNames.cs" />
     <Compile Include="ServiceResult.cs" />
     <Compile Include="Settings\PublishedContentExtensions.cs" />

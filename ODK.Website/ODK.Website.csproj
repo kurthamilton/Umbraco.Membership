@@ -311,6 +311,8 @@
     <None Include="Properties\PublishProfiles\PrecompiledWebUmbraco.pubxml" />
     <Content Include="Views\Register.cshtml" />
     <Content Include="Views\Partials\Footer.cshtml" />
+    <Content Include="Views\Event.cshtml" />
+    <Content Include="Views\Events.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
