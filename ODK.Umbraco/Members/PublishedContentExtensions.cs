@@ -2,7 +2,7 @@
 using Umbraco.Core.Models;
 using Umbraco.Web;
 
-namespace ODK.Umbraco.Membership
+namespace ODK.Umbraco.Members
 {
     public static class PublishedContentExtensions
     {

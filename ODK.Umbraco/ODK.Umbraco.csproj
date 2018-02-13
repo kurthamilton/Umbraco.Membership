@@ -213,16 +213,18 @@
     <Compile Include="Events\EventPropertyNames.cs" />
     <Compile Include="Events\EventSearchCriteria.cs" />
     <Compile Include="Events\EventService.cs" />
-    <Compile Include="Membership\RegisterMember.cs" />
-    <Compile Include="Membership\MemberPropertyNames.cs" />
-    <Compile Include="Membership\MembershipService.cs" />
-    <Compile Include="Membership\ProfileModelExtensions.cs" />
+    <Compile Include="Members\LoginModel.cs" />
+    <Compile Include="Members\MemberExtensions.cs" />
+    <Compile Include="Members\MemberModel.cs" />
+    <Compile Include="Members\RegisterMemberModel.cs" />
+    <Compile Include="Members\MemberPropertyNames.cs" />
+    <Compile Include="Members\MemberService.cs" />
     <Compile Include="Web\Mvc\OdkUmbracoTemplatePage.cs" />
     <Compile Include="PropertyNames.cs" />
     <Compile Include="ServiceResult.cs" />
     <Compile Include="Settings\PublishedContentExtensions.cs" />
     <Compile Include="Settings\HomePageSettings.cs" />
-    <Compile Include="Membership\PublishedContentExtensions.cs" />
+    <Compile Include="Members\PublishedContentExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

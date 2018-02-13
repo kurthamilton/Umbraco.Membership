@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ODK.Website.ViewModels.Account
+namespace ODK.Umbraco.Members
 {
-    public class LoginViewModel
+    public class LoginModel
     {
         [Required]
         public string Email { get; set; }

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ODK.Umbraco.Membership
+namespace ODK.Umbraco.Members
 {
-    public class RegisterMember
+    public class RegisterMemberModel
     {
         public int ChapterId { get; set; }
 
