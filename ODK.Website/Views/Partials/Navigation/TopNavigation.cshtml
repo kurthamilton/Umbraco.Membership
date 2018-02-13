@@ -7,14 +7,24 @@
     IPublishedContent home = homePageSettings.Content;
     IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
     IEnumerable<IPublishedContent> selection = home.MenuItems(member);
+    
+    string loginButtonText = homePageSettings.GetPropertyValue<string>("loginButtonText");
+    IPublishedContent loginPage = homePageSettings.GetPropertyValue<IPublishedContent>("loginPage");
+    string loginUrl = loginPage != null ? loginPage.Url : null;
+    IPublishedContent logo = homePageSettings.GetPropertyValue<IPublishedContent>("siteLogo");
+    string logoutButtonText = homePageSettings.GetPropertyValue<string>("logoutButtonText");
+    string logoutUrl = "/umbraco/surface/account/logout";
+    string registerButtonText = homePageSettings.GetPropertyValue<string>("registerButtonText");
+    IPublishedContent registerPage = homePageSettings.GetPropertyValue<IPublishedContent>("registerPage");
+    string registerUrl = registerPage != null ? registerPage.Url : null;
 }
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="@homePageSettings.Content.Url">
-            @if (homePageSettings.Logo != null && !string.IsNullOrEmpty(homePageSettings.Content.Url))
+            @if (logo != null && !string.IsNullOrEmpty(homePageSettings.Content.Url))
             {
-                <img src="@homePageSettings.Logo.Url" alt="@homePageSettings.Name" height="40">
+                <img src="@logo.Url" alt="@homePageSettings.Name" height="40">
             }
             else
             {
@@ -36,30 +46,33 @@
                 }
 
                 <li class="nav-item d-md-none">
-                    @LogoutLink("", homePageSettings.LogoutButtonText)
+                    @LogoutLink("", logoutUrl, logoutButtonText)
                 </li>
             </ul>
 
             <div>
                 @if (member == null)
                 {
-                    <a class="btn btn-primary" href="@homePageSettings.LoginUrl">@homePageSettings.LoginButtonText</a>
-
-                    if (!string.IsNullOrEmpty(homePageSettings.RegisterUrl))
+                    if (!string.IsNullOrEmpty(loginUrl))
                     {
-                        <a class="btn btn-success" href="@homePageSettings.RegisterUrl">@homePageSettings.RegisterButtonText</a>
+                        <a class="btn btn-primary" href="@loginUrl">@loginButtonText</a>
+                    }
+
+                    if (!string.IsNullOrEmpty(registerUrl))
+                    {
+                        <a class="btn btn-success" href="@registerUrl">@registerButtonText</a>
                     }
                 }
                 else
                 {
-                    @LogoutLink("btn btn-light d-none d-lg-block", homePageSettings.LogoutButtonText)
+                    @LogoutLink("btn btn-light d-none d-lg-block", logoutUrl, logoutButtonText)
                 }
             </div>
         </div>
     </div>
 </nav>
 
-@helper LogoutLink(string cssClass, string text)
+@helper LogoutLink(string cssClass, string url, string text)
 {
-    <a class="@cssClass" href="/umbraco/surface/account/logout">@text</a>
+    <a class="@cssClass" href="@url">@text</a>
 }

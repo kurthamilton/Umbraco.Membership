@@ -1,0 +1,20 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+	Layout = "Master.cshtml";
+	
+	string date = Model.Content.GetPropertyValue<DateTime>("eventDate").ToString("dd MMMM yyyy HH:mm");
+	string description = Model.Content.GetPropertyValue("eventDescription").ToString();
+}
+
+@Html.Partial("SectionHeader")
+
+<div class="container">
+    <h1>@Model.Content.Name</h1>
+    <h2>@date</h2>
+        
+    <div class="row">
+        <section class="section">
+            @Html.Raw(description)
+        </section>
+    </div>
+</div>

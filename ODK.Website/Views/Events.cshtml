@@ -1,0 +1,39 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+	Layout = "Master.cshtml";
+}
+
+@Html.Partial("SectionHeader")
+
+<div class="container">
+    <div>
+        TODO - EVENTS CALENDAR
+    </div>
+    
+    <div class="row">
+        <section class="section">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Location</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (IPublishedContent ev in Model.Content.Children)
+                    {
+                        string eventDate = ev.GetPropertyValue<DateTime>("eventDate").ToString("dd MMMM yyyy");
+                        <tr>
+                            <td>
+                                @eventDate
+                            </td>
+                            <td>
+                                <a href="@ev.Url">@ev.GetPropertyValue("eventLocation")</a>
+                            </td>
+                        </tr>   
+                    }
+                </tbody>
+            </table>
+        </section>
+    </div>
+</div>

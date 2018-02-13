@@ -5,6 +5,8 @@
     Layout = "Master.cshtml";
 
     HomePageSettings homePageSettings = Model.Content.HomePageSettings();
+    
+    string registerButtonText = homePageSettings.GetPropertyValue<string>("registerButtonText");
 }
 
 @Html.Partial("SectionHeader")
@@ -35,7 +37,7 @@
             @Html.ValidationSummary()
 
             <div>
-                <button type="submit" class="btn btn-primary">@homePageSettings.RegisterButtonText</button>
+                <button type="submit" class="btn btn-primary">@registerButtonText</button>
             </div>
         }
     </div>

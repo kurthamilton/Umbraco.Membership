@@ -2,35 +2,38 @@
 @using ContentModels = Umbraco.Web.PublishedContentModels;
 @{
     Layout = "Master.cshtml";
-    var backgroundImage = Model.Content.HeroBackgroundImage != null ? Model.Content.HeroBackgroundImage.Url : String.Empty;
+    var backgroundImage = Model.Content.HeroBackgroundImage != null ? Model.Content.HeroBackgroundImage.Url : string.Empty;
 }
-<section class="section section--full-height background-image-full overlay overlay--dark section--content-center section--thick-border"
+
+<section class="section section--full-height background-image-full overlay overlay--dark section--content-center"
          style="background-image: url('@backgroundImage')">
     <div class="section__hero-content">
         <h1>@Model.Content.HeroHeader</h1>
         <p class="section__description">@Model.Content.HeroDescription</p>
-        <a class="button button--border--solid" href="@Model.Content.HeroCtalink.Url">
-            @Model.Content.HeroCtacaption
-        </a>
-
+        
+        @if (@Model.Content.HeroCtalink != null)
+        {
+            <a class="btn btn-primary" href="@Model.Content.HeroCtalink.Url">
+                @Model.Content.HeroCtacaption
+            </a>
+        }
     </div>
 </section>
 
-<section class="section section">
+<section class="section">
     @Html.GetGridHtml(Model.Content, "bodyText", "bootstrap3-fluid")
 </section>
 
-
-<section class="section section--themed">
+<section class="section">
 
     <div class="container">
         <div class="row">
 
-            <div class="ta-center">
+            <div class="text-center">
                 <h2>@Model.Content.FooterHeader</h2>
-                <p class="section__description mw-640 ma-h-auto">@Model.Content.FooterDescription</p>
+                <p class="section__description">@Model.Content.FooterDescription</p>
 
-                <a class="button button--border--light_solid" href="@Model.Content.FooterCtalink.Url">
+                <a class="btn btn-secondary" href="@Model.Content.FooterCtalink.Url">
                     @Model.Content.FooterCtacaption
                 </a>
 
