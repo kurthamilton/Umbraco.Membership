@@ -20,6 +20,8 @@
         Response.Redirect(Model.Content.Parent.Url);
         return;
     }
+
+    var dataTypeService = ApplicationContext.Services.DataTypeService;
 }
 
 <section class="section section--header">
@@ -39,7 +41,7 @@
         @RenderField("Neighbourhood", member.Neighbourhood)
         @RenderField("Where are you from?", member.Hometown)
         @RenderField("Your favourite alcoholic beverage", member.FavouriteBeverage)
-        @RenderField("What's your level of knitting know-how?", member.KnittingExperience)
+        @RenderField("What's your level of knitting know-how?", member.KnittingExperienceOther ?? dataTypeService.GetPreValueAsString(member.KnittingExperienceId))
         @RenderField("Why are you a drunken knitwit?", member.Reason)
         @RenderField("Facebook profile", member.FacebookProfile)
         @RenderField("Member since", member.Joined.ToString("dd MMMM yyyy"))

@@ -6,6 +6,13 @@ namespace ODK.Umbraco.Members
 {
     public static class MemberExtensions
     {
+        public static int GetIntegerPropertyValue(this IMember member, string name)
+        {
+            string stringValue = member.GetStringPropertyValue(name);
+            int.TryParse(stringValue, out int value);
+            return value;
+        }
+
         public static object GetPropertyValue(this IMember member, string name)
         {
             return member.HasProperty(name) ? member.Properties[name] : null;

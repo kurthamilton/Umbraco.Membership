@@ -8,6 +8,7 @@
         public const string FirstName = "memberFirstName";
         public const string Hometown = "memberHometown";
         public const string KnittingExperience = "memberKnittingExperience";
+        public const string KnittingExperienceOther = "memberKnittingExperienceOther";
         public const string LastName = "memberLastName";
         public const string Neighbourhood = "memberNeighbourhood";
         public const string Picture = "memberPicture";

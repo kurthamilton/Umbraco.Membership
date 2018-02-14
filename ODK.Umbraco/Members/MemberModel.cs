@@ -11,7 +11,8 @@ namespace ODK.Umbraco.Members
         private readonly Lazy<string> _facebookProfile;
         private readonly Lazy<string> _firstName;
         private readonly Lazy<string> _hometown;
-        private readonly Lazy<string> _knittingExperience;
+        private readonly Lazy<int> _knittingExperienceId;
+        private readonly Lazy<string> _knittingExperienceOther;
         private readonly Lazy<string> _lastName;
         private readonly Lazy<string> _neighbourhood;
         private readonly Lazy<IPublishedContent> _picture;
@@ -27,7 +28,8 @@ namespace ODK.Umbraco.Members
             _favouriteBeverage = new Lazy<string>(() => member.GetStringPropertyValue(MemberPropertyNames.FavouriteBeverage));
             _firstName = new Lazy<string>(() => member.GetStringPropertyValue(MemberPropertyNames.FirstName));
             _hometown = new Lazy<string>(() => member.GetStringPropertyValue(MemberPropertyNames.Hometown));
-            _knittingExperience = new Lazy<string>(() => member.GetStringPropertyValue(MemberPropertyNames.KnittingExperience));
+            _knittingExperienceId = new Lazy<int>(() => member.GetIntegerPropertyValue(MemberPropertyNames.KnittingExperience));
+            _knittingExperienceOther = new Lazy<string>(() => member.GetStringPropertyValue(MemberPropertyNames.KnittingExperienceOther));
             _lastName = new Lazy<string>(() => member.GetStringPropertyValue(MemberPropertyNames.LastName));
             _neighbourhood = new Lazy<string>(() => member.GetStringPropertyValue(MemberPropertyNames.Neighbourhood));
             _picture = new Lazy<IPublishedContent>(() => member.GetPublishedMediaPropertyValue(MemberPropertyNames.Picture, helper));
@@ -48,7 +50,9 @@ namespace ODK.Umbraco.Members
 
         public DateTime Joined { get; }
 
-        public string KnittingExperience => _knittingExperience.Value;
+        public int KnittingExperienceId => _knittingExperienceId.Value;
+
+        public string KnittingExperienceOther => _knittingExperienceOther.Value;
 
         public string LastName => _lastName.Value;
 
