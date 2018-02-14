@@ -20,6 +20,7 @@ namespace ODK.Umbraco.Members
 
         public MemberModel(IMember member, UmbracoHelper helper)
         {
+            Email = member.Email;
             Id = member.Id;
             Joined = member.CreateDate;
 
@@ -37,6 +38,8 @@ namespace ODK.Umbraco.Members
         }
 
         public int? ChapterId => _chapterId.Value;
+
+        public string Email { get; }
 
         public string FacebookProfile => _facebookProfile.Value;
 
