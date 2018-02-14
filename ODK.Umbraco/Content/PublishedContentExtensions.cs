@@ -8,6 +8,11 @@ namespace ODK.Umbraco.Content
 {
     public static class PublishedContentExtensions
     {
+        public static bool IsPage(this IPublishedContent content)
+        {
+            return content.TemplateId > 0;
+        }
+
         public static IEnumerable<T> GetPropertyValues<T>(this IEnumerable<IPublishedContent> contents, string alias)
         {
             foreach (IPublishedContent content in contents)

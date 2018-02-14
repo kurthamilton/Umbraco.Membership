@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ODK.Umbraco.Content;
+using System.Collections.Generic;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 
@@ -29,6 +30,11 @@ namespace ODK.Umbraco.Members
 
         private static bool ShowInMenu(IPublishedContent content, IPublishedContent member)
         {
+            if (!content.IsPage())
+            {
+                return false;
+            }
+
             if (content.GetPropertyValue(PropertyNames.UmbracoNaviHide, recurse: true, defaultValue: false))
             {
                 return false;
