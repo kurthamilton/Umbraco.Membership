@@ -317,7 +317,7 @@
     <Content Include="Views\Event.cshtml" />
     <Content Include="Views\Events.cshtml" />
     <Content Include="Views\Partials\Login.cshtml" />
-    <Content Include="Views\Members.cshtml" />
+    <Content Include="Views\Chapter.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

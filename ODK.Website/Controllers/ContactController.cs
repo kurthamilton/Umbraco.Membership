@@ -14,14 +14,14 @@ namespace ODK.Website.Controllers
         {
             IPublishedContent content = Umbraco.AssignedContentItem;
 
-            string contactEmailAddress = content.GetPropertyValue<string>("contactEmailAddress");
+            string toEmailAddresses = content.GetPropertyValue<string>("toEmailAddresses");
 
             string body =
                 "A message has been sent through the drunkenknitwits.com website from " + email + "." +
                 "Message:" +
                 "" + message;
 
-            MailMessage mailMessage = new MailMessage("noreply@drunkenknitwits.com", contactEmailAddress, "Website contact message", body);
+            MailMessage mailMessage = new MailMessage("noreply@drunkenknitwits.com", toEmailAddresses, "Website contact message", body);
 
             using (SmtpClient smtpClient = new SmtpClient())
             {

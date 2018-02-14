@@ -2,6 +2,7 @@
 using System.Linq;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
+using Umbraco.Web;
 
 namespace ODK.Umbraco.Members
 {
@@ -14,7 +15,7 @@ namespace ODK.Umbraco.Members
             _umbracoMemberService = umbracoMemberService;
         }
 
-        public MemberModel GetMember(string username)
+        public MemberModel GetMember(string username, UmbracoHelper helper)
         {
             IMember umbracoMember = _umbracoMemberService.GetByUsername(username);
             if (umbracoMember == null)
@@ -22,14 +23,26 @@ namespace ODK.Umbraco.Members
                 return null;
             }
 
-            return new MemberModel(umbracoMember);
+            return new MemberModel(umbracoMember, helper);
         }
 
-        public IEnumerable<MemberModel> GetMembers(int chapterId)
+        public MemberModel GetMember(int id, UmbracoHelper helper)
+        {
+            IMember umbracoMember = _umbracoMemberService.GetById(id);
+            if (umbracoMember == null)
+            {
+                return null;
+            }
+
+            return new MemberModel(umbracoMember, helper);
+        }
+
+        public IReadOnlyCollection<MemberModel> GetMembers(int chapterId, UmbracoHelper helper)
         {
             IEnumerable<IMember> members = _umbracoMemberService.GetAllMembers();
-            return members.Select(x => new MemberModel(x))
-                          .Where(x => x.ChapterId == chapterId);
+            return members.Select(x => new MemberModel(x, helper))
+                          .Where(x => x.ChapterId == chapterId)
+                          .ToArray();
         }
 
         public ServiceResult Register(RegisterMemberModel model)

@@ -1,11 +1,25 @@
+body {
+	font-family: 'Catamaran';
+}
+
+.btn-primary {
+	background-color: #0069d9;
+	border-color: #0069d9;
+}
+
+.btn-primary:hover {
+	background-color: #0056b3;
+	border-color: #0056b3;
+}
+
 .background-image-full {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: 50%;
 }
 
-.navbar {
-	height: 120px;
+.events__event {
+	border-bottom: 1px solid #E3E3E3;
 }
 
 .overlay {
@@ -54,18 +68,27 @@
 	padding-bottom: 30px;
 }
 
-.section--full-height {
-    min-height: 100vh;
+.section--hero {
+	background-position-y: 0;
+	padding: 100px 20px;
+}
+
+.section--hero__content {    	
+	color: #fff;
+	font-size: 1.4rem;
+	max-width: 760px;    	
+}
+
+.section--hero__content h1 {
+	font-size: 3rem;
+}
+
+.section--main {
+	padding-top: 30px;
 }
 
 .section__description {
     font-size: 18px;
     line-height: 1.5;
     margin-bottom: 60px;
-}
-
-.section__hero-content {
-    color: #fff;
-	max-width: 760px;
-    padding: 0 20px;
 }

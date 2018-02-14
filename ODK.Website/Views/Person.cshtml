@@ -1,4 +1,62 @@
-﻿@{
-	Layout = "Master.cshtml";
+﻿@using ODK.Umbraco.Members;
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    Layout = "Master.cshtml";
+
+    int id = 0;
+    try
+    {
+        id = int.Parse(Request.QueryString["id"]);
+    }
+    catch
+    {
+    }
+
+    MemberService memberService = new MemberService(ApplicationContext.Services.MemberService);
+    MemberModel member = memberService.GetMember(id, Umbraco);
+
+    if (member == null)
+    {
+        Response.Redirect(Model.Content.Parent.Url);
+        return;
+    }
 }
-<p>Nothing to see, but we could make a lesson to display a person</p>
+
+<section class="section section--header">
+    <div class="container">
+        <h1>
+            @if (member.Picture != null)
+            {
+                <img src="@member.Picture.GetCropUrl(height: 100)" />
+            }
+            @member.FirstName  @member.LastName
+        </h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        @RenderField("Neighbourhood", member.Neighbourhood)
+        @RenderField("Where are you from?", member.Hometown)
+        @RenderField("Your favourite alcoholic beverage", member.FavouriteBeverage)
+        @RenderField("What's your level of knitting know-how?", member.KnittingExperience)
+        @RenderField("Why are you a drunken knitwit?", member.Reason)
+        @RenderField("Facebook profile", member.FacebookProfile)
+        @RenderField("Member since", member.Joined.ToString("dd MMMM yyyy"))
+    </div>
+</section>
+
+@helper RenderField(string field, string value)
+{
+    if (string.IsNullOrEmpty(value))
+    {
+        return;
+    }
+
+    <div class="form-group row">
+        <label class="col-sm-3 col-form-label">@field</label>
+        <div class="col-sm-9">
+            <input type="text" readonly class="form-control-plaintext" value="@value">
+        </div>
+    </div>
+}

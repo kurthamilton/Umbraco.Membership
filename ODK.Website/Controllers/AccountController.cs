@@ -68,7 +68,7 @@ namespace ODK.Website.Controllers
         {
             if (Umbraco.MemberIsLoggedOn())
             {
-                MemberModel member = _memberService.GetMember(Umbraco.MembershipHelper.CurrentUserName);
+                MemberModel member = _memberService.GetMember(Umbraco.MembershipHelper.CurrentUserName, Umbraco);
                 RedirectToChapter(member?.ChapterId);
             }
         }
