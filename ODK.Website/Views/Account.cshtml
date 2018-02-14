@@ -1,0 +1,36 @@
+﻿@using ODK.Umbraco.Members;
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+	Layout = "Master.cshtml";
+	
+	IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
+	if (member == null)
+    {
+        Response.Redirect(Model.Content.Parent.Url);
+        return;
+    }
+    
+	MemberService memberService = new MemberService(ApplicationContext.Services.MemberService);
+    MemberModel model = memberService.GetMember(member.Id, Umbraco);
+
+    var dataTypeService = ApplicationContext.Services.DataTypeService;
+}
+
+@Html.Partial("SectionHeader")
+
+<section class="section">
+    <div class="container">
+        @using (Html.BeginUmbracoForm("Update", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.Partial("Account", model)
+
+            @Html.ValidationSummary()
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        }
+    </div>
+</section>

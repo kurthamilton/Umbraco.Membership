@@ -1,4 +1,5 @@
-﻿@using ODK.Umbraco.Members;
+﻿@using ODK.Umbraco.Content;
+@using ODK.Umbraco.Members;
 @using ODK.Umbraco.Settings;
 @inherits Umbraco.Web.Mvc.UmbracoTemplatePage
 @{
@@ -8,19 +9,24 @@
     IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
     IEnumerable<IPublishedContent> selection = home.MenuItems(member);
 
+    
     IPublishedContent logo = homePageSettings.GetPropertyValue<IPublishedContent>("siteLogo");
-    string loginButtonText = homePageSettings.GetPropertyValue<string>("loginButtonText");
-    string logoutButtonText = homePageSettings.GetPropertyValue<string>("logoutButtonText");
-    string logoutUrl = "/umbraco/surface/account/logout";
-    string registerButtonText = homePageSettings.GetPropertyValue<string>("registerButtonText");
-    IPublishedContent registerPage = homePageSettings.GetPropertyValue<IPublishedContent>("registerPage");
+    
+    string loginButtonText = member == null ? homePageSettings.GetPropertyValue<string>("loginButtonText") : null;
+    string registerButtonText = member == null ? homePageSettings.GetPropertyValue<string>("registerButtonText") : null;
+    IPublishedContent registerPage = member == null ? homePageSettings.GetPropertyValue<IPublishedContent>("registerPage") : null;
     string registerUrl = registerPage != null ? registerPage.Url : null;
+    
+    IPublishedContent accountPage = member != null ? homePageSettings.GetPropertyValue<IPublishedContent>("accountPage") : null;
+    string accountUrl = accountPage != null ? accountPage.Url : null;
+    string logoutButtonText = member != null ? homePageSettings.GetPropertyValue<string>("logoutButtonText") : null;
+    string logoutUrl = "/umbraco/surface/account/logout";
 }
 
 @if (logo != null)
 {
-    <div class="bg-dark">
-        <div class="text-center"><a href="@home.Url"><img src="@logo.Url" /></a></div>
+    <div class="bg-dark text-center">
+        <a href="@home.Url"><img class="logo--main" src="@logo.Url" /></a>
     </div>
 }
 
@@ -38,12 +44,12 @@
         </button>
 
         <div class="d-lg-none">
-            @MembershipLinks(member, loginButtonText, registerUrl, registerButtonText, logoutUrl, logoutButtonText)
+            @MembershipLinks(member, loginButtonText, registerUrl, registerButtonText, logoutUrl, logoutButtonText, accountUrl)
         </div>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                @foreach (var item in selection)
+                @foreach (var item in selection.Where(x => x.TemplateId > 0))
                 {
                     <li class="nav-item">
                         <a class="nav-link @(item.IsAncestorOrSelf(Model.Content) ? "active" : null)" href="@item.Url">@item.Name</a>
@@ -57,12 +63,12 @@
         </div>
 
         <div class="d-none d-lg-block">
-            @MembershipLinks(member, loginButtonText, registerUrl, registerButtonText, logoutUrl, logoutButtonText)
+            @MembershipLinks(member, loginButtonText, registerUrl, registerButtonText, logoutUrl, logoutButtonText, accountUrl)
         </div>
     </div>
 </nav>
 
-@helper MembershipLinks(IPublishedContent member, string loginButtonText, string registerUrl, string registerButtonText, string logoutUrl, string logoutButtonText)
+@helper MembershipLinks(IPublishedContent member, string loginButtonText, string registerUrl, string registerButtonText, string logoutUrl, string logoutButtonText, string accountUrl)
 {
     if (member == null)
     {
@@ -75,7 +81,12 @@
     }
     else
     {
-        @LogoutLink(member, "btn btn-light d-none d-lg-block", logoutUrl, logoutButtonText)
+        if (!string.IsNullOrEmpty(accountUrl))
+        {
+            <a class="btn btn-primary" href="@accountUrl">Account</a>
+        }
+        
+        @LogoutLink(member, "btn btn-light d-none d-lg-inline", logoutUrl, logoutButtonText)
     }
 }
 

@@ -1,0 +1,47 @@
+﻿@using ODK.Umbraco.Members;
+@model MemberModel
+
+@*
+<div class="form-group">
+    <label for="email">Email</label>
+    <input type="text" id="email" name="email" class="form-control" value="@Model.Email" />
+</div>
+*@
+
+@if (Model.Id == 0)
+{
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" class="form-control" />
+    </div>
+}
+
+<div class="form-group">
+    <label for="firstName">First Name</label>
+    <input type="text" id="firstName" name="firstName" class="form-control" value="@Model.FirstName" />
+</div>
+<div class="form-group">
+    <label for="lastName">Last Name</label>
+    <input type="text" id="lastName" name="lastName" class="form-control" value="@Model.LastName" />
+</div>
+<div class="form-group">
+    <label for="neighbourhood">Neighbourhood</label>
+    <input type="text" id="neighbourhood" name="neighbourhood" class="form-control" value="@Model.Neighbourhood" />
+</div>
+<div class="form-group">
+    <label for="hometown">Hometown</label>
+    <input type="text" id="hometown" name="hometown" class="form-control" value="@Model.Hometown" />
+</div>
+<div class="form-group">
+    <label for="facebookProfile">Facebook Profile</label>
+    <div>
+        <span class="form-control-plaintext">https://www.facebook.com/</span>
+        <input type="text" id="facebookProfile" name="facebookProfile" class="form-control" value="@Model.FacebookProfile" />
+    </div>
+</div>
+<div class="form-group">
+    <label for="favouriteBeverage">Favourite Beverage</label>
+    <input type="text" id="favouriteBeverage" name="favouriteBeverage" class="form-control" value="@Model.FavouriteBeverage" />
+</div>
+
+@*TODO: Joined, Knitting experience, picture, reason*@

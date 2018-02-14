@@ -22,6 +22,10 @@ body {
 	border-bottom: 1px solid #E3E3E3;
 }
 
+.logo--main {
+	max-width: 100%;
+}
+
 .overlay {
     position: relative;
 }
@@ -71,6 +75,7 @@ body {
 .section--hero {
 	background-position-y: 0;
 	padding: 100px 20px;
+	min-height: 100vh;
 }
 
 .section--hero__content {    	
@@ -91,4 +96,20 @@ body {
     font-size: 18px;
     line-height: 1.5;
     margin-bottom: 60px;
+}
+
+/* page overrides */
+.page--home .navbar .navbar-nav {
+	justify-content: center;
+	width: 100%;
+}
+
+.page--home .nav-item {
+	border-left: 1px solid rgba(255,255,255,.5);
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.page--home .nav-item:first-child {
+	border-left: none;
 }

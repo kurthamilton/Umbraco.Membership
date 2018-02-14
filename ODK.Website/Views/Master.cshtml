@@ -12,7 +12,9 @@
     }
 
     HomePageSettings homePageSettings = Model.Content.HomePageSettings();
-    IEnumerable<string> stylesheets = homePageSettings.Content.AncestorsOrSelf().Reverse().GetPropertyValues<string>("stylesheet");
+    IEnumerable<string> stylesheets = homePageSettings.Content.AncestorsOrSelf().Reverse().GetPropertyValues<string>("stylesheet").SelectMany(x => x.Split(';'));
+    
+    int stylesheetVersion = 1;
 }
 
 <!doctype html>
@@ -25,18 +27,18 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="@Url.Content("~/css/style.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/css/style.css")?v=@stylesheetVersion" />
     
     @foreach (string stylesheet in stylesheets)
     {
-        <link rel="stylesheet" href="@Url.Content("~/css/" + stylesheet + ".css")" />
+        <link rel="stylesheet" href="@Url.Content("~/css/" + stylesheet + ".css")?v=@stylesheetVersion" />
     }
     
     <link href='https://fonts.googleapis.com/css?family=Catamaran' rel='stylesheet'>
     
     @RenderSection("Header", required: false)
 </head>
-<body>
+<body class="page--@Model.Content.ContentType.Alias">
     <header>
         @Html.Partial("Navigation/TopNavigation")
     </header>
