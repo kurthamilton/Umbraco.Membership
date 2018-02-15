@@ -4,10 +4,10 @@
 @{
     Layout = "Master.cshtml";
 
-    MemberService memberService = new MemberService(ApplicationContext.Services.MemberService);
+    MemberService memberService = new MemberService(ApplicationContext.Services.MemberService, Umbraco);
 
     int chapterId = Model.Content.HomePageSettings().Content.Id;
-    IReadOnlyCollection<MemberModel> members = memberService.GetMembers(chapterId, Umbraco);
+    IReadOnlyCollection<MemberModel> members = memberService.GetMembers(chapterId);
 
     string memberUrl = Model.Content.GetPropertyValue<IPublishedContent>("memberProfilePage").Url;
 }

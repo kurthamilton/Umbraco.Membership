@@ -1,4 +1,5 @@
 ﻿@using ODK.Umbraco.Members;
+@using ODK.Umbraco.Mvc;
 @inherits Umbraco.Web.Mvc.UmbracoTemplatePage
 @{
     Layout = "Master.cshtml";
@@ -12,10 +13,12 @@
     {
     }
 
-    MemberService memberService = new MemberService(ApplicationContext.Services.MemberService);
-    MemberModel member = memberService.GetMember(id, Umbraco);
+    MemberService memberService = new MemberService(ApplicationContext.Services.MemberService, Umbraco);
+    MemberModel member = memberService.GetMember(id);
 
-    if (member == null)
+    HtmlHelper<MemberModel> memberHelper = Html.For<MemberModel>(member);
+
+if (member == null)
     {
         Response.Redirect(Model.Content.Parent.Url);
         return;
@@ -27,10 +30,6 @@
 <section class="section section--header">
     <div class="container">
         <h1>
-            @if (member.Picture != null)
-            {
-                <img src="@member.Picture.GetCropUrl(height: 100)" />
-            }
             @member.FirstName  @member.LastName
         </h1>
     </div>
@@ -38,27 +37,44 @@
 
 <section class="section">
     <div class="container">
-        @RenderField("Neighbourhood", member.Neighbourhood)
-        @RenderField("Where are you from?", member.Hometown)
-        @RenderField("Your favourite alcoholic beverage", member.FavouriteBeverage)
-        @RenderField("What's your level of knitting know-how?", member.KnittingExperienceOther ?? dataTypeService.GetPreValueAsString(member.KnittingExperienceId))
-        @RenderField("Why are you a drunken knitwit?", member.Reason)
-        @RenderField("Facebook profile", member.FacebookProfile)
-        @RenderField("Member since", member.Joined.ToString("dd MMMM yyyy"))
+        <div class="row">
+            @if (member.Picture != null)
+            {
+                <div class="col-md-3">
+                    <img src="@member.Picture.GetCropUrl(height: 300)" class="picture--profile" />
+                </div>
+            }
+
+            <div class="col-md-9">
+                <div class="container">
+                    @RenderField(memberHelper.DisplayNameFor(x => x.Neighbourhood), member.Neighbourhood)
+                    @RenderField(memberHelper.DisplayNameFor(x => x.Hometown), member.Hometown)
+                    @RenderField(memberHelper.DisplayNameFor(x => x.FavouriteBeverage), member.FavouriteBeverage)
+                    @RenderField(memberHelper.DisplayNameFor(x => x.KnittingExperienceId), member.KnittingExperienceOther ?? dataTypeService.GetPreValueAsString(member.KnittingExperienceId))
+                    @RenderField(memberHelper.DisplayNameFor(x => x.Reason), member.Reason)
+                    @RenderField(memberHelper.DisplayNameFor(x => x.FacebookProfile), member.FacebookProfile)
+
+                    @if (member.Joined != null)
+                    {
+                         @RenderField(memberHelper.DisplayNameFor(x => x.Joined), member.Joined.Value.ToString("dd MMMM yyyy"))
+                    }
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
-@helper RenderField(string field, string value)
+@helper RenderField(MvcHtmlString field, string value)
 {
     if (string.IsNullOrEmpty(value))
     {
         return;
     }
 
-    <div class="form-group row">
-        <label class="col-sm-3 col-form-label">@field</label>
-        <div class="col-sm-9">
-            <input type="text" readonly class="form-control-plaintext" value="@value">
+    <div class="row">
+        <label class="col-4 col-form-label text-right">@field</label>
+        <div class="col-8">
+            <span class="form-control-plaintext">@value</span>
         </div>
     </div>
 }

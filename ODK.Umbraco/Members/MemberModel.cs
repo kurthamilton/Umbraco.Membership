@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 
@@ -6,63 +8,122 @@ namespace ODK.Umbraco.Members
 {
     public class MemberModel
     {
-        private readonly Lazy<int?> _chapterId;
-        private readonly Lazy<string> _favouriteBeverage;
-        private readonly Lazy<string> _facebookProfile;
-        private readonly Lazy<string> _firstName;
-        private readonly Lazy<string> _hometown;
-        private readonly Lazy<int> _knittingExperienceId;
-        private readonly Lazy<string> _knittingExperienceOther;
-        private readonly Lazy<string> _lastName;
-        private readonly Lazy<string> _neighbourhood;
+        public const int DefaultKnittingExperienceOptionId = 0;
+
+        private readonly MutableLazy<string> _favouriteBeverage;
+        private readonly MutableLazy<string> _facebookProfile;
+        private readonly MutableLazy<string> _firstName;
+        private readonly MutableLazy<string> _hometown;
+        private readonly MutableLazy<int> _knittingExperienceId;
+        private readonly MutableLazy<string> _knittingExperienceOther;
+        private readonly MutableLazy<string> _lastName;
+        private readonly MutableLazy<string> _neighbourhood;
         private readonly Lazy<IPublishedContent> _picture;
-        private readonly Lazy<string> _reason;
+        private readonly MutableLazy<string> _reason;
 
         public MemberModel(IMember member, UmbracoHelper helper)
         {
-            Email = member.Email;
-            Id = member.Id;
-            Joined = member.CreateDate;
+            Helper = helper;
 
-            _chapterId = new Lazy<int?>(() => member.GetPublishedContentPropertyValue(MemberPropertyNames.ChapterId, helper)?.Id);
-            _facebookProfile = new Lazy<string>(() => member.GetStringPropertyValue(MemberPropertyNames.FacebookProfile));
-            _favouriteBeverage = new Lazy<string>(() => member.GetStringPropertyValue(MemberPropertyNames.FavouriteBeverage));
-            _firstName = new Lazy<string>(() => member.GetStringPropertyValue(MemberPropertyNames.FirstName));
-            _hometown = new Lazy<string>(() => member.GetStringPropertyValue(MemberPropertyNames.Hometown));
-            _knittingExperienceId = new Lazy<int>(() => member.GetIntegerPropertyValue(MemberPropertyNames.KnittingExperience));
-            _knittingExperienceOther = new Lazy<string>(() => member.GetStringPropertyValue(MemberPropertyNames.KnittingExperienceOther));
-            _lastName = new Lazy<string>(() => member.GetStringPropertyValue(MemberPropertyNames.LastName));
-            _neighbourhood = new Lazy<string>(() => member.GetStringPropertyValue(MemberPropertyNames.Neighbourhood));
-            _picture = new Lazy<IPublishedContent>(() => member.GetPublishedMediaPropertyValue(MemberPropertyNames.Picture, helper));
-            _reason = new Lazy<string>(() => member.GetStringPropertyValue(MemberPropertyNames.Reason));
+            if (member != null)
+            {
+                ChapterId = member.GetPublishedContentPropertyValue(MemberPropertyNames.ChapterId, helper).Id;
+                Email = member.Email;
+                Id = member.Id;
+                Joined = member.CreateDate;
+            }
+
+            _facebookProfile = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.FacebookProfile));
+            _favouriteBeverage = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.FavouriteBeverage));
+            _firstName = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.FirstName));
+            _hometown = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.Hometown));
+            _knittingExperienceId = new MutableLazy<int>(() => member?.GetIntegerPropertyValue(MemberPropertyNames.KnittingExperience) ?? DefaultKnittingExperienceOptionId);
+            _knittingExperienceOther = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.KnittingExperienceOther));
+            _lastName = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.LastName));
+            _neighbourhood = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.Neighbourhood));
+            _picture = new Lazy<IPublishedContent>(() => member?.GetPublishedMediaPropertyValue(MemberPropertyNames.Picture, helper));
+            _reason = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.Reason));
         }
 
-        public int? ChapterId => _chapterId.Value;
+        public int ChapterId { get; set; }
 
-        public string Email { get; }
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
 
-        public string FacebookProfile => _facebookProfile.Value;
+        [DisplayName("Facebook profile")]
+        public string FacebookProfile
+        {
+            get { return _facebookProfile?.Value; }
+            set { _facebookProfile.Value = value; }
+        }
 
-        public string FavouriteBeverage => _favouriteBeverage.Value;
+        [DisplayName("Your favourite alcoholic beverage")]
+        [Required]
+        public string FavouriteBeverage
+        {
+            get { return _favouriteBeverage?.Value; }
+            set { _favouriteBeverage.Value = value; }
+        }
 
-        public string FirstName => _firstName.Value;
+        [DisplayName("First Name")]
+        [Required]
+        public string FirstName
+        {
+            get { return _firstName?.Value; }
+            set { _firstName.Value = value; }
+        }
 
-        public string Hometown => _hometown.Value;
+        public UmbracoHelper Helper { get; set; }
+
+        [DisplayName("Where are you from?")]
+        public string Hometown
+        {
+            get { return _hometown?.Value; }
+            set { _hometown.Value = value; }
+        }
 
         public int Id { get; }
 
-        public DateTime Joined { get; }
+        [DisplayName("Date joined")]
+        public DateTime? Joined { get; }
 
-        public int KnittingExperienceId => _knittingExperienceId.Value;
+        [DisplayName("What's your level of knitting know-how?")]
+        public int KnittingExperienceId
+        {
+            get { return _knittingExperienceId?.Value ?? -1; }
+            set { _knittingExperienceId.Value = value; }
+        }
 
-        public string KnittingExperienceOther => _knittingExperienceOther.Value;
+        [DisplayName("Please specify")]
+        public string KnittingExperienceOther
+        {
+            get { return _knittingExperienceOther?.Value; }
+            set { _knittingExperienceOther.Value = value; }
+        }
 
-        public string LastName => _lastName.Value;
+        [DisplayName("Last Name")]
+        [Required]
+        public string LastName
+        {
+            get { return _lastName?.Value; }
+            set { _lastName.Value = value; }
+        }
 
-        public string Neighbourhood => _neighbourhood.Value;
+        public string Neighbourhood
+        {
+            get { return _neighbourhood?.Value; }
+            set { _neighbourhood.Value = value; }
+        }
 
-        public IPublishedContent Picture => _picture.Value;
+        public IPublishedContent Picture => _picture?.Value;
 
-        public string Reason => _reason.Value;
+        [DisplayName("Why are you a Drunken Knitwit?")]
+        [Required]
+        public string Reason
+        {
+            get { return _reason?.Value; }
+            set { _reason.Value = value; }
+        }
     }
 }

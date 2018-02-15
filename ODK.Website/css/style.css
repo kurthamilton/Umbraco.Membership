@@ -1,5 +1,5 @@
 body {
-	font-family: 'Catamaran';
+	font-family: 'Josefin Sans';
 }
 
 .btn-primary {
@@ -18,8 +18,22 @@ body {
     background-position: 50%;
 }
 
+.content {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.content p:last-child {
+    margin-bottom: 0;
+}
+
 .events__event {
 	border-bottom: 1px solid #E3E3E3;
+}
+
+.form-group.required .form-control-label:after {
+  content: " *";
+  color: red;
 }
 
 .logo--main {
@@ -53,6 +67,11 @@ body {
     z-index: 1;
 }
 
+.picture--profile {
+    max-height: 300px;
+    max-width: 100%;
+}
+
 .section {
     padding: 90px 20px;
 }
@@ -78,14 +97,18 @@ body {
 	min-height: 100vh;
 }
 
-.section--hero__content {    	
+.section--hero__content {
 	color: #fff;
 	font-size: 1.4rem;
-	max-width: 760px;    	
+	max-width: 760px;
 }
 
 .section--hero__content h1 {
 	font-size: 3rem;
+}
+
+.section--hero__content h1:not(:first-child) {
+	margin-top: 4rem;
 }
 
 .section--main {
@@ -98,6 +121,14 @@ body {
     margin-bottom: 60px;
 }
 
+.text-muted {
+	color: #bbb !important;
+}
+
+.text-help {
+	color: #6d6dcb;
+}
+
 /* page overrides */
 .page--home .navbar .navbar-nav {
 	justify-content: center;
@@ -108,6 +139,7 @@ body {
 	border-left: 1px solid rgba(255,255,255,.5);
 	padding-left: 20px;
 	padding-right: 20px;
+	text-transform: uppercase;
 }
 
 .page--home .nav-item:first-child {

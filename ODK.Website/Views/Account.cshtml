@@ -10,8 +10,8 @@
         return;
     }
     
-	MemberService memberService = new MemberService(ApplicationContext.Services.MemberService);
-    MemberModel model = memberService.GetMember(member.Id, Umbraco);
+	MemberService memberService = new MemberService(ApplicationContext.Services.MemberService, Umbraco);
+    MemberModel model = memberService.GetMember(member.Id);
 
     var dataTypeService = ApplicationContext.Services.DataTypeService;
 }
@@ -24,7 +24,7 @@
         {
             @Html.AntiForgeryToken()
 
-            @Html.Partial("Account", model)
+            @Html.Partial("MemberForm", model)
 
             @Html.ValidationSummary()
 
