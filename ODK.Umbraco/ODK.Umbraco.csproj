@@ -225,12 +225,12 @@
     <Compile Include="Members\UmbracoHelperExtensions.cs" />
     <Compile Include="MutableLazy.cs" />
     <Compile Include="Mvc\HtmlHelpers.cs" />
+    <Compile Include="Mvc\OdkSurfaceControllerBase.cs" />
     <Compile Include="Mvc\ViewDataContainer.cs" />
     <Compile Include="Web\Mvc\OdkUmbracoTemplatePage.cs" />
     <Compile Include="PropertyNames.cs" />
     <Compile Include="ServiceResult.cs" />
     <Compile Include="Settings\PublishedContentExtensions.cs" />
-    <Compile Include="Settings\HomePageSettings.cs" />
     <Compile Include="Members\PublishedContentExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

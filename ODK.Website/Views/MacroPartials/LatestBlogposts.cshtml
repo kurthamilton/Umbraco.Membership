@@ -1,7 +1,7 @@
 ﻿@using ContentModels = Umbraco.Web.PublishedContentModels;
 @using Umbraco.Web;
 @inherits Umbraco.Web.Macros.PartialViewMacroPage
-@{ 
+@{
     var startNodeId = Model.MacroParameters["startNodeId"] != null ? Model.MacroParameters["startNodeId"] : Model.Content.Id;
     var numberOfPosts = 3;
     if (Model.MacroParameters["numberOfPosts"] != null)

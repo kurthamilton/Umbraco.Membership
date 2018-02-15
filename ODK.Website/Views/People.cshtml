@@ -6,7 +6,7 @@
 
     MemberService memberService = new MemberService(ApplicationContext.Services.MemberService, Umbraco);
 
-    int chapterId = Model.Content.HomePageSettings().Content.Id;
+    int chapterId = Model.Content.HomePage().Id;
     IReadOnlyCollection<MemberModel> members = memberService.GetMembers(chapterId);
 
     string memberUrl = Model.Content.GetPropertyValue<IPublishedContent>("memberProfilePage").Url;

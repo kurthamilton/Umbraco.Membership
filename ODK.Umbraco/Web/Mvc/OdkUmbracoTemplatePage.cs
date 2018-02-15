@@ -1,4 +1,5 @@
 ﻿using ODK.Umbraco.Settings;
+using Umbraco.Core.Models;
 using Umbraco.Web.Mvc;
 
 namespace ODK.Umbraco.Web.Mvc
@@ -7,9 +8,9 @@ namespace ODK.Umbraco.Web.Mvc
     {
         protected OdkUmbracoTemplatePage()
         {
-            HomePageSettings = Model.Content.HomePageSettings();
+            HomePage = Model.Content.HomePage();
         }
 
-        public HomePageSettings HomePageSettings { get; }
+        public IPublishedContent HomePage { get; }
     }
 }

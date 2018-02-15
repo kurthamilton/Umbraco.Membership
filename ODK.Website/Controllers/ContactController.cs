@@ -1,12 +1,12 @@
 ﻿using System.Net.Mail;
 using System.Web.Mvc;
+using ODK.Umbraco.Content;
+using ODK.Umbraco.Mvc;
 using Umbraco.Core.Models;
-using Umbraco.Web;
-using Umbraco.Web.Mvc;
 
 namespace ODK.Website.Controllers
 {
-    public class ContactController : SurfaceController
+    public class ContactController : OdkSurfaceControllerBase
     {
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -14,21 +14,34 @@ namespace ODK.Website.Controllers
         {
             IPublishedContent content = Umbraco.AssignedContentItem;
 
-            string toEmailAddresses = content.GetPropertyValue<string>("toEmailAddresses");
-
-            string body =
-                "A message has been sent through the drunkenknitwits.com website from " + email + "." +
-                "Message:" +
-                "" + message;
-
-            MailMessage mailMessage = new MailMessage("noreply@drunkenknitwits.com", toEmailAddresses, "Website contact message", body);
-
-            using (SmtpClient smtpClient = new SmtpClient())
+            try
             {
-                smtpClient.Send(mailMessage);
-            }
+                string body = content.GetHomePageValue<string>("contactEmailBody")
+                                     .Replace("{email}", email)
+                                     .Replace("{message}", message);
+                string fromAddress = content.GetHomePageValue<string>("contactFromAddress");
+                string toAddresses = content.GetHomePageValue<string>("toEmailAddresses");
 
-            TempData["Feedback"] = "Message sent";
+                MailMessage mailMessage = new MailMessage
+                {
+                    Body = body,
+                    From = new MailAddress(fromAddress),
+                    IsBodyHtml = false
+                };
+
+                mailMessage.To.Add(toAddresses);
+
+                using (SmtpClient smtpClient = new SmtpClient())
+                {
+                    smtpClient.Send(mailMessage);
+                }
+
+                AddFeedback("Message sent", true);
+            }
+            catch
+            {
+                AddFeedback("Something went wrong", false);
+            }
 
             return CurrentUmbracoPage();
         }

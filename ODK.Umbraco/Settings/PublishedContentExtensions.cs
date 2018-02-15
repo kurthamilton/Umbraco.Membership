@@ -5,7 +5,7 @@ namespace ODK.Umbraco.Settings
 {
     public static class PublishedContentExtensions
     {
-        public static HomePageSettings HomePageSettings(this IPublishedContent content)
+        public static IPublishedContent HomePage(this IPublishedContent content)
         {
             foreach (IPublishedContent ancestor in content.AncestorsOrSelf())
             {
@@ -16,7 +16,7 @@ namespace ODK.Umbraco.Settings
                     continue;
                 }
 
-                return new HomePageSettings(name, ancestor);
+                return ancestor;
             }
 
             return null;

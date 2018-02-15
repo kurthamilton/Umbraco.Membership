@@ -11,10 +11,9 @@
         Response.Redirect(Model.Content.Parent.Url);
     }
 
-    HomePageSettings homePageSettings = Model.Content.HomePageSettings();
-    IEnumerable<string> stylesheets = homePageSettings.Content.AncestorsOrSelf().Reverse().GetPropertyValues<string>("stylesheet").SelectMany(x => x.Split(';'));
+    IPublishedContent homePage = Model.Content.HomePage();
 
-    int stylesheetVersion = 1;
+    int stylesheetVersion = 3;
 }
 
 <!doctype html>
@@ -23,7 +22,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>@GetTitle(homePageSettings)</title>
+    <title>@GetTitle(homePage)</title>
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -31,7 +30,7 @@
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/solid.css" rel="stylesheet" />
     <link rel="stylesheet" href="@Url.Content("~/css/style.css")?v=@stylesheetVersion" />
 
-    @foreach (string stylesheet in stylesheets)
+    @foreach (string stylesheet in GetStylesheets(homePage))
     {
         <link rel="stylesheet" href="@Url.Content("~/css/" + stylesheet + ".css")?v=@stylesheetVersion" />
     }
@@ -40,10 +39,11 @@
 
     @RenderSection("Header", required: false)
 </head>
-<body class="page--@Model.Content.ContentType.Alias">
+<body class="page--@Model.Content.Name">
     <header>
-        @Html.Partial("Navigation/TopNavigation")
+        @Html.Partial("TopNavigation")
     </header>
+    @Html.Partial("Feedback")
     <main>
         @RenderBody()
     </main>
@@ -64,10 +64,18 @@
 
 @functions
 {
-    string GetTitle(HomePageSettings homePageSettings)
+    string GetTitle(IPublishedContent homePage)
     {
-        return Model.Content.Id == homePageSettings.Content.Id
-            ? homePageSettings.Name
-            : string.Format("{0} | {1}", Model.Content.Name, homePageSettings.Name);
+        return Model.Content.Id == homePage.Id
+            ? homePage.Name
+            : string.Format("{0} | {1}", Model.Content.Name, homePage.Name);
+    }
+
+    IEnumerable<string> GetStylesheets(IPublishedContent homePage)
+    {
+        return homePage.AncestorsOrSelf()
+                       .Reverse()
+                       .GetPropertyValues<string>("stylesheet")
+                       .SelectMany(x => x.Split(';'));
     }
 }

@@ -1,13 +1,14 @@
 ﻿using System.Web.Mvc;
 using ODK.Umbraco;
+using ODK.Umbraco.Content;
 using ODK.Umbraco.Members;
+using ODK.Umbraco.Mvc;
 using ODK.Umbraco.Settings;
 using Umbraco.Core.Models;
-using Umbraco.Web.Mvc;
 
 namespace ODK.Website.Controllers
 {
-    public class AccountController : SurfaceController
+    public class AccountController : OdkSurfaceControllerBase
     {
         private readonly MemberService _memberService;
 
@@ -53,7 +54,8 @@ namespace ODK.Website.Controllers
                 return OnError(model);
             }
 
-            model.ChapterId = Umbraco.AssignedContentItem.HomePageSettings().Content.Id;
+            IPublishedContent chapter = Umbraco.AssignedContentItem.HomePage();
+            model.SetChapter(chapter);
 
             ServiceResult result = _memberService.Register(model);
             if (!result.Success)
@@ -62,6 +64,8 @@ namespace ODK.Website.Controllers
             }
 
             Umbraco.MembershipHelper.Login(model.Email, model.Password);
+
+            AddFeedback("Welcome!", true);
 
             return RedirectToChapter(model.ChapterId);
         }
@@ -81,6 +85,8 @@ namespace ODK.Website.Controllers
             {
                 return OnError(model);
             }
+
+            AddFeedback("Profile updated", true);
 
             return RedirectToCurrentUmbracoPage();
         }
@@ -109,8 +115,8 @@ namespace ODK.Website.Controllers
 
         private ActionResult RedirectToHome()
         {
-            HomePageSettings homePageSettings = Umbraco.UmbracoContext.PublishedContentRequest.PublishedContent.HomePageSettings();
-            return RedirectToUmbracoPage(homePageSettings.Content.Id);
+            IPublishedContent homePage = Umbraco.UmbracoContext.PublishedContentRequest.PublishedContent.HomePage();
+            return RedirectToUmbracoPage(homePage.Id);
         }
     }
 }

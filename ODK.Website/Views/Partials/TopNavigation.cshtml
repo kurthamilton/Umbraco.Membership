@@ -3,30 +3,27 @@
 @using ODK.Umbraco.Settings;
 @inherits Umbraco.Web.Mvc.UmbracoTemplatePage
 @{
-    HomePageSettings homePageSettings = Model.Content.HomePageSettings();
-
-    IPublishedContent home = homePageSettings.Content;
+    IPublishedContent homePage = Model.Content.HomePage();
     IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
-    IEnumerable<IPublishedContent> selection = home.MenuItems(member);
+    IEnumerable<IPublishedContent> selection = homePage.MenuItems(member);
 
-    
-    IPublishedContent logo = homePageSettings.GetPropertyValue<IPublishedContent>("siteLogo");
-    
-    string loginButtonText = member == null ? homePageSettings.GetPropertyValue<string>("loginButtonText") : null;
-    string registerButtonText = member == null ? homePageSettings.GetPropertyValue<string>("registerButtonText") : null;
-    IPublishedContent registerPage = member == null ? homePageSettings.GetPropertyValue<IPublishedContent>("registerPage") : null;
+    IPublishedContent logo = homePage.GetHomePageValue<IPublishedContent>("siteLogo");
+
+    string loginButtonText = member == null ? homePage.GetHomePageValue<string>("loginButtonText") : null;
+    string registerButtonText = member == null ? homePage.GetHomePageValue<string>("registerButtonText") : null;
+    IPublishedContent registerPage = member == null ? homePage.GetHomePageValue<IPublishedContent>("registerPage") : null;
     string registerUrl = registerPage != null ? registerPage.Url : null;
-    
-    IPublishedContent accountPage = member != null ? homePageSettings.GetPropertyValue<IPublishedContent>("accountPage") : null;
+
+    IPublishedContent accountPage = member != null ? homePage.GetHomePageValue<IPublishedContent>("accountPage") : null;
     string accountUrl = accountPage != null ? accountPage.Url : null;
-    string logoutButtonText = member != null ? homePageSettings.GetPropertyValue<string>("logoutButtonText") : null;
+    string logoutButtonText = member != null ? homePage.GetHomePageValue<string>("logoutButtonText") : null;
     string logoutUrl = "/umbraco/surface/account/logout";
 }
 
 @if (logo != null)
 {
     <div class="bg-dark text-center">
-        <a href="@home.Url"><img class="logo--main" src="@logo.Url" /></a>
+        <a href="@homePage.Url"><img class="logo--main" src="@logo.Url" /></a>
     </div>
 }
 
@@ -34,8 +31,8 @@
     <div class="container">
         @if (logo == null)
         {
-            <a class="navbar-brand" href="@homePageSettings.Content.Url">
-                @homePageSettings.Name
+            <a class="navbar-brand" href="@homePage.Url">
+                @homePage.Name
             </a>
         }
 
@@ -69,33 +66,33 @@
 </nav>
 
 @helper MembershipLinks(IPublishedContent member, string loginButtonText, string registerUrl, string registerButtonText, string logoutUrl, string logoutButtonText, string accountUrl)
-{
-    if (member == null)
     {
-        <button class="btn btn-primary" data-toggle="modal" data-target="#login-modal">@loginButtonText</button>
+        if (member == null)
+        {
+            <button class="btn btn-primary" data-toggle="modal" data-target="#login-modal">@loginButtonText</button>
 
-        if (!string.IsNullOrEmpty(registerUrl))
-        {
-            <a class="btn btn-success" href="@registerUrl">@registerButtonText</a>
+            if (!string.IsNullOrEmpty(registerUrl))
+            {
+                <a class="btn btn-success" href="@registerUrl">@registerButtonText</a>
+            }
         }
-    }
-    else
-    {
-        if (!string.IsNullOrEmpty(accountUrl))
+        else
         {
-            <a class="btn btn-primary" href="@accountUrl">Account</a>
+            if (!string.IsNullOrEmpty(accountUrl))
+            {
+                <a class="btn btn-primary" href="@accountUrl">Account</a>
+            }
+
+            @LogoutLink(member, "btn btn-light d-none d-lg-inline", logoutUrl, logoutButtonText)
         }
-        
-        @LogoutLink(member, "btn btn-light d-none d-lg-inline", logoutUrl, logoutButtonText)
-    }
 }
 
 @helper LogoutLink(IPublishedContent member, string cssClass, string url, string text)
-{
-    if (member == null)
     {
-        return;
-    }
+        if (member == null)
+        {
+            return;
+        }
 
-    <a class="@cssClass" href="@url">@text</a>
+        <a class="@cssClass" href="@url">@text</a>
 }

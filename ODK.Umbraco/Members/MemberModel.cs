@@ -27,7 +27,7 @@ namespace ODK.Umbraco.Members
 
             if (member != null)
             {
-                ChapterId = member.GetPublishedContentPropertyValue(MemberPropertyNames.ChapterId, helper).Id;
+                Chapter = member.GetPublishedContentPropertyValue(MemberPropertyNames.ChapterId, helper);
                 Email = member.Email;
                 Id = member.Id;
                 Joined = member.CreateDate;
@@ -45,7 +45,9 @@ namespace ODK.Umbraco.Members
             _reason = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.Reason));
         }
 
-        public int ChapterId { get; set; }
+        public IPublishedContent Chapter { get; protected set; }
+
+        public int ChapterId => Chapter?.Id ?? 0;
 
         [Required]
         [EmailAddress]

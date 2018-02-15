@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web;
+using Umbraco.Core.Models;
 using Umbraco.Web;
 
 namespace ODK.Umbraco.Members
@@ -8,14 +9,14 @@ namespace ODK.Umbraco.Members
     public class RegisterMemberModel : MemberModel
     {
         public RegisterMemberModel()
-            : this(0, null)
+            : this(null, null)
         {
         }
 
-        public RegisterMemberModel(int chapterId, UmbracoHelper helper)
+        public RegisterMemberModel(IPublishedContent chapter, UmbracoHelper helper)
             : base(null, helper)
         {
-            ChapterId = chapterId;
+            Chapter = chapter;
             Helper = helper;
         }
 
@@ -30,5 +31,15 @@ namespace ODK.Umbraco.Members
         [Required(ErrorMessage = "Photo required")]
         [DisplayName("Please upload your photo")]
         public HttpPostedFileBase UploadedPicture { get; set; }
+
+        public void SetChapter(IPublishedContent chapter)
+        {
+            if (Chapter != null)
+            {
+                return;
+            }
+
+            Chapter = chapter;
+        }
     }
 }

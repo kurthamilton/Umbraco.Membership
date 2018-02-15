@@ -1,4 +1,5 @@
 ﻿@using System.Web.Mvc;
+@using ODK.Umbraco.Content;
 @using ODK.Umbraco.Members;
 @using ODK.Umbraco.Settings;
 @inherits Umbraco.Web.Mvc.UmbracoTemplatePage
@@ -12,14 +13,14 @@
         return;
     }
 
-    HomePageSettings homePageSettings = Model.Content.HomePageSettings();
+    IPublishedContent homePage = Model.Content.HomePage();
 
-    string registerButtonText = homePageSettings.GetPropertyValue<string>("registerButtonText");
+    string registerButtonText = homePage.GetHomePageValue<string>("registerButtonText");
 
     RegisterMemberModel model = TempData["Model"] as RegisterMemberModel;
     if (model == null)
     {
-        model = new RegisterMemberModel(homePageSettings.Content.Id, Umbraco);
+        model = new RegisterMemberModel(homePage, Umbraco);
     }
 }
 

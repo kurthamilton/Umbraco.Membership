@@ -5,20 +5,14 @@
     Layout = "Master.cshtml";
 
     int id = 0;
-    try
-    {
-        id = int.Parse(Request.QueryString["id"]);
-    }
-    catch
-    {
-    }
+    int.TryParse(Request.QueryString["id"], out id);
 
     MemberService memberService = new MemberService(ApplicationContext.Services.MemberService, Umbraco);
     MemberModel member = memberService.GetMember(id);
 
     HtmlHelper<MemberModel> memberHelper = Html.For<MemberModel>(member);
 
-if (member == null)
+    if (member == null)
     {
         Response.Redirect(Model.Content.Parent.Url);
         return;
