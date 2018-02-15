@@ -16,17 +16,19 @@ namespace ODK.Website.Controllers
 
             try
             {
+                string subject = content.GetHomePageValue<string>("contactEmailSubject");
                 string body = content.GetHomePageValue<string>("contactEmailBody")
                                      .Replace("{email}", email)
                                      .Replace("{message}", message);
-                string fromAddress = content.GetHomePageValue<string>("contactFromAddress");
-                string toAddresses = content.GetHomePageValue<string>("toEmailAddresses");
+                string fromAddress = content.GetHomePageValue<string>("contactEmailFromAddress");
+                string toAddresses = content.GetHomePageValue<string>("contactEmailToAddresses");
 
                 MailMessage mailMessage = new MailMessage
                 {
                     Body = body,
                     From = new MailAddress(fromAddress),
-                    IsBodyHtml = false
+                    IsBodyHtml = false,
+                    Subject = subject
                 };
 
                 mailMessage.To.Add(toAddresses);
