@@ -30,8 +30,6 @@ namespace ODK.Website.Controllers
                 }
             }
 
-            ModelState.AddModelError("", "The username or password provided is incorrect.");
-
             SetModel(model);
 
             return CurrentUmbracoPage();
