@@ -1,18 +1,15 @@
 ﻿@using ODK.Umbraco.Events;
-@using ODK.Umbraco.Settings;
-@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
 	Layout = "Master.cshtml";
 
 	EventModel eventModel = new EventModel(Model.Content);
 
-	bool restricted = Umbraco.MembershipHelper.GetCurrentMember() == null && !eventModel.Public;
+	bool restricted = CurrentMember == null && !eventModel.Public;
 	if (restricted)
 	{
 	    Response.Redirect(Model.Content.Parent.Url);
 	}
-
-	IPublishedContent homePage = Model.Content.HomePage();
 
 	string mapApiKey = Model.Content.Site().GetPropertyValue<string>("googleMapsApiKey");
 	string mapUrl = "https://www.google.com/maps/embed/v1/place?key=" + mapApiKey + "&q=" + eventModel.MapQuery;

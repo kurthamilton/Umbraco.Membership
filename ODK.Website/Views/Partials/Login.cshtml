@@ -1,16 +1,13 @@
 ﻿@using ODK.Umbraco.Content;
-@using ODK.Umbraco.Settings;
 @using ODK.Website.Controllers;
-@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
-    IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
-    if (member != null)
+    if (CurrentMember != null)
     {
         return;
     }
 
-    IPublishedContent homePage = Model.Content.HomePage();
-    string loginButtonText = homePage.GetHomePageValue<string>("loginButtonText");
+    string loginButtonText = HomePage.GetHomePageValue<string>("loginButtonText");
 }
 
 @using (Html.BeginUmbracoForm<AccountController>("Login", FormMethod.Post))

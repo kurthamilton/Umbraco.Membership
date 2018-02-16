@@ -10,11 +10,11 @@ namespace ODK.Website.Controllers
 {
     public class AccountController : OdkSurfaceControllerBase
     {
-        private readonly MemberService _memberService;
+        private readonly OdkMemberService _memberService;
 
         public AccountController()
         {
-            _memberService = new MemberService(Services.MemberService, Umbraco);
+            _memberService = new OdkMemberService(Services.MemberService, Umbraco);
         }
 
         [HttpPost]

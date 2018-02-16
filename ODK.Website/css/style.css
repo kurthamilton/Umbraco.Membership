@@ -2,6 +2,10 @@ body {
 	font-family: 'Josefin Sans';
 }
 
+main {
+	padding-bottom: 2rem;
+}
+
 .background-image-full {
     background-repeat: no-repeat;
     background-size: cover;
@@ -24,10 +28,6 @@ body {
 
 .icon--help {
     color: #6d6dcb;
-}
-
-.logo--main {
-	max-width: 100%;
 }
 
 .overlay {
@@ -60,6 +60,46 @@ body {
 .picture--profile {
     max-height: 300px;
     max-width: 100%;
+}
+
+/* NAV */
+.logo--main {
+	max-width: 100%;
+}
+
+.navbar .container {
+	position: relative;
+}
+
+.navbar .navbar-nav {
+	justify-content: center;
+	width: 100%;
+}
+
+.nav-item:first-child {
+	border-left: none;
+}
+
+/* lg */
+@media screen and (min-width: 992px) {
+    .nav-item {
+        border-left: 1px solid rgba(255, 255, 255, .5);
+    }
+	
+	.navbar-expand-lg .navbar-nav .nav-link {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+}
+
+.account-links {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.account-links__user {
+	opacity: 0.5;
 }
 
 /* SECTIONS */
@@ -112,6 +152,29 @@ body {
     margin-bottom: 60px;
 }
 
+/* PEOPLE */
+.member-tile {
+	display: flex;
+	margin: 5px;
+	padding: 5px;
+	position: relative;
+}
+
+.member-tile a:hover {
+	opacity: 0.7;
+	text-decoration: none;
+}
+
+.member-tile__footer {
+	background-color: #fff;
+	border-top: none;
+	bottom: 5px;	
+	left: 5px;
+	opacity: 0.9;
+	padding: 3px;
+	position: absolute;	
+}
+
 /* Bootstrap overrides */
 .btn-primary {
     background-color: #0069d9;
@@ -123,6 +186,19 @@ body {
     border-color: #0056b3;
 }
 
+.col-form-label {
+	font-weight: 700;
+}
+
+.dropdown {
+	cursor: pointer;
+}
+
+.dropdown-menu-right {
+	right: 0;
+	left: auto;
+}
+
 .text-muted {
     color: #bbb !important;
 }
@@ -130,25 +206,13 @@ body {
 /* PAGE SPECIFIC */
 
 /* Home */
-.page--home .navbar .navbar-nav {
-	justify-content: center;
-	width: 100%;
-}
-
 .page--home .nav-item {
 	text-transform: uppercase;
 }
 
-/* lg */
-@media screen and (min-width: 992px) {
-    .page--home .nav-item {
-        border-left: 1px solid rgba(255, 255, 255, .5);
-    }
-
-}
-
-.page--home .nav-item:first-child {
-	border-left: none;
+.page--home .navbar-expand-lg .navbar-nav .nav-link {
+	padding-left: 0.5rem;
+	padding-right: 0.5rem;
 }
 
 /* Events */

@@ -1,13 +1,12 @@
 ﻿@using ODK.Umbraco.Content;
 @using ODK.Umbraco.Members;
-@using ODK.Umbraco.Settings;
-@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
-    IPublishedContent homePage = Model.Content.HomePage();
-    IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
+    IPublishedContent homePage = HomePage;
+    IPublishedContent member = CurrentMember;
     IEnumerable<IPublishedContent> selection = homePage.MenuItems(member);
 
-    IPublishedContent logo = homePage.GetHomePageValue<IPublishedContent>("siteLogo");
+    IPublishedContent logo = HomePage.GetHomePageValue<IPublishedContent>("siteLogo");
 
     string loginButtonText = member == null ? homePage.GetHomePageValue<string>("loginButtonText") : null;
     string registerButtonText = member == null ? homePage.GetHomePageValue<string>("registerButtonText") : null;
@@ -40,10 +39,6 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="d-lg-none">
-            @MembershipLinks(member, loginButtonText, registerUrl, registerButtonText, logoutUrl, logoutButtonText, accountUrl)
-        </div>
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 @foreach (var item in selection.Where(x => x.TemplateId > 0))
@@ -52,47 +47,34 @@
                         <a class="nav-link @(item.IsAncestorOrSelf(Model.Content) ? "active" : null)" href="@item.Url">@item.Name</a>
                     </li>
                 }
-
-                <li class="nav-item d-lg-none">
-                    @LogoutLink(member, "nav-link", logoutUrl, logoutButtonText)
-                </li>
             </ul>
         </div>
 
-        <div class="d-none d-lg-block">
-            @MembershipLinks(member, loginButtonText, registerUrl, registerButtonText, logoutUrl, logoutButtonText, accountUrl)
+        <div class="account-links">
+            @if (member == null)
+            {
+                <button class="btn btn-primary" data-toggle="modal" data-target="#login-modal">@loginButtonText</button>
+
+                if (!string.IsNullOrEmpty(registerUrl))
+                {
+                    <a class="btn btn-success" href="@registerUrl">@registerButtonText</a>
+                }
+            }
+            else
+            {
+                <div class="dropdown">
+                    <span class="text-light account-links__user" data-toggle="dropdown">
+                        <i class="fas fa-user fa-2x"></i>
+                    </span>
+                    <div class="dropdown-menu dropdown-menu-right" role="menu">
+                        @if (!string.IsNullOrEmpty(accountUrl))
+                        {
+                            <a class="dropdown-item" href="@accountUrl">My account</a>
+                        }
+                        <a class="dropdown-item" href="@logoutUrl">@logoutButtonText</a>
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </nav>
-
-@helper MembershipLinks(IPublishedContent member, string loginButtonText, string registerUrl, string registerButtonText, string logoutUrl, string logoutButtonText, string accountUrl)
-    {
-        if (member == null)
-        {
-            <button class="btn btn-primary" data-toggle="modal" data-target="#login-modal">@loginButtonText</button>
-
-            if (!string.IsNullOrEmpty(registerUrl))
-            {
-                <a class="btn btn-success" href="@registerUrl">@registerButtonText</a>
-            }
-        }
-        else
-        {
-            if (!string.IsNullOrEmpty(accountUrl))
-            {
-                <a class="btn btn-primary" href="@accountUrl">Account</a>
-            }
-
-            @LogoutLink(member, "btn btn-light d-none d-lg-inline", logoutUrl, logoutButtonText)
-        }
-}
-
-@helper LogoutLink(IPublishedContent member, string cssClass, string url, string text)
-    {
-        if (member == null)
-        {
-            return;
-        }
-
-        <a class="@cssClass" href="@url">@text</a>
-}

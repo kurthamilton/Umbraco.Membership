@@ -1,10 +1,9 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.Home>
-@using ContentModels = Umbraco.Web.PublishedContentModels;
+﻿@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
     Layout = "Master.cshtml";
 }
 
-@foreach (var section in Model.Content.Children.Where(x => x.TemplateId == 0))
+@foreach (var section in Model.Content.Children().Where(x => x.TemplateId == 0))
 {
     string backgroundImage = section.GetPropertyValue<IPublishedContent>("heroBackgroundImage").Url;
     <section class="section section--hero background-image-full overlay overlay--dark section--content-center"
@@ -21,8 +20,8 @@
         <div class="row">
 
             <div class="text-center">
-                <h2>@Model.Content.FooterHeader</h2>
-                <p class="section__description">@Model.Content.FooterDescription</p>
+                <h2>@Model.Content.GetPropertyValue("FooterHeader")</h2>
+                <p class="section__description">@Model.Content.GetPropertyValue("FooterDescription")</p>
 
                 @*<a class="btn btn-secondary" href="@Model.Content.FooterCtalink.Url">
                     @Model.Content.FooterCtacaption

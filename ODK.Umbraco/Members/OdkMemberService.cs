@@ -7,13 +7,13 @@ using Umbraco.Web;
 
 namespace ODK.Umbraco.Members
 {
-    public class MemberService
+    public class OdkMemberService
     {
         private readonly UmbracoHelper _umbracoHelper;
 
         private readonly IMemberService _umbracoMemberService;
 
-        public MemberService(IMemberService umbracoMemberService, UmbracoHelper umbracoHelper)
+        public OdkMemberService(IMemberService umbracoMemberService, UmbracoHelper umbracoHelper)
         {
             _umbracoHelper = umbracoHelper;
             _umbracoMemberService = umbracoMemberService;

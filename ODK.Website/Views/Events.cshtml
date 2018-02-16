@@ -1,22 +1,21 @@
-﻿@using System.Collections.Generic;
-@using ODK.Umbraco.Events;
-@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+﻿@using ODK.Umbraco.Events;
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
 	Layout = "Master.cshtml";
-	
-	IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
+
+	IPublishedContent member = CurrentMember;
 	EventService eventService = new EventService(Model.Content, member);
-	
+
 	EventSearchCriteria criteria = new EventSearchCriteria
 	{
 	    FutureOnly = true
 	};
-	
+
 	EventModel[] events = eventService.SearchEvents(criteria).ToArray();
 }
 
 @Html.Partial("SectionHeader")
-    
+
 <section class="section section--main">
     <div class="container">
         @if (events.Length == 0)
@@ -30,7 +29,7 @@
                 <p>There are no forthcoming events.</p>
             }
         }
-        
+
         @foreach (EventModel ev in events)
         {
             <div class="events__event mb-2 pt-2">
