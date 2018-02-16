@@ -26,11 +26,15 @@
 
 @helper RenderMember(MemberModel member, string memberUrl)
 {
-    <div class="card member-tile">
+    <div id="member-@member.Id" class="card member-tile">
         <a href="@memberUrl?id=@member.Id">
             @if (member.Picture != null)
             {
                 <img class="card-img-top" src="@member.Picture.GetCropUrl(height: 150)" alt="Photo of @member.FirstName">
+            }
+            else
+            {
+                <i class="card-img-top fas fa-user fa-5x"></i>
             }
             <div class="member-tile__footer">
                 @member.FirstName @member.LastName

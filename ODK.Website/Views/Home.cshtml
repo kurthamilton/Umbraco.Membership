@@ -1,35 +1,32 @@
-﻿@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
+﻿@using ODK.Umbraco.Content;
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
     Layout = "Master.cshtml";
 }
 
-@foreach (var section in Model.Content.Children().Where(x => x.TemplateId == 0))
+@foreach (var section in Model.Content.Children().Where(x => !x.IsPage()))
 {
-    string backgroundImage = section.GetPropertyValue<IPublishedContent>("heroBackgroundImage").Url;
-    <section class="section section--hero background-image-full overlay overlay--dark section--content-center"
-             style="background-image: url('@backgroundImage')">
+    string cssClass = "";
+    string style = "";
+    
+    string overlayType = section.GetPropertyValue<string>("heroOverlayType");
+    if (!string.IsNullOrEmpty(overlayType))
+    {
+        cssClass += " overlay overlay--" + overlayType.ToLower();
+    }
+    
+    IPublishedContent backgroundImage = section.GetPropertyValue<IPublishedContent>("heroBackgroundImage");
+    if (backgroundImage != null)
+    {
+        style += "background-image: url('" + backgroundImage.Url + "')";
+        cssClass += " background-image-full";
+    }
+    
+    string temp = section.Name;
+    
+    <section class="section section--hero section--content-center @cssClass" style="@style" data-name="@temp">
         <div class="section--hero__content">
             @Html.GetGridHtml(section, "heroContent", "bootstrap3-fluid")
         </div>
     </section>
 }
-
-<section class="section">
-
-    <div class="container">
-        <div class="row">
-
-            <div class="text-center">
-                <h2>@Model.Content.GetPropertyValue("FooterHeader")</h2>
-                <p class="section__description">@Model.Content.GetPropertyValue("FooterDescription")</p>
-
-                @*<a class="btn btn-secondary" href="@Model.Content.FooterCtalink.Url">
-                    @Model.Content.FooterCtacaption
-                </a>*@
-
-            </div>
-
-        </div>
-    </div>
-
-</section>

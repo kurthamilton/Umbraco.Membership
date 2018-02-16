@@ -1,6 +1,7 @@
 (function() {
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
+        $('.modal.show').modal('show');
     });
 
     $('[data-other-for]').each(function() {

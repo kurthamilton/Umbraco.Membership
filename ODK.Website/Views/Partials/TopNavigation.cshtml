@@ -4,7 +4,9 @@
 @{
     IPublishedContent homePage = HomePage;
     IPublishedContent member = CurrentMember;
-    IEnumerable<IPublishedContent> selection = homePage.MenuItems(member);
+    MemberModel memberModel = member != null ? MemberService.GetMember(member.Id) : null;
+    
+    IEnumerable<IPublishedContent> menuItems = homePage.MenuItems(member);
 
     IPublishedContent logo = HomePage.GetHomePageValue<IPublishedContent>("siteLogo");
 
@@ -13,7 +15,7 @@
     IPublishedContent registerPage = member == null ? homePage.GetHomePageValue<IPublishedContent>("registerPage") : null;
     string registerUrl = registerPage != null ? registerPage.Url : null;
 
-    IPublishedContent accountPage = member != null ? homePage.GetHomePageValue<IPublishedContent>("accountPage") : null;
+    IPublishedContent accountPage = member != null ? memberModel.Chapter.GetPropertyValue<IPublishedContent>("accountPage") : null;
     string accountUrl = accountPage != null ? accountPage.Url : null;
     string logoutButtonText = member != null ? homePage.GetHomePageValue<string>("logoutButtonText") : null;
     string logoutUrl = "/umbraco/surface/account/logout";
@@ -41,7 +43,7 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                @foreach (var item in selection.Where(x => x.TemplateId > 0))
+                @foreach (var item in menuItems.Where(x => x.TemplateId > 0))
                 {
                     <li class="nav-item">
                         <a class="nav-link @(item.IsAncestorOrSelf(Model.Content) ? "active" : null)" href="@item.Url">@item.Name</a>
@@ -71,6 +73,7 @@
                         {
                             <a class="dropdown-item" href="@accountUrl">My account</a>
                         }
+                        <a class="dropdown-item" href="@memberModel.Chapter.Url">@memberModel.Chapter.Name</a>
                         <a class="dropdown-item" href="@logoutUrl">@logoutButtonText</a>
                     </div>
                 </div>
