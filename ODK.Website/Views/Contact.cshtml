@@ -1,6 +1,5 @@
 ﻿@inherits UmbracoTemplatePage<Contact>
 @using ContentModels = Umbraco.Web.PublishedContentModels;
-@using Terratype;
 @{
     Layout = "Master.cshtml";
 }
@@ -9,25 +8,31 @@
 
 <section class="section">
     <div class="container">
-
         <div class="row">
-
-            <div class="col-md-6">
-                <h2>@Model.Content.MapHeader</h2>
-                @Html.Terratype(Model.Content.Map)
-            </div>
-
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <h2>@Model.Content.ContactFormHeader</h2>
                 @Model.Content.ContactIntro
-                <p class="compat-msg">
-        <em>Umbraco Forms</em> is required to render this form.It's a breeze to install, all you have to do is
-        go to the<em> Umbraco Forms</em> section in the back office and click Install, that's it! :) 
-        <br /><br />
-        <a href="/umbraco/#/forms" class="button button--border--solid">Go to Back Office and install Forms</a>
-        <!-- When Umbraco Forms is installed, uncomment this line -->
-        @* @Umbraco.RenderMacro("renderUmbracoForm", new {FormGuid=Model.Content.ContactForm.ToString()}) *@
-        </p>
+                
+                @using (Html.BeginUmbracoForm("Index", "Contact", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+        
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="text" id="email" name="email" class="form-control" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea type="text" id="message" name="message" rows="5" class="form-control"></textarea>
+                    </div>
+        
+                    @Html.ValidationSummary()
+        
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </div>
+                }
             </div>
         </div>
     </div>

@@ -1,8 +1,10 @@
-﻿@using ODK.Umbraco.Settings;
-@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    string title = Model.Content.GetPropertyValue<string>("PageTitle") ?? Model.Content.Name;
+}
 
 <section class="section section--header">
     <div class="container">
-        <h1>@Model.Content.GetPropertyValue("PageTitle")</h1>
+        <h1>@title</h1>
     </div>
 </section>

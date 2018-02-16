@@ -1,18 +1,16 @@
 ﻿@using ODK.Umbraco.Content;
-@using ODK.Umbraco.Membership;
-@using ODK.Umbraco.Settings;
-@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@using ODK.Umbraco.Members;
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
     Layout = null;
 
-    IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
-    if (Model.Content.IsRestricted(member))
+    if (IsRestricted)
     {
-        Response.Redirect(Model.Content.Parent.Url);
+        return;
     }
 
-    HomePageSettings homePageSettings = Model.Content.HomePageSettings();
-    IEnumerable<string> stylesheets = homePageSettings.Content.AncestorsOrSelf().Reverse().GetPropertyValues<string>("stylesheet");
+    string favicon = HomePage.GetHomePageValue<IPublishedContent>("favicon").Url;
+    int stylesheetVersion = 4;
 }
 
 <!doctype html>
@@ -21,23 +19,29 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>@GetTitle(homePageSettings)</title>
+    <title>@GetTitle(HomePage)</title>
     <meta name="description" content="">
     <meta name="author" content="">
+    <link rel="icon" type="image/png" href="@favicon?v=4" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="@Url.Content("~/css/style.css")" />
-    
-    @foreach (string stylesheet in stylesheets)
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/fontawesome.css" rel="stylesheet" />
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/solid.css" rel="stylesheet" />
+    <link rel="stylesheet" href="@Url.Content("~/css/style.css")?v=@stylesheetVersion" />
+
+    @foreach (string stylesheet in GetStylesheets(HomePage))
     {
-        <link rel="stylesheet" href="@Url.Content("~/css/" + stylesheet + ".css")" />
+        <link rel="stylesheet" href="@Url.Content("~/css/" + stylesheet + ".css")?v=@stylesheetVersion" />
     }
-    
+
+    <link href="https://fonts.googleapis.com/css?family=Josefin%20Sans:Light" rel="stylesheet" />
+
     @RenderSection("Header", required: false)
 </head>
-<body>
+<body class="page--@Model.Content.Name.ToLower()">
     <header>
-        @Html.Partial("Navigation/TopNavigation")
+        @Html.Partial("TopNavigation")
     </header>
+    @Html.Partial("Feedback")
     <main>
         @RenderBody()
     </main>
@@ -45,18 +49,31 @@
         @Html.Partial("Footer")
     </footer>
 
+    @Html.Partial("Login")
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="@Url.Content("~/scripts/script.js")"></script>
+
+    @RenderSection("Scripts", required: false)
 </body>
 </html>
 
 @functions
 {
-    string GetTitle(HomePageSettings homePageSettings)
+    string GetTitle(IPublishedContent homePage)
     {
-        return Model.Content.Id == homePageSettings.Content.Id
-            ? homePageSettings.Name
-            : string.Format("{0} | {1}", Model.Content.Name, homePageSettings.Name);
+        return Model.Content.Id == homePage.Id
+            ? homePage.GetPropertyValue<string>("siteName")
+            : string.Format("{0} | {1}", Model.Content.Name, homePage.GetPropertyValue<string>("siteName"));
+    }
+
+    IEnumerable<string> GetStylesheets(IPublishedContent homePage)
+    {
+        return homePage.AncestorsOrSelf()
+                       .Reverse()
+                       .GetPropertyValues<string>("stylesheet")
+                       .SelectMany(x => x.Split(';'));
     }
 }

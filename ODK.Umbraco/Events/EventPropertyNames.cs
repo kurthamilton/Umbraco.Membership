@@ -4,6 +4,7 @@
     {
         public const string Date = "eventDate";
         public const string Description = "eventDescription";
+        public const string Location = "eventLocation";
         public const string MapQuery = "eventMapQuery";
         public const string Public = "eventPublic";
     }

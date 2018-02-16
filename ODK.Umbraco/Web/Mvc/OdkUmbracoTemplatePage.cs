@@ -1,15 +1,44 @@
-﻿using ODK.Umbraco.Settings;
+﻿using ODK.Umbraco.Members;
+using ODK.Umbraco.Settings;
+using Umbraco.Core.Models;
+using Umbraco.Core.Services;
 using Umbraco.Web.Mvc;
 
 namespace ODK.Umbraco.Web.Mvc
 {
     public abstract class OdkUmbracoTemplatePage : UmbracoTemplatePage
     {
+        private RequestCacheItem<IPublishedContent> _currentMember;
+        private RequestCacheItem<IPublishedContent> _homePage;
+        private RequestCacheItem<OdkMemberService> _memberService;
+
         protected OdkUmbracoTemplatePage()
         {
-            HomePageSettings = Model.Content.HomePageSettings();
+            _currentMember = new RequestCacheItem<IPublishedContent>(nameof(_currentMember), () => Umbraco.MembershipHelper.GetCurrentMember());
+            _homePage = new RequestCacheItem<IPublishedContent>(nameof(_homePage), () => Model.Content.HomePage());
+            _memberService = new RequestCacheItem<OdkMemberService>(nameof(_memberService), () => new OdkMemberService(ApplicationContext.Services.MemberService, Umbraco));
         }
 
-        public HomePageSettings HomePageSettings { get; }
+        public bool IsRestricted { get; set; }
+
+        protected override void InitializePage()
+        {
+            if (Model.Content.IsRestricted(CurrentMember))
+            {
+                IsRestricted = true;
+                Response.Redirect(Model.Content.Parent.Url);
+                return;
+            }
+
+            base.InitializePage();
+        }
+
+        public IPublishedContent CurrentMember => _currentMember.Value;
+
+        public IDataTypeService DataTypeService => ApplicationContext.Services.DataTypeService;
+
+        public IPublishedContent HomePage => _homePage.Value;
+
+        public OdkMemberService MemberService => _memberService.Value;
     }
 }

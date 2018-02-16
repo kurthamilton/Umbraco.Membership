@@ -1,39 +1,46 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+﻿@using ODK.Umbraco.Events;
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
 	Layout = "Master.cshtml";
+
+	IPublishedContent member = CurrentMember;
+	EventService eventService = new EventService(Model.Content, member);
+
+	EventSearchCriteria criteria = new EventSearchCriteria
+	{
+	    FutureOnly = true
+	};
+
+	EventModel[] events = eventService.SearchEvents(criteria).ToArray();
 }
 
 @Html.Partial("SectionHeader")
 
-<div class="container">
-    <div>
-        TODO - EVENTS CALENDAR
+<section class="section section--main">
+    <div class="container">
+        @if (events.Length == 0)
+        {
+            if (member == null)
+            {
+                <p>There are no forthcoming public events. Sign in to see private events.</p>
+            }
+            else
+            {
+                <p>There are no forthcoming events.</p>
+            }
+        }
+
+        @foreach (EventModel ev in events)
+        {
+            <div class="events__event mb-2 pt-2">
+                <h2><a href="@ev.Url">@ev.Name</a></h2>
+                <h3>@ev.Date.ToString("dddd, dd MMMM yyyy")</h3>
+                <div>Location: @ev.Location</div>
+                @if (!string.IsNullOrEmpty(ev.Description))
+                {
+                    <div>@Html.Raw(ev.Description)</div>
+                }
+            </div>
+        }
     </div>
-    
-    <div class="row">
-        <section class="section">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Location</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (IPublishedContent ev in Model.Content.Children)
-                    {
-                        string eventDate = ev.GetPropertyValue<DateTime>("eventDate").ToString("dd MMMM yyyy");
-                        <tr>
-                            <td>
-                                @eventDate
-                            </td>
-                            <td>
-                                <a href="@ev.Url">@ev.GetPropertyValue("eventLocation")</a>
-                            </td>
-                        </tr>   
-                    }
-                </tbody>
-            </table>
-        </section>
-    </div>
-</div>
+</section>

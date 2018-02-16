@@ -1,0 +1,80 @@
+﻿@using ODK.Umbraco.Content;
+@using ODK.Umbraco.Members;
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
+@{
+    IPublishedContent homePage = HomePage;
+    IPublishedContent member = CurrentMember;
+    IEnumerable<IPublishedContent> selection = homePage.MenuItems(member);
+
+    IPublishedContent logo = HomePage.GetHomePageValue<IPublishedContent>("siteLogo");
+
+    string loginButtonText = member == null ? homePage.GetHomePageValue<string>("loginButtonText") : null;
+    string registerButtonText = member == null ? homePage.GetHomePageValue<string>("registerButtonText") : null;
+    IPublishedContent registerPage = member == null ? homePage.GetHomePageValue<IPublishedContent>("registerPage") : null;
+    string registerUrl = registerPage != null ? registerPage.Url : null;
+
+    IPublishedContent accountPage = member != null ? homePage.GetHomePageValue<IPublishedContent>("accountPage") : null;
+    string accountUrl = accountPage != null ? accountPage.Url : null;
+    string logoutButtonText = member != null ? homePage.GetHomePageValue<string>("logoutButtonText") : null;
+    string logoutUrl = "/umbraco/surface/account/logout";
+}
+
+@if (logo != null)
+{
+    <div class="bg-dark text-center">
+        <a href="@homePage.Url"><img class="logo--main" src="@logo.Url" /></a>
+    </div>
+}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        @if (logo == null)
+        {
+            <a class="navbar-brand" href="@homePage.Url">
+                @homePage.Name
+            </a>
+        }
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                @foreach (var item in selection.Where(x => x.TemplateId > 0))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(item.IsAncestorOrSelf(Model.Content) ? "active" : null)" href="@item.Url">@item.Name</a>
+                    </li>
+                }
+            </ul>
+        </div>
+
+        <div class="account-links">
+            @if (member == null)
+            {
+                <button class="btn btn-primary" data-toggle="modal" data-target="#login-modal">@loginButtonText</button>
+
+                if (!string.IsNullOrEmpty(registerUrl))
+                {
+                    <a class="btn btn-success" href="@registerUrl">@registerButtonText</a>
+                }
+            }
+            else
+            {
+                <div class="dropdown">
+                    <span class="text-light account-links__user" data-toggle="dropdown">
+                        <i class="fas fa-user fa-2x"></i>
+                    </span>
+                    <div class="dropdown-menu dropdown-menu-right" role="menu">
+                        @if (!string.IsNullOrEmpty(accountUrl))
+                        {
+                            <a class="dropdown-item" href="@accountUrl">My account</a>
+                        }
+                        <a class="dropdown-item" href="@logoutUrl">@logoutButtonText</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</nav>

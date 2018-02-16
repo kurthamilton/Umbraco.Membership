@@ -1,0 +1,26 @@
+﻿@using ODK.Umbraco.Members;
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
+@{
+	Layout = "Master.cshtml";
+
+    MemberModel model = MemberService.GetMember(CurrentMember.Id);
+}
+
+@Html.Partial("SectionHeader")
+
+<section class="section">
+    <div class="container">
+        @using (Html.BeginUmbracoForm("Update", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.Partial("MemberForm", model)
+
+            @Html.ValidationSummary()
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        }
+    </div>
+</section>

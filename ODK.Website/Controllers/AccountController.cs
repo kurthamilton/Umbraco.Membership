@@ -1,37 +1,36 @@
 ﻿using System.Web.Mvc;
 using ODK.Umbraco;
-using ODK.Umbraco.Membership;
+using ODK.Umbraco.Members;
+using ODK.Umbraco.Mvc;
 using ODK.Umbraco.Settings;
 using Umbraco.Core.Models;
-using Umbraco.Web.Mvc;
-using ODK.Website.ViewModels.Account;
 
 namespace ODK.Website.Controllers
 {
-    public class AccountController : SurfaceController
+    public class AccountController : OdkSurfaceControllerBase
     {
-        private readonly MembershipService _membershipService;
+        private readonly OdkMemberService _memberService;
 
         public AccountController()
         {
-            _membershipService = new MembershipService(Umbraco.MembershipHelper);
+            _memberService = new OdkMemberService(Services.MemberService, Umbraco);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginViewModel viewModel)
+        public ActionResult Login(LoginModel model)
         {
             HandleLoggedOnUser();
 
             if (ModelState.IsValid)
             {
-                if (Umbraco.MembershipHelper.Login(viewModel.Email, viewModel.Password))
+                if (Umbraco.MembershipHelper.Login(model.Email, model.Password))
                 {
                     return RedirectToCurrentUmbracoPage();
                 }
             }
 
-            ModelState.AddModelError("", "The username or password provided is incorrect.");
+            SetModel(model);
 
             return CurrentUmbracoPage();
         }
@@ -45,43 +44,64 @@ namespace ODK.Website.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(RegisterMember member)
+        public ActionResult Register(RegisterMemberModel model)
         {
             HandleLoggedOnUser();
 
             if (!ModelState.IsValid)
             {
-                return CurrentUmbracoPage();
+                return OnError(model);
             }
 
-            member.ChapterId = Umbraco.AssignedContentItem.HomePageSettings().Content.Id;
+            IPublishedContent chapter = Umbraco.AssignedContentItem.HomePage();
+            model.SetChapter(chapter);
 
-            ServiceResult result = _membershipService.Register(member);
-
+            ServiceResult result = _memberService.Register(model);
             if (!result.Success)
             {
-                return CurrentUmbracoPage();
+                return OnError(model);
             }
 
-            return RedirectToRoute(new { Controller = "Account", Action = nameof(SetChapter), id = member.ChapterId });
+            Umbraco.MembershipHelper.Login(model.Email, model.Password);
+
+            AddFeedback("Welcome!", true);
+
+            return RedirectToChapter(model.ChapterId);
         }
 
-        [HttpGet]
-        public ActionResult SetChapter(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(MemberModel model)
         {
-            IPublishedContent chapterContent = Umbraco.ContentQuery.TypedContent(id);
+            IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
+            if (member == null)
+            {
+                return RedirectToHome();
+            }
 
-            _membershipService.UpdateChapter(chapterContent);
+            ServiceResult result = _memberService.Update(member.Id, model);
+            if (!result.Success)
+            {
+                return OnError(model);
+            }
 
-            return RedirectToChapter(id);
+            AddFeedback("Profile updated", true);
+
+            return RedirectToCurrentUmbracoPage();
+        }
+
+        private ActionResult OnError(object model)
+        {
+            SetModel(model);
+            return CurrentUmbracoPage();
         }
 
         private void HandleLoggedOnUser()
         {
             if (Umbraco.MemberIsLoggedOn())
             {
-                int? chapterId = _membershipService.GetChapterId(Umbraco.MembershipHelper.CurrentUserName);
-                RedirectToChapter(chapterId);
+                MemberModel member = _memberService.GetMember(Umbraco.MembershipHelper.CurrentUserName);
+                RedirectToChapter(member?.ChapterId);
             }
         }
 
@@ -94,8 +114,8 @@ namespace ODK.Website.Controllers
 
         private ActionResult RedirectToHome()
         {
-            HomePageSettings homePageSettings = Umbraco.UmbracoContext.PublishedContentRequest.PublishedContent.HomePageSettings();
-            return RedirectToUmbracoPage(homePageSettings.Content.Id);
+            IPublishedContent homePage = Umbraco.UmbracoContext.PublishedContentRequest.PublishedContent.HomePage();
+            return RedirectToUmbracoPage(homePage.Id);
         }
     }
 }

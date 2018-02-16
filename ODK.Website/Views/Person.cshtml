@@ -1,4 +1,74 @@
-﻿@{
-	Layout = "Master.cshtml";
+﻿@using ODK.Umbraco.Members;
+@using ODK.Umbraco.Mvc;
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
+@{
+    Layout = "Master.cshtml";
+
+    int id = 0;
+    int.TryParse(Request.QueryString["id"], out id);
+
+    MemberModel member = MemberService.GetMember(id);
+
+    if (member == null)
+    {
+        Response.Redirect(Model.Content.Parent.Url);
+        return;
+    }
+
+    HtmlHelper<MemberModel> memberHelper = Html.For<MemberModel>(member);
 }
-<p>Nothing to see, but we could make a lesson to display a person</p>
+
+<section class="section section--header">
+    <div class="container">
+        <h1>
+            @member.FirstName  @member.LastName
+        </h1>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="row">
+            @if (member.Picture != null)
+            {
+                <div class="col-md-3">
+                    <img src="@member.Picture.GetCropUrl(height: 300)" class="picture--profile" />
+                </div>
+            }
+
+            <div class="col-md-9">
+                @RenderField(memberHelper.DisplayNameFor(x => x.Neighbourhood), member.Neighbourhood)
+                @RenderField(memberHelper.DisplayNameFor(x => x.Hometown), member.Hometown)
+                @RenderField(memberHelper.DisplayNameFor(x => x.FavouriteBeverage), member.FavouriteBeverage)
+                @RenderField(memberHelper.DisplayNameFor(x => x.KnittingExperienceId), member.KnittingExperienceOther ?? DataTypeService.GetPreValueAsString(member.KnittingExperienceId))
+                @RenderField(memberHelper.DisplayNameFor(x => x.Reason), member.Reason)
+                @RenderField(memberHelper.DisplayNameFor(x => x.FacebookProfile), member.FacebookProfile)
+
+                @if (member.Joined != null)
+                {
+                     @RenderField(memberHelper.DisplayNameFor(x => x.Joined), member.Joined.Value.ToString("dd MMMM yyyy"))
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-9 offset-md-3">
+                <a href="@Model.Content.Parent.Url">Other Knitwits</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+@helper RenderField(MvcHtmlString field, string value)
+{
+    if (string.IsNullOrEmpty(value))
+    {
+        return;
+    }
+
+    <div class="form-group">
+        <label class="col-form-label">@field</label>
+        <div>
+            <span class="form-control-plaintext">@value</span>
+        </div>
+    </div>
+}
