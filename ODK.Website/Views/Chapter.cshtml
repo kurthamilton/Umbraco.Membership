@@ -1,13 +1,13 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+﻿@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
 	Layout = "Master.cshtml";
-	
+
 	string redirectUrl = Model.Content.GetPropertyValue<string>("redirectUrl");
 	if (!string.IsNullOrWhiteSpace(redirectUrl) && Model.Content.GetPropertyValue<bool>("redirectEnabled"))
 	{
 	    Response.Redirect(redirectUrl);
 	}
-	
+
 	string instagramApiKey = Model.Content.GetPropertyValue<string>("instagramApiKey");
 }
 
@@ -17,7 +17,7 @@
 {
     <div id="pixlee_container">
     </div>
-    
+
     <script type="text/javascript">window.PixleeAsyncInit = function() {Pixlee.init({apiKey:'@instagramApiKey'});Pixlee.addSimpleWidget({widgetId:'1808'});};</script><script src="//instafeed.assets.pixlee.com/assets/pixlee_widget_1_0_0.js"></script>
 }
 

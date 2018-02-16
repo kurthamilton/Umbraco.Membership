@@ -1,19 +1,9 @@
 ﻿@using ODK.Umbraco.Members;
-@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
 	Layout = "Master.cshtml";
-	
-	IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
-	if (member == null)
-    {
-        Response.Redirect(Model.Content.Parent.Url);
-        return;
-    }
-    
-	MemberService memberService = new MemberService(ApplicationContext.Services.MemberService, Umbraco);
-    MemberModel model = memberService.GetMember(member.Id);
 
-    var dataTypeService = ApplicationContext.Services.DataTypeService;
+    MemberModel model = MemberService.GetMember(CurrentMember.Id);
 }
 
 @Html.Partial("SectionHeader")

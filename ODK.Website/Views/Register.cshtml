@@ -1,26 +1,22 @@
 ﻿@using System.Web.Mvc;
 @using ODK.Umbraco.Content;
 @using ODK.Umbraco.Members;
-@using ODK.Umbraco.Settings;
-@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
     Layout = "Master.cshtml";
 
-    IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
-    if (member != null)
+    if (CurrentMember != null)
     {
         Response.Redirect(Model.Content.Parent.Url);
         return;
     }
 
-    IPublishedContent homePage = Model.Content.HomePage();
-
-    string registerButtonText = homePage.GetHomePageValue<string>("registerButtonText");
+    string registerButtonText = HomePage.GetHomePageValue<string>("registerButtonText");
 
     RegisterMemberModel model = TempData["Model"] as RegisterMemberModel;
     if (model == null)
     {
-        model = new RegisterMemberModel(homePage, Umbraco);
+        model = new RegisterMemberModel(HomePage, Umbraco);
     }
 }
 

@@ -1,19 +1,16 @@
 ﻿@using ODK.Umbraco.Content;
 @using ODK.Umbraco.Members;
-@using ODK.Umbraco.Settings;
-@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
     Layout = null;
 
-    IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
-    if (Model.Content.IsRestricted(member))
+    if (IsRestricted)
     {
-        Response.Redirect(Model.Content.Parent.Url);
+        return;
     }
 
-    IPublishedContent homePage = Model.Content.HomePage();
-
-    int stylesheetVersion = 3;
+    string favicon = HomePage.GetHomePageValue<IPublishedContent>("favicon").Url;
+    int stylesheetVersion = 4;
 }
 
 <!doctype html>
@@ -22,15 +19,16 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>@GetTitle(homePage)</title>
+    <title>@GetTitle(HomePage)</title>
     <meta name="description" content="">
     <meta name="author" content="">
+    <link rel="icon" type="image/png" href="@favicon?v=4" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/fontawesome.css" rel="stylesheet" />
     <link href="https://use.fontawesome.com/releases/v5.0.6/css/solid.css" rel="stylesheet" />
     <link rel="stylesheet" href="@Url.Content("~/css/style.css")?v=@stylesheetVersion" />
 
-    @foreach (string stylesheet in GetStylesheets(homePage))
+    @foreach (string stylesheet in GetStylesheets(HomePage))
     {
         <link rel="stylesheet" href="@Url.Content("~/css/" + stylesheet + ".css")?v=@stylesheetVersion" />
     }
@@ -39,7 +37,7 @@
 
     @RenderSection("Header", required: false)
 </head>
-<body class="page--@Model.Content.Name">
+<body class="page--@Model.Content.Name.ToLower()">
     <header>
         @Html.Partial("TopNavigation")
     </header>
@@ -67,8 +65,8 @@
     string GetTitle(IPublishedContent homePage)
     {
         return Model.Content.Id == homePage.Id
-            ? homePage.Name
-            : string.Format("{0} | {1}", Model.Content.Name, homePage.Name);
+            ? homePage.GetPropertyValue<string>("siteName")
+            : string.Format("{0} | {1}", Model.Content.Name, homePage.GetPropertyValue<string>("siteName"));
     }
 
     IEnumerable<string> GetStylesheets(IPublishedContent homePage)

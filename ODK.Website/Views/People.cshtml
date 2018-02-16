@@ -1,13 +1,12 @@
 ﻿@using ODK.Umbraco.Members;
-@using ODK.Umbraco.Settings;
-@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
     Layout = "Master.cshtml";
 
-    MemberService memberService = new MemberService(ApplicationContext.Services.MemberService, Umbraco);
-
-    int chapterId = Model.Content.HomePage().Id;
-    IReadOnlyCollection<MemberModel> members = memberService.GetMembers(chapterId);
+    int chapterId = HomePage.Id;
+    IReadOnlyCollection<MemberModel> members = MemberService.GetMembers(chapterId)
+                                                            .OrderBy(x => x.FirstName)
+                                                            .ThenBy(x => x.LastName).ToArray();
 
     string memberUrl = Model.Content.GetPropertyValue<IPublishedContent>("memberProfilePage").Url;
 }
@@ -16,11 +15,26 @@
 
 <section class="section">
     <div class="container">
-        @foreach (MemberModel member in members)
-        {
-            <div>
-                <a href="@memberUrl?id=@member.Id">@member.FirstName</a>
-            </div>
-        }
+        <div class="row">
+            @foreach (MemberModel member in members)
+            {
+                @RenderMember(member, memberUrl)
+            }
+        </div>
     </div>
 </section>
+
+@helper RenderMember(MemberModel member, string memberUrl)
+{
+    <div class="card member-tile">
+        <a href="@memberUrl?id=@member.Id">
+            @if (member.Picture != null)
+            {
+                <img class="card-img-top" src="@member.Picture.GetCropUrl(height: 150)" alt="Photo of @member.FirstName">
+            }
+            <div class="member-tile__footer">
+                @member.FirstName @member.LastName
+            </div>
+        </a>
+    </div>
+}
