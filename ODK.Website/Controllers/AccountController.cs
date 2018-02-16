@@ -1,6 +1,5 @@
 ﻿using System.Web.Mvc;
 using ODK.Umbraco;
-using ODK.Umbraco.Content;
 using ODK.Umbraco.Members;
 using ODK.Umbraco.Mvc;
 using ODK.Umbraco.Settings;
@@ -32,6 +31,8 @@ namespace ODK.Website.Controllers
             }
 
             ModelState.AddModelError("", "The username or password provided is incorrect.");
+
+            SetLoginFailure();
 
             return CurrentUmbracoPage();
         }
