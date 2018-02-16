@@ -32,7 +32,7 @@ namespace ODK.Website.Controllers
 
             ModelState.AddModelError("", "The username or password provided is incorrect.");
 
-            SetLoginFailure();
+            SetModel(model);
 
             return CurrentUmbracoPage();
         }
@@ -94,7 +94,7 @@ namespace ODK.Website.Controllers
 
         private ActionResult OnError(object model)
         {
-            TempData["Model"] = model;
+            SetModel(model);
             return CurrentUmbracoPage();
         }
 

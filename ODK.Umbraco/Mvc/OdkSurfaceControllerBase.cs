@@ -26,9 +26,9 @@ namespace ODK.Umbraco.Mvc
             base.OnResultExecuting(filterContext);
         }
 
-        protected void SetLoginFailure()
+        protected void SetModel(object model)
         {
-            TempData["Login.Failed"] = true;
+            TempData["Model"] = model;
         }
     }
 }
