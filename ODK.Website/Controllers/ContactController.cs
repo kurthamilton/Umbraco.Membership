@@ -1,7 +1,7 @@
 ﻿using System.Net.Mail;
 using System.Web.Mvc;
 using ODK.Umbraco.Content;
-using ODK.Umbraco.Mvc;
+using ODK.Umbraco.Web.Mvc;
 using Umbraco.Core.Models;
 
 namespace ODK.Website.Controllers

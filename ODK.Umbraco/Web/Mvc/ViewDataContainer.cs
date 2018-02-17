@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace ODK.Umbraco.Mvc
+namespace ODK.Umbraco.Web.Mvc
 {
     public class ViewDataContainer : IViewDataContainer
     {

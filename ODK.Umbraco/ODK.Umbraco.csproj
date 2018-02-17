@@ -224,9 +224,9 @@
     <Compile Include="Members\OdkMemberService.cs" />
     <Compile Include="Members\UmbracoHelperExtensions.cs" />
     <Compile Include="MutableLazy.cs" />
-    <Compile Include="Mvc\HtmlHelpers.cs" />
-    <Compile Include="Mvc\OdkSurfaceControllerBase.cs" />
-    <Compile Include="Mvc\ViewDataContainer.cs" />
+    <Compile Include="Web\Mvc\HtmlHelpers.cs" />
+    <Compile Include="Web\Mvc\OdkSurfaceControllerBase.cs" />
+    <Compile Include="Web\Mvc\ViewDataContainer.cs" />
     <Compile Include="Web\Mvc\RequestCacheItem.cs" />
     <Compile Include="Web\Mvc\OdkUmbracoTemplatePage.cs" />
     <Compile Include="PropertyNames.cs" />

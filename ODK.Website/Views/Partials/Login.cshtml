@@ -1,6 +1,6 @@
 ﻿@using ODK.Umbraco.Content;
 @using ODK.Umbraco.Members;
-@using ODK.Umbraco.Mvc;
+@using ODK.Umbraco.Web.Mvc;
 @using ODK.Website.Controllers;
 @inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
@@ -10,17 +10,17 @@
     }
 
     string loginButtonText = HomePage.GetHomePageValue<string>("loginButtonText");
-    
+
     LoginModel model = TempData["Model"] as LoginModel;
     bool isError = model != null;
-    
+
     HtmlHelper<LoginModel> loginHelper = Html.For<LoginModel>(model != null ? model : new LoginModel());
 }
 
 @using (Html.BeginUmbracoForm<AccountController>("Login", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="modal @(isError ? "show" : null)" tabindex="-1" role="dialog" id="login-modal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using Umbraco.Web.Mvc;
 
-namespace ODK.Umbraco.Mvc
+namespace ODK.Umbraco.Web.Mvc
 {
     public abstract class OdkSurfaceControllerBase : SurfaceController
     {

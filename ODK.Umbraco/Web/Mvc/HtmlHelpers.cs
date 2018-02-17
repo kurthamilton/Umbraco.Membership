@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace ODK.Umbraco.Mvc
+namespace ODK.Umbraco.Web.Mvc
 {
     // https://daveaglick.com/posts/getting-an-htmlhelper-for-an-alternate-model-type
     public static class HtmlHelpers

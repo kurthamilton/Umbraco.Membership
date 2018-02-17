@@ -1,8 +1,8 @@
 ﻿using System.Web.Mvc;
 using ODK.Umbraco;
 using ODK.Umbraco.Members;
-using ODK.Umbraco.Mvc;
 using ODK.Umbraco.Settings;
+using ODK.Umbraco.Web.Mvc;
 using Umbraco.Core.Models;
 
 namespace ODK.Website.Controllers
