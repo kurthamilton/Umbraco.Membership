@@ -209,6 +209,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Content\PropertyExtensions.cs" />
     <Compile Include="Content\PublishedContentExtensions.cs" />
     <Compile Include="Content\UmbracoHelperExtensions.cs" />
     <Compile Include="Events\EventModel.cs" />
@@ -226,6 +227,7 @@
     <Compile Include="MutableLazy.cs" />
     <Compile Include="Web\Mvc\HtmlHelpers.cs" />
     <Compile Include="Web\Mvc\OdkSurfaceControllerBase.cs" />
+    <Compile Include="Web\Mvc\OdkUmbracoTemplateModel.cs" />
     <Compile Include="Web\Mvc\ViewDataContainer.cs" />
     <Compile Include="Web\Mvc\RequestCacheItem.cs" />
     <Compile Include="Web\Mvc\OdkUmbracoTemplatePage.cs" />

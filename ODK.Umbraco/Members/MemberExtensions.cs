@@ -1,4 +1,5 @@
-﻿using Umbraco.Core;
+﻿using ODK.Umbraco.Content;
+using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 
@@ -44,19 +45,7 @@ namespace ODK.Umbraco.Members
         private static Udi GetUdiPropertyValue(this IMember member, string name)
         {
             Property property = member.GetPropertyValue(name) as Property;
-            if (property == null)
-            {
-                return null;
-            }
-
-            string id = property.Value?.ToString();
-            if (id == null)
-            {
-                return null;
-            }
-
-            Udi udi = Udi.Parse(id);
-            return udi;
+            return property.GetUdiPropertyValue(name);
         }
     }
 }

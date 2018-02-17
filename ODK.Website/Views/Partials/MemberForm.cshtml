@@ -1,17 +1,17 @@
 ﻿@using ODK.Umbraco.Members;
 @using ODK.Umbraco.Web.Mvc;
-@model MemberModel
+@model OdkUmbracoTemplateModel<MemberModel>
 @{
     IDictionary<int, string> knittingExperienceOptions = Model.Helper.GetKnittingExperienceOptions();
 
-    RegisterMemberModel registerMember = Model as RegisterMemberModel;
+    RegisterMemberModel registerMember = Model.Value as RegisterMemberModel;
 
     HtmlHelper<RegisterMemberModel> registerHelper = registerMember != null ? Html.For<RegisterMemberModel>(registerMember) : null;
 }
 
 <div class="form-group required">
-    @Html.LabelFor(x => x.Email, new { @class = "form-control-label" })
-    @Html.TextBoxFor(x => x.Email, new { type = "email", @class = "form-control", required = "" })
+    @Html.LabelFor(x => x.Value.Email, new { @class = "form-control-label" })
+    @Html.TextBoxFor(x => x.Value.Email, new { type = "email", @class = "form-control", required = "" })
 </div>
 
 @if (registerHelper != null)
@@ -33,12 +33,12 @@
 <div class="form-group required">
     <div class="form-row">
         <div class="col-6">
-            @Html.LabelFor(x => x.FirstName, new { @class = "form-control-label" })
-            @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", required = "" })
+            @Html.LabelFor(x => x.Value.FirstName, new { @class = "form-control-label" })
+            @Html.TextBoxFor(x => x.Value.FirstName, new { @class = "form-control", required = "" })
         </div>
         <div class="col-6">
-            @Html.LabelFor(x => x.LastName, new { @class = "form-control-label" })
-            @Html.TextBoxFor(x => x.LastName, new { @class = "form-control", required = "" })
+            @Html.LabelFor(x => x.Value.LastName, new { @class = "form-control-label" })
+            @Html.TextBoxFor(x => x.Value.LastName, new { @class = "form-control", required = "" })
         </div>
     </div>
 </div>
@@ -52,71 +52,72 @@
 }
 
 <div class="form-group">
-    @Html.LabelFor(x => x.Neighbourhood, new { @class = "form-control-label" })
+    @Html.LabelFor(x => x.Value.Neighbourhood, new { @class = "form-control-label" })
     @Html.Partial("Tooltip", "For other Knitwits to see who's nearby")
-    @Html.TextBoxFor(x => x.Neighbourhood, new { @class = "form-control" })
+    @Html.TextBoxFor(x => x.Value.Neighbourhood, new { @class = "form-control" })
 </div>
 
 <div class="form-group">
-    @Html.LabelFor(x => x.Hometown, new { @class = "form-control-label" })
+    @Html.LabelFor(x => x.Value.Hometown, new { @class = "form-control-label" })
     @Html.Partial("Tooltip", "Your hometown")
-    @Html.TextBoxFor(x => x.Hometown, new { @class = "form-control" })
+    @Html.TextBoxFor(x => x.Value.Hometown, new { @class = "form-control" })
 </div>
 
 <div class="form-group required">
-    @Html.LabelFor(x => x.FavouriteBeverage, new { @class = "form-control-label" })
-    @Html.TextBoxFor(x => x.FavouriteBeverage, new { @class = "form-control", required = "" })
+    @Html.LabelFor(x => x.Value.FavouriteBeverage, new { @class = "form-control-label" })
+    @Html.TextBoxFor(x => x.Value.FavouriteBeverage, new { @class = "form-control", required = "" })
 </div>
 
 <div class="form-group required">
-    @Html.LabelFor(x => x.KnittingExperienceId, new { @class = "form-control-label" })
+    @Html.LabelFor(x => x.Value.KnittingExperienceId, new { @class = "form-control-label" })
     <label class="text-muted">You don't have to be a great knitter to be a Drunken Knitwit!</label>
-    <select id="@Html.IdFor(x => x.KnittingExperienceId)" name="@Html.NameFor(x => x.KnittingExperienceId)" class="form-control" selected="@Model.KnittingExperienceId" required>
+    <select id="@Html.IdFor(x => x.Value.KnittingExperienceId)" name="@Html.NameFor(x => x.Value.KnittingExperienceId)"
+            class="form-control" selected="@Model.Value.KnittingExperienceId" required>
         <option value="">Select...</option>
         @foreach (KeyValuePair<int, string> preValue in knittingExperienceOptions)
         {
-            <option value="@preValue.Key" @(preValue.Key == Model.KnittingExperienceId ? Html.Raw("selected") : null)>@preValue.Value</option>
+            <option value="@preValue.Key" @(preValue.Key == Model.Value.KnittingExperienceId ? Html.Raw("selected") : null)>@preValue.Value</option>
         }
     </select>
 </div>
 
-<div class="form-group required" data-other-for="@Html.IdFor(x => x.KnittingExperienceId)" data-other-key="@knittingExperienceOptions.Last().Key">
-    @Html.LabelFor(x => x.KnittingExperienceOther, new { @class = "form-control-label", required = "" })
-    @Html.TextBoxFor(x => x.KnittingExperienceOther, new { @class = "form-control" })
+<div class="form-group required" data-other-for="@Html.IdFor(x => x.Value.KnittingExperienceId)" data-other-key="@knittingExperienceOptions.Last().Key">
+    @Html.LabelFor(x => x.Value.KnittingExperienceOther, new { @class = "form-control-label", required = "" })
+    @Html.TextBoxFor(x => x.Value.KnittingExperienceOther, new { @class = "form-control" })
 </div>
 
 <div class="form-group required">
-    @Html.LabelFor(x => x.Reason, new { @class = "form-control-label" })
-    @Html.TextAreaFor(x => x.Reason, new { rows = 3, @class = "form-control", required = "" })
+    @Html.LabelFor(x => x.Value.Reason, new { @class = "form-control-label" })
+    @Html.TextAreaFor(x => x.Value.Reason, new { rows = 3, @class = "form-control", required = "" })
 </div>
 
 <div class="form-group">
-    @Html.LabelFor(x => x.FacebookProfile, new { @class = "form-control-label" })
+    @Html.LabelFor(x => x.Value.FacebookProfile, new { @class = "form-control-label" })
     @Html.Partial("Tooltip", "This is optional, and only other members will be able to see it.")
     <div class="input-group mb-3">
         <div class="input-group-prepend">
             <span class="input-group-text">https://www.facebook.com/</span>
         </div>
-        @Html.TextBoxFor(x => x.FacebookProfile, new { @class = "form-control" })
+        @Html.TextBoxFor(x => x.Value.FacebookProfile, new { @class = "form-control" })
     </div>
 </div>
 
-@if (Model.Joined != null)
+@if (Model.Value.Joined != null)
 {
     <div class="form-group">
-        @Html.LabelFor(x => x.Joined, new { @class = "form-control-label" })
-        <span class="form-control-plaintext">@Model.Joined.Value.ToString("dd MMMM yyyy")</span>
+        @Html.LabelFor(x => x.Value.Joined, new { @class = "form-control-label" })
+        <span class="form-control-plaintext">@Model.Value.Joined.Value.ToString("dd MMMM yyyy")</span>
     </div>
 }
 
 @*TODO: picture*@
 
 @helper RequiredIf(bool condition)
+{
+    if (!condition)
     {
-        if (!condition)
-        {
-            return;
-        }
+        return;
+    }
 
-        @Html.Raw("required")
+    @Html.Raw("required")
 }

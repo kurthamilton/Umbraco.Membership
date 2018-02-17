@@ -8,7 +8,6 @@
     int.TryParse(Request.QueryString["id"], out id);
 
     MemberModel member = MemberService.GetMember(id);
-
     if (member == null)
     {
         Response.Redirect(Model.Content.Parent.Url);

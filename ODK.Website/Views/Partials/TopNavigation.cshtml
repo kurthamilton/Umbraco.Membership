@@ -4,8 +4,8 @@
 @{
     IPublishedContent homePage = HomePage;
     IPublishedContent member = CurrentMember;
-    MemberModel memberModel = member != null ? MemberService.GetMember(member.Id) : null;
-    
+    MemberModel memberModel = CurrentMemberModel;
+
     IEnumerable<IPublishedContent> menuItems = homePage.MenuItems(member);
 
     IPublishedContent logo = HomePage.GetHomePageValue<IPublishedContent>("siteLogo");
@@ -64,7 +64,7 @@
             }
             else
             {
-                <div class="dropdown">
+                <div class="dropdown navbar-nav">
                     <span class="text-light account-links__user" data-toggle="dropdown">
                         <i class="fas fa-user fa-2x"></i>
                     </span>

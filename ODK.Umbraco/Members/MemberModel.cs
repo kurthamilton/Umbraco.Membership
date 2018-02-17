@@ -22,14 +22,34 @@ namespace ODK.Umbraco.Members
         private readonly MutableLazy<string> _reason;
 
         public MemberModel()
-            : this(null, null)
+            : this(null)
         {
+        }
+
+        public MemberModel(IPublishedContent member)
+        {
+            if (member != null)
+            {
+                Chapter = member.GetPropertyValue<IPublishedContent>(MemberPropertyNames.ChapterId);
+                Email = member.GetPropertyValue<string>(MemberPropertyNames.Email);
+                Id = member.Id;
+                Joined = member.CreateDate;
+            }
+
+            _facebookProfile = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.FacebookProfile));
+            _favouriteBeverage = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.FavouriteBeverage));
+            _firstName = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.FirstName));
+            _hometown = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.Hometown));
+            _knittingExperienceId = new MutableLazy<int>(() => member?.GetPropertyValue<int>(MemberPropertyNames.KnittingExperience) ?? DefaultKnittingExperienceOptionId);
+            _knittingExperienceOther = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.KnittingExperienceOther));
+            _lastName = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.LastName));
+            _neighbourhood = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.Neighbourhood));
+            _picture = new Lazy<IPublishedContent>(() => member?.GetPropertyValue<IPublishedContent>(MemberPropertyNames.Picture));
+            _reason = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.Reason));
         }
 
         public MemberModel(IMember member, UmbracoHelper helper)
         {
-            Helper = helper;
-
             if (member != null)
             {
                 Chapter = member.GetPublishedContentPropertyValue(MemberPropertyNames.ChapterId, helper);
@@ -80,8 +100,6 @@ namespace ODK.Umbraco.Members
             get { return _firstName?.Value; }
             set { _firstName.Value = value; }
         }
-
-        public UmbracoHelper Helper { get; set; }
 
         [DisplayName("Where are you from?")]
         public string Hometown

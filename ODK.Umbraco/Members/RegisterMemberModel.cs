@@ -9,15 +9,14 @@ namespace ODK.Umbraco.Members
     public class RegisterMemberModel : MemberModel
     {
         public RegisterMemberModel()
-            : this(null, null)
+            : this(null)
         {
         }
 
-        public RegisterMemberModel(IPublishedContent chapter, UmbracoHelper helper)
-            : base(null, helper)
+        public RegisterMemberModel(IPublishedContent chapter)
+            : base(null)
         {
             Chapter = chapter;
-            Helper = helper;
         }
 
         [Required]

@@ -1,6 +1,7 @@
 ﻿@using System.Web.Mvc;
 @using ODK.Umbraco.Content;
 @using ODK.Umbraco.Members;
+@using ODK.Umbraco.Web.Mvc;
 @inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
     Layout = "Master.cshtml";
@@ -16,7 +17,7 @@
     RegisterMemberModel model = TempData["Model"] as RegisterMemberModel;
     if (model == null)
     {
-        model = new RegisterMemberModel(HomePage, Umbraco);
+        model = new RegisterMemberModel(HomePage);
     }
 }
 
@@ -29,7 +30,7 @@
 
         @Html.ValidationSummary("", new { @class = "text-danger" })
 
-        @Html.Partial("MemberForm", model)
+        @Html.Partial("MemberForm", new OdkUmbracoTemplateModel<MemberModel>(model, Umbraco))
 
         <div>
             <button type="submit" class="btn btn-primary">@registerButtonText</button>

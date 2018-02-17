@@ -3,6 +3,7 @@
     public static class MemberPropertyNames
     {
         public const string ChapterId = "memberChapterId";
+        public const string Email = "Email";
         public const string FacebookProfile = "memberFacebookProfile";
         public const string FavouriteBeverage = "memberFavouriteBeverage";
         public const string FirstName = "memberFirstName";

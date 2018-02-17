@@ -9,12 +9,14 @@ namespace ODK.Umbraco.Web.Mvc
     public abstract class OdkUmbracoTemplatePage : UmbracoTemplatePage
     {
         private RequestCacheItem<IPublishedContent> _currentMember;
+        private RequestCacheItem<MemberModel> _currentMemberModel;
         private RequestCacheItem<IPublishedContent> _homePage;
         private RequestCacheItem<OdkMemberService> _memberService;
 
         protected OdkUmbracoTemplatePage()
         {
             _currentMember = new RequestCacheItem<IPublishedContent>(nameof(_currentMember), () => Umbraco.MembershipHelper.GetCurrentMember());
+            _currentMemberModel = new RequestCacheItem<MemberModel>(nameof(_currentMemberModel), () => new MemberModel(CurrentMember));
             _homePage = new RequestCacheItem<IPublishedContent>(nameof(_homePage), () => Model.Content.HomePage());
             _memberService = new RequestCacheItem<OdkMemberService>(nameof(_memberService), () => new OdkMemberService(ApplicationContext.Services.MemberService, Umbraco));
         }
@@ -34,6 +36,8 @@ namespace ODK.Umbraco.Web.Mvc
         }
 
         public IPublishedContent CurrentMember => _currentMember.Value;
+
+        public MemberModel CurrentMemberModel => _currentMemberModel.Value;
 
         public IDataTypeService DataTypeService => ApplicationContext.Services.DataTypeService;
 

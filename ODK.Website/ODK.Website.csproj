@@ -310,11 +310,11 @@
     <Content Include="Views\Events.cshtml" />
     <Content Include="Views\Partials\Login.cshtml" />
     <Content Include="Views\Chapter.cshtml" />
-    <Content Include="Views\Account.cshtml" />
     <Content Include="Views\Partials\MemberForm.cshtml" />
     <Content Include="Views\Partials\Tooltip.cshtml" />
     <Content Include="Views\Partials\Feedback.cshtml" />
     <Content Include="Views\Partials\PageHeader.cshtml" />
+    <Content Include="Views\Profile.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
