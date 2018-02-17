@@ -291,7 +291,6 @@
     <Content Include="Views\MacroPartials\LatestBlogposts.cshtml" />
     <Content Include="Views\Partials\TopNavigation.cshtml" />
     <Content Include="Views\Partials\CategoryLinks.cshtml" />
-    <Content Include="Views\Partials\SectionHeader.cshtml" />
     <Content Include="Views\Blog.cshtml" />
     <Content Include="Views\Blogpost.cshtml" />
     <Content Include="Views\Contact.cshtml" />
@@ -315,6 +314,7 @@
     <Content Include="Views\Partials\MemberForm.cshtml" />
     <Content Include="Views\Partials\Tooltip.cshtml" />
     <Content Include="Views\Partials\Feedback.cshtml" />
+    <Content Include="Views\Partials\PageHeader.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

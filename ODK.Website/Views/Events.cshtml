@@ -14,8 +14,6 @@
 	EventModel[] events = eventService.SearchEvents(criteria).ToArray();
 }
 
-@Html.Partial("SectionHeader")
-
 <section class="section section--main">
     <div class="container">
         @if (events.Length == 0)

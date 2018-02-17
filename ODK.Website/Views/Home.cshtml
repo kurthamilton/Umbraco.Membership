@@ -8,25 +8,29 @@
 {
     string cssClass = "";
     string style = "";
-    
+
     string overlayType = section.GetPropertyValue<string>("heroOverlayType");
     if (!string.IsNullOrEmpty(overlayType))
     {
         cssClass += " overlay overlay--" + overlayType.ToLower();
     }
-    
+
     IPublishedContent backgroundImage = section.GetPropertyValue<IPublishedContent>("heroBackgroundImage");
     if (backgroundImage != null)
     {
         style += "background-image: url('" + backgroundImage.Url + "')";
         cssClass += " background-image-full";
     }
-    
+
     string temp = section.Name;
-    
+
     <section class="section section--hero section--content-center @cssClass" style="@style" data-name="@temp">
         <div class="section--hero__content">
             @Html.GetGridHtml(section, "heroContent", "bootstrap3-fluid")
         </div>
     </section>
+}
+
+@section PageHeader
+{
 }

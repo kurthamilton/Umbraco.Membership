@@ -4,8 +4,11 @@
     Layout = "Master.cshtml";
 }
 
-<!-- for the section we want to show the shop header -->
-@Html.Partial("SectionHeader", Model.Content.Parent)
+@section PageHeader
+{
+    <!-- for the section we want to show the shop header -->
+    @Html.Partial("SectionHeader", Model.Content.Parent)
+}
 
 <section class="section">
     <div class="container">

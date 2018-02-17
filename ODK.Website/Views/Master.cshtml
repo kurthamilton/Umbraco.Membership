@@ -41,8 +41,18 @@
     <header>
         @Html.Partial("TopNavigation")
     </header>
-    @Html.Partial("Feedback")
     <main>
+        @if (IsSectionDefined("PageHeader"))
+        {
+            @RenderSection("PageHeader", required: false)
+        }
+        else
+        {
+            @Html.Partial("PageHeader")
+        }
+        
+        @Html.Partial("Feedback")
+        
         @RenderBody()
     </main>
     <footer>

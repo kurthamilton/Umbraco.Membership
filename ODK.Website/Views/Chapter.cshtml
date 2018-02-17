@@ -11,8 +11,6 @@
 	string instagramApiKey = Model.Content.GetPropertyValue<string>("instagramApiKey");
 }
 
-@Html.Partial("SectionHeader")
-
 @if (false && !string.IsNullOrEmpty(instagramApiKey))
 {
     <div id="pixlee_container">

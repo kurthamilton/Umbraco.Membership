@@ -21,6 +21,11 @@ namespace ODK.Umbraco.Members
         private readonly Lazy<IPublishedContent> _picture;
         private readonly MutableLazy<string> _reason;
 
+        public MemberModel()
+            : this(null, null)
+        {
+        }
+
         public MemberModel(IMember member, UmbracoHelper helper)
         {
             Helper = helper;

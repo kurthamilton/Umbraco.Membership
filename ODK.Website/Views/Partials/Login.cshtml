@@ -38,7 +38,7 @@
                     @if (isError)
                     {
                         <div class="text-danger w-100">
-                            The email or username is incorrect
+                            The @loginHelper.DisplayNameFor(x => x.Email) or @loginHelper.DisplayNameFor(x => x.Password) is incorrect
                         </div>
                     }
                     <button type="submit" class="btn btn-primary">@loginButtonText</button>

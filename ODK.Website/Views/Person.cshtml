@@ -18,13 +18,16 @@
     HtmlHelper<MemberModel> memberHelper = Html.For<MemberModel>(member);
 }
 
-<section class="section section--header">
-    <div class="container">
-        <h1>
-            @member.FirstName  @member.LastName
-        </h1>
-    </div>
-</section>
+@section PageHeader
+{
+    <section class="section section--header">
+        <div class="container">
+            <h1>
+                @member.FirstName  @member.LastName
+            </h1>
+        </div>
+    </section>
+}
 
 <section class="section">
     <div class="container">
@@ -39,7 +42,7 @@
                     <i class="fas fa-user fa-5x"></i>
                 }
             </div>
-            
+
             <div class="col-md-9">
                 @RenderField(memberHelper.DisplayNameFor(x => x.Neighbourhood), member.Neighbourhood)
                 @RenderField(memberHelper.DisplayNameFor(x => x.Hometown), member.Hometown)
@@ -50,7 +53,7 @@
 
                 @if (member.Joined != null)
                 {
-                     @RenderField(memberHelper.DisplayNameFor(x => x.Joined), member.Joined.Value.ToString("dd MMMM yyyy"))
+                    @RenderField(memberHelper.DisplayNameFor(x => x.Joined), member.Joined.Value.ToString("dd MMMM yyyy"))
                 }
             </div>
         </div>
@@ -63,16 +66,16 @@
 </section>
 
 @helper RenderField(MvcHtmlString field, string value)
-{
-    if (string.IsNullOrEmpty(value))
     {
-        return;
-    }
+        if (string.IsNullOrEmpty(value))
+        {
+            return;
+        }
 
-    <div class="form-group">
-        <label class="col-form-label">@field</label>
-        <div>
-            <span class="form-control-plaintext">@value</span>
+        <div class="form-group">
+            <label class="col-form-label">@field</label>
+            <div>
+                <span class="form-control-plaintext">@value</span>
+            </div>
         </div>
-    </div>
 }
