@@ -31,6 +31,20 @@
 <section class="section">
     <div class="container">
         <div class="row">
+            <div class="col-md-9">
+                @RenderField(memberHelper.DisplayNameFor(x => x.Neighbourhood), member.Neighbourhood)
+                @RenderField(memberHelper.DisplayNameFor(x => x.Hometown), member.Hometown)
+                @RenderField(memberHelper.DisplayNameFor(x => x.FavouriteBeverage), member.FavouriteBeverage)
+                @RenderField(memberHelper.DisplayNameFor(x => x.KnittingExperienceId), member.KnittingExperienceOther ?? DataTypeService.GetPreValueAsString(member.KnittingExperienceId))
+                @RenderField(memberHelper.DisplayNameFor(x => x.Reason), member.Reason)
+                @RenderHtmlField(memberHelper.DisplayNameFor(x => x.FacebookProfile), !string.IsNullOrEmpty(member.FacebookProfile) ? RenderLink("https://www.facebook.com/" + member.FacebookProfile) : null)
+
+                @if (member.Joined != null)
+                {
+                    @RenderField(memberHelper.DisplayNameFor(x => x.Joined), member.Joined.Value.ToString("dd MMMM yyyy"))
+                }
+            </div>
+
             <div class="col-md-3">
                 @if (member.Picture != null)
                 {
@@ -41,23 +55,9 @@
                     <i class="fas fa-user fa-5x"></i>
                 }
             </div>
-
-            <div class="col-md-9">
-                @RenderField(memberHelper.DisplayNameFor(x => x.Neighbourhood), member.Neighbourhood)
-                @RenderField(memberHelper.DisplayNameFor(x => x.Hometown), member.Hometown)
-                @RenderField(memberHelper.DisplayNameFor(x => x.FavouriteBeverage), member.FavouriteBeverage)
-                @RenderField(memberHelper.DisplayNameFor(x => x.KnittingExperienceId), member.KnittingExperienceOther ?? DataTypeService.GetPreValueAsString(member.KnittingExperienceId))
-                @RenderField(memberHelper.DisplayNameFor(x => x.Reason), member.Reason)
-                @RenderField(memberHelper.DisplayNameFor(x => x.FacebookProfile), member.FacebookProfile)
-
-                @if (member.Joined != null)
-                {
-                    @RenderField(memberHelper.DisplayNameFor(x => x.Joined), member.Joined.Value.ToString("dd MMMM yyyy"))
-                }
-            </div>
         </div>
         <div class="row">
-            <div class="col-md-9 offset-md-3">
+            <div class="col-md-9">
                 <a href="@Model.Content.Parent.Url#member-@member.Id">Other Knitwits</a>
             </div>
         </div>
@@ -65,16 +65,31 @@
 </section>
 
 @helper RenderField(MvcHtmlString field, string value)
+{
+    if (string.IsNullOrEmpty(value))
     {
-        if (string.IsNullOrEmpty(value))
-        {
-            return;
-        }
+        return;
+    }
 
-        <div class="form-group">
-            <label class="col-form-label">@field</label>
-            <div>
-                <span class="form-control-plaintext">@value</span>
-            </div>
+    @RenderHtmlField(field, Html.Raw(value))
+}
+
+@helper RenderHtmlField(MvcHtmlString field, IHtmlString value)
+{
+    if (value == null)
+    {
+        return;
+    }
+
+    <div class="form-group">
+        <label class="col-form-label">@field</label>
+        <div>
+            <span class="form-control-plaintext">@value</span>
         </div>
+    </div>
+}
+
+@helper RenderLink(string url)
+{
+    <a href="@url" target="_blank">@url</a>
 }

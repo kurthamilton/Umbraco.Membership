@@ -27,13 +27,13 @@ namespace ODK.Umbraco.Members
                 return null;
             }
 
-            IMember umbracoMember = _umbracoMemberService.GetById(id);
-            if (umbracoMember == null)
+            IPublishedContent member = _umbracoHelper.TypedMember(id);
+            if (member == null)
             {
                 return null;
             }
 
-            return new MemberModel(umbracoMember, _umbracoHelper);
+            return new MemberModel(member);
         }
 
         public IReadOnlyCollection<MemberModel> GetMembers(MemberSearchCriteria criteria)
