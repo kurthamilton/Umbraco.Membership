@@ -146,6 +146,10 @@ body {
 	max-width: 760px;
 }
 
+.section--image {
+    max-width: 100%;
+}
+
 .overlay--dark .section--hero__content {
 	color: #fff;
 }

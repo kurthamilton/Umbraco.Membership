@@ -1,13 +1,16 @@
-﻿@using ODK.Umbraco.Content;
+﻿@using Newtonsoft.Json.Linq;
+@using ODK.Umbraco.Content;
 @inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
     Layout = "Master.cshtml";
 }
 
-@foreach (var section in Model.Content.Children().Where(x => !x.IsPage()))
+@foreach (IPublishedContent section in Model.Content.Children().Where(x => !x.IsPage()))
 {
     string cssClass = "";
     string style = "";
+
+    bool sectionHasContent = section.HasChildContent("heroContent");
 
     string overlayType = section.GetPropertyValue<string>("heroOverlayType");
     if (!string.IsNullOrEmpty(overlayType))
@@ -16,19 +19,24 @@
     }
 
     IPublishedContent backgroundImage = section.GetPropertyValue<IPublishedContent>("heroBackgroundImage");
-    if (backgroundImage != null)
+    if (backgroundImage != null && sectionHasContent)
     {
         style += "background-image: url('" + backgroundImage.Url + "')";
         cssClass += " background-image-full";
     }
 
-    string temp = section.Name;
-
-    <section class="section section--hero section--content-center @cssClass" style="@style" data-name="@temp">
-        <div class="section--hero__content">
-            @Html.GetGridHtml(section, "heroContent", "bootstrap3-fluid")
-        </div>
-    </section>
+    if (sectionHasContent)
+    {
+        <section class="section section--hero section--content-center @cssClass" style="@style">
+            <div class="section--hero__content">
+                @Html.GetGridHtml(section, "heroContent", "bootstrap3-fluid")
+            </div>
+        </section>
+    }
+    else if (backgroundImage != null)
+    {
+        <img class="section section--image" src="@backgroundImage.Url" />
+    }
 }
 
 @section PageHeader

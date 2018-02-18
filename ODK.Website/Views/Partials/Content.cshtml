@@ -1,4 +1,11 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+﻿@using ODK.Umbraco.Content;
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    if (!Model.Content.HasChildContent("bodyText"))
+    {
+        return;
+    }
+}
 
 <div class="content">
     @Html.GetGridHtml(Model.Content, "bodyText", "bootstrap3-fluid")

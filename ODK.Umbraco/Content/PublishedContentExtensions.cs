@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Web;
@@ -22,6 +23,32 @@ namespace ODK.Umbraco.Content
                     yield return content.GetPropertyValue<T>(alias);
                 }
             }
+        }
+
+        public static bool HasChildContent(this IPublishedContent content, string alias)
+        {
+            JObject childContent = content.GetPropertyValue<JObject>(alias);
+            if (childContent == null)
+            {
+                return false;
+            }
+
+            JArray sections = childContent["sections"] as JArray;
+            if (sections == null)
+            {
+                return false;
+            }
+
+            foreach (JToken section in sections)
+            {
+                JArray rows = section["rows"] as JArray;
+                if (rows != null && rows.Count > 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static bool IsPage(this IPublishedContent content)
