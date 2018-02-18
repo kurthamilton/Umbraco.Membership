@@ -2,6 +2,7 @@
 {
     public static class EventPropertyNames
     {
+        public const string Address = "eventAddress";
         public const string Date = "eventDate";
         public const string Description = "eventDescription";
         public const string Location = "eventLocation";

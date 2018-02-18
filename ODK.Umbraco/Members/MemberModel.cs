@@ -37,7 +37,7 @@ namespace ODK.Umbraco.Members
                 Joined = member.CreateDate;
             }
 
-            _disabled = new Lazy<bool>(() => member?.GetPropertyValue<bool>("disabled") ?? false);
+            _disabled = new Lazy<bool>(() => member != null ? !member.GetPropertyValue<bool>(MemberPropertyNames.Approved) : false);
             _facebookProfile = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.FacebookProfile));
             _favouriteBeverage = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.FavouriteBeverage));
             _firstName = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.FirstName));
