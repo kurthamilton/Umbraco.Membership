@@ -216,7 +216,9 @@
     <Compile Include="Events\EventPropertyNames.cs" />
     <Compile Include="Events\EventSearchCriteria.cs" />
     <Compile Include="Events\EventService.cs" />
+    <Compile Include="Members\IMemberPictureUpload.cs" />
     <Compile Include="Members\LoginModel.cs" />
+    <Compile Include="Members\MediaExtensions.cs" />
     <Compile Include="Members\MemberExtensions.cs" />
     <Compile Include="Members\MemberModelTemplate.cs" />
     <Compile Include="Members\MemberSearchCriteria.cs" />
@@ -226,6 +228,7 @@
     <Compile Include="Members\MemberPropertyNames.cs" />
     <Compile Include="Members\OdkMemberService.cs" />
     <Compile Include="Members\UmbracoHelperExtensions.cs" />
+    <Compile Include="Members\UpdateMemberModel.cs" />
     <Compile Include="MutableLazy.cs" />
     <Compile Include="Web\Mvc\HtmlHelpers.cs" />
     <Compile Include="Web\Mvc\OdkSurfaceControllerBase.cs" />

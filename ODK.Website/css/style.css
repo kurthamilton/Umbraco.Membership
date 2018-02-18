@@ -22,8 +22,12 @@ body {
 }
 
 .form-group.required .form-control-label:after {
-  content: " *";
-  color: red;
+    content: " *";
+    color: #dc3545;
+}
+
+.field-validation-error {
+    color: #dc3545;
 }
 
 .icon--help {
@@ -225,7 +229,7 @@ body {
     border-color: #0056b3;
 }
 
-.col-form-label {
+.col-form-label, .form-control-label {
 	font-weight: 700;
 }
 

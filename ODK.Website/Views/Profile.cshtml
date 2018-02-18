@@ -1,7 +1,9 @@
 ﻿@using ODK.Umbraco.Members;
 @inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
-	Layout = "Master.cshtml";
+    Layout = "Master.cshtml";
+
+    UpdateMemberModel model = new UpdateMemberModel(CurrentMember, TempData["Model"] as UpdateMemberModel);
 }
 
 <section class="section section--main">
@@ -10,9 +12,7 @@
         {
             @Html.AntiForgeryToken()
 
-            @Html.Partial("MemberForm", ModelFor<MemberModel>(CurrentMemberModel))
-
-            @Html.ValidationSummary()
+            @Html.Partial("MemberForm", ModelFor<MemberModel>(model))
 
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Update</button>

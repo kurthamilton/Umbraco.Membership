@@ -1,22 +1,24 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web;
-using Umbraco.Core.Models;
-using Umbraco.Web;
 
 namespace ODK.Umbraco.Members
 {
-    public class RegisterMemberModel : MemberModel
+    public class RegisterMemberModel : MemberModel, IMemberPictureUpload
     {
         public RegisterMemberModel()
-            : this(null)
         {
         }
 
-        public RegisterMemberModel(IPublishedContent chapter)
-            : base(null)
+        public RegisterMemberModel(RegisterMemberModel other)
         {
-            Chapter = chapter;
+            if (other != null)
+            {
+                CopyFrom(other);
+
+                Password = other.Password;
+                PasswordConfirm = other.PasswordConfirm;
+            }
         }
 
         [Required]
@@ -30,15 +32,5 @@ namespace ODK.Umbraco.Members
         [Required(ErrorMessage = "Photo required")]
         [DisplayName("Please upload your photo")]
         public HttpPostedFileBase UploadedPicture { get; set; }
-
-        public void SetChapter(IPublishedContent chapter)
-        {
-            if (Chapter != null)
-            {
-                return;
-            }
-
-            Chapter = chapter;
-        }
     }
 }

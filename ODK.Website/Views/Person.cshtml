@@ -22,7 +22,7 @@
     <section class="section section--header">
         <div class="container">
             <h1>
-                @member.FirstName  @member.LastName
+                @member.FullName
             </h1>
         </div>
     </section>
@@ -35,7 +35,7 @@
                 @RenderField(memberHelper.DisplayNameFor(x => x.Neighbourhood), member.Neighbourhood)
                 @RenderField(memberHelper.DisplayNameFor(x => x.Hometown), member.Hometown)
                 @RenderField(memberHelper.DisplayNameFor(x => x.FavouriteBeverage), member.FavouriteBeverage)
-                @RenderField(memberHelper.DisplayNameFor(x => x.KnittingExperienceId), member.KnittingExperienceOther ?? DataTypeService.GetPreValueAsString(member.KnittingExperienceId))
+                @RenderField(memberHelper.DisplayNameFor(x => x.KnittingExperience), member.KnittingExperienceOther ?? member.KnittingExperience)
                 @RenderField(memberHelper.DisplayNameFor(x => x.Reason), member.Reason)
                 @RenderHtmlField(memberHelper.DisplayNameFor(x => x.FacebookProfile), !string.IsNullOrEmpty(member.FacebookProfile) ? RenderLink("https://www.facebook.com/" + member.FacebookProfile) : null)
 

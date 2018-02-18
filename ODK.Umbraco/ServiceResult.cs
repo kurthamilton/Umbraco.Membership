@@ -5,17 +5,17 @@ namespace ODK.Umbraco
 {
     public class ServiceResult
     {
-        public ServiceResult(string propertyName, string message)
+        public ServiceResult(string propertyName, string errorMessage)
         {
-            Messages = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>
+            Errors = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>
             {
-                { propertyName, message }
+                { propertyName, errorMessage }
             });
         }
 
-        public ServiceResult(IDictionary<string, string> messages)
+        public ServiceResult(IDictionary<string, string> errors)
         {
-            Messages = new ReadOnlyDictionary<string, string>(messages);
+            Errors = new ReadOnlyDictionary<string, string>(errors);
         }
 
         public ServiceResult(bool success)
@@ -23,7 +23,7 @@ namespace ODK.Umbraco
             Success = success;
         }
 
-        public IReadOnlyDictionary<string, string> Messages { get; private set; } = new Dictionary<string, string>();
+        public IReadOnlyDictionary<string, string> Errors { get; private set; } = new Dictionary<string, string>();
 
         public bool Success { get; private set; }
     }

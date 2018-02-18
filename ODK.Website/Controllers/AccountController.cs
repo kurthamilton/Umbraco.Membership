@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Web;
+using System.Web.Mvc;
 using ODK.Umbraco;
 using ODK.Umbraco.Members;
 using ODK.Umbraco.Settings;
@@ -13,7 +14,7 @@ namespace ODK.Website.Controllers
 
         public AccountController()
         {
-            _memberService = new OdkMemberService(Umbraco.MembershipHelper.GetCurrentMember(), Services.MemberService, Umbraco);
+            _memberService = new OdkMemberService(Umbraco.MembershipHelper.GetCurrentMember(), Services.MediaService, Services.MemberService, Umbraco);
         }
 
         [HttpPost]
@@ -50,7 +51,7 @@ namespace ODK.Website.Controllers
 
             if (!ModelState.IsValid)
             {
-                return OnError(model);
+                return OnError(model, null);
             }
 
             IPublishedContent chapter = Umbraco.AssignedContentItem.HomePage();
@@ -59,7 +60,7 @@ namespace ODK.Website.Controllers
             ServiceResult result = _memberService.Register(model);
             if (!result.Success)
             {
-                return OnError(model);
+                return OnError(model, result);
             }
 
             Umbraco.MembershipHelper.Login(model.Email, model.Password);
@@ -71,7 +72,7 @@ namespace ODK.Website.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Update(MemberModel model)
+        public ActionResult Update(UpdateMemberModel model)
         {
             IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
             if (member == null)
@@ -79,10 +80,13 @@ namespace ODK.Website.Controllers
                 return RedirectToHome();
             }
 
+            IPublishedContent chapter = Umbraco.AssignedContentItem.HomePage();
+            model.SetChapter(chapter);
+
             ServiceResult result = _memberService.Update(member.Id, model);
             if (!result.Success)
             {
-                return OnError(model);
+                return OnError(model, result);
             }
 
             AddFeedback("Profile updated", true);
@@ -90,8 +94,16 @@ namespace ODK.Website.Controllers
             return RedirectToCurrentUmbracoPage();
         }
 
-        private ActionResult OnError(object model)
+        private ActionResult OnError(object model, ServiceResult result)
         {
+            if (result != null)
+            {
+                foreach (string key in result.Errors.Keys)
+                {
+                    ModelState.AddModelError(key, result.Errors[key]);
+                }
+            }
+
             SetModel(model);
             return CurrentUmbracoPage();
         }
