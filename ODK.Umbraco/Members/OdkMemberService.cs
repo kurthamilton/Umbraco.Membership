@@ -53,6 +53,11 @@ namespace ODK.Umbraco.Members
                 models = models.Where(x => !x.Disabled);
             }
 
+            if (criteria.Types != null)
+            {
+                models = models.Where(x => criteria.Types.Contains(x.Type));
+            }
+
             if (criteria.Sort != null)
             {
                 models = criteria.Sort(models);

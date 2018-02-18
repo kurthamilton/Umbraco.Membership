@@ -6,7 +6,8 @@
     int chapterId = HomePage.Id;
     MemberSearchCriteria criteria = new MemberSearchCriteria(HomePage.Id)
     {
-        Sort = m => m.OrderBy(x => x.FirstName).ThenBy(x => x.LastName)
+        Sort = m => m.OrderBy(x => x.FirstName).ThenBy(x => x.LastName),
+        Types = new[] { MemberTypes.Full, MemberTypes.Partial, MemberTypes.Trial }
     };
 
     IEnumerable<MemberModel> members = MemberService.GetMembers(criteria);

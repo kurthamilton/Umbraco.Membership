@@ -15,5 +15,6 @@
         public const string Neighbourhood = "memberNeighbourhood";
         public const string Picture = "memberPicture";
         public const string Reason = "memberReason";
+        public const string Type = "memberType";
     }
 }

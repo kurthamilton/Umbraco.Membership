@@ -110,14 +110,22 @@
     </div>
 }
 
+@if (Model.Value.Type != MemberTypes.None)
+{
+    <div class="form-group">
+        @Html.LabelFor(x => x.Value.Type, new { @class = "form-control-label" })
+        <span class="form-control-plaintext">@Model.Value.Type</span>
+    </div>
+}
+
 @*TODO: picture*@
 
 @helper RequiredIf(bool condition)
-{
-    if (!condition)
     {
-        return;
-    }
+        if (!condition)
+        {
+            return;
+        }
 
-    @Html.Raw("required")
+        @Html.Raw("required")
 }

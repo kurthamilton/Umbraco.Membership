@@ -17,5 +17,7 @@ namespace ODK.Umbraco.Members
         public bool ShowAll { get; set; }
 
         public Func<IEnumerable<MemberModel>, IEnumerable<MemberModel>> Sort { get; set; }
+
+        public IReadOnlyCollection<MemberTypes> Types { get; set; }
 }
 }

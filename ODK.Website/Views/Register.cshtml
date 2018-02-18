@@ -20,9 +20,9 @@
     }
 }
 
-@Html.Partial("Content")
-
 <div class="container">
+    @Html.Partial("Content")
+
     @using (Html.BeginUmbracoForm("Register", "Account", FormMethod.Post))
     {
         @Html.AntiForgeryToken()

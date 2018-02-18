@@ -21,9 +21,15 @@ namespace ODK.Umbraco.Members
         private readonly MutableLazy<string> _neighbourhood;
         private readonly Lazy<IPublishedContent> _picture;
         private readonly MutableLazy<string> _reason;
+        private readonly Lazy<MemberTypes> _type;
 
         public MemberModel()
             : this(null)
+        {
+        }
+
+        public MemberModel(IMember member, UmbracoHelper helper)
+            : this(helper.TypedMember(member.Id))
         {
         }
 
@@ -48,30 +54,7 @@ namespace ODK.Umbraco.Members
             _neighbourhood = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.Neighbourhood));
             _picture = new Lazy<IPublishedContent>(() => member?.GetPropertyValue<IPublishedContent>(MemberPropertyNames.Picture));
             _reason = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.Reason));
-        }
-
-        public MemberModel(IMember member, UmbracoHelper helper)
-        {
-            if (member != null)
-            {
-                Chapter = member.GetPublishedContentPropertyValue(MemberPropertyNames.ChapterId, helper);
-                Email = member.Email;
-                Id = member.Id;
-                Joined = member.CreateDate;
-
-                _disabled = new Lazy<bool>(() => !member.IsApproved);
-            }
-
-            _facebookProfile = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.FacebookProfile));
-            _favouriteBeverage = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.FavouriteBeverage));
-            _firstName = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.FirstName));
-            _hometown = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.Hometown));
-            _knittingExperienceId = new MutableLazy<int>(() => member?.GetIntegerPropertyValue(MemberPropertyNames.KnittingExperience) ?? DefaultKnittingExperienceOptionId);
-            _knittingExperienceOther = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.KnittingExperienceOther));
-            _lastName = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.LastName));
-            _neighbourhood = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.Neighbourhood));
-            _picture = new Lazy<IPublishedContent>(() => member?.GetPublishedMediaPropertyValue(MemberPropertyNames.Picture, helper));
-            _reason = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.Reason));
+            _type = new Lazy<MemberTypes>(() => member != null ? (MemberTypes)Enum.Parse(typeof(MemberTypes), member.GetPropertyValue<string>(MemberPropertyNames.Type)) : MemberTypes.Trial);
         }
 
         public IPublishedContent Chapter { get; protected set; }
@@ -82,9 +65,11 @@ namespace ODK.Umbraco.Members
 
         [Required]
         [EmailAddress]
+        [MaxLength(500)]
         public string Email { get; set; }
 
         [DisplayName("Facebook profile")]
+        [MaxLength(500)]
         public string FacebookProfile
         {
             get { return _facebookProfile?.Value; }
@@ -93,6 +78,7 @@ namespace ODK.Umbraco.Members
 
         [DisplayName("Your favourite alcoholic beverage")]
         [Required]
+        [MaxLength(500)]
         public string FavouriteBeverage
         {
             get { return _favouriteBeverage?.Value; }
@@ -101,6 +87,7 @@ namespace ODK.Umbraco.Members
 
         [DisplayName("First Name")]
         [Required]
+        [MaxLength(500)]
         public string FirstName
         {
             get { return _firstName?.Value; }
@@ -108,6 +95,7 @@ namespace ODK.Umbraco.Members
         }
 
         [DisplayName("Where are you from?")]
+        [MaxLength(500)]
         public string Hometown
         {
             get { return _hometown?.Value; }
@@ -127,6 +115,7 @@ namespace ODK.Umbraco.Members
         }
 
         [DisplayName("Please specify")]
+        [MaxLength(500)]
         public string KnittingExperienceOther
         {
             get { return _knittingExperienceOther?.Value; }
@@ -135,12 +124,14 @@ namespace ODK.Umbraco.Members
 
         [DisplayName("Last Name")]
         [Required]
+        [MaxLength(500)]
         public string LastName
         {
             get { return _lastName?.Value; }
             set { _lastName.Value = value; }
         }
 
+        [MaxLength(500)]
         public string Neighbourhood
         {
             get { return _neighbourhood?.Value; }
@@ -151,10 +142,14 @@ namespace ODK.Umbraco.Members
 
         [DisplayName("Why are you a Drunken Knitwit?")]
         [Required]
+        [MaxLength(500)]
         public string Reason
         {
             get { return _reason?.Value; }
             set { _reason.Value = value; }
         }
+
+        [DisplayName("Membership type")]
+        public MemberTypes Type => _type.Value;
     }
 }
