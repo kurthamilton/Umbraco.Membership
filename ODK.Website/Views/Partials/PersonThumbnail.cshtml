@@ -3,7 +3,7 @@
 @model OdkUmbracoTemplateModel<MemberModel>
 @{
     MemberModel member = Model.Value;
-    string memberUrl = Model.Content.GetPropertyValue<IPublishedContent>("memberPage", recurse: true).Url + "?id=" + member.Id;
+    string memberUrl = Model.Content.GetPropertyValue<IPublishedContent>("personPage", recurse: true).Url + "?id=" + member.Id;
 }
 
 <div id="member-@member.Id" class="card member-tile">

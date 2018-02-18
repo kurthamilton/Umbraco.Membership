@@ -12,11 +12,16 @@
 
     string loginButtonText = member == null ? homePage.GetHomePageValue<string>("loginButtonText") : null;
     string registerButtonText = member == null ? homePage.GetHomePageValue<string>("registerButtonText") : null;
+
     IPublishedContent registerPage = member == null ? homePage.GetHomePageValue<IPublishedContent>("registerPage") : null;
     string registerUrl = registerPage != null ? registerPage.Url : null;
 
+    IPublishedContent profilePage = member != null ? memberModel.Chapter.GetPropertyValue<IPublishedContent>("profilePage") : null;
+    string profileUrl = profilePage != null ? profilePage.Url : null;
+
     IPublishedContent accountPage = member != null ? memberModel.Chapter.GetPropertyValue<IPublishedContent>("accountPage") : null;
     string accountUrl = accountPage != null ? accountPage.Url : null;
+
     string logoutButtonText = member != null ? homePage.GetHomePageValue<string>("logoutButtonText") : null;
     string logoutUrl = "/umbraco/surface/account/logout";
 }
@@ -69,9 +74,13 @@
                         <i class="fas fa-user fa-2x"></i>
                     </div>
                     <div class="dropdown-menu dropdown-menu-right" role="menu">
+                        @if (!string.IsNullOrEmpty(profileUrl))
+                        {
+                            <a class="dropdown-item" href="@profileUrl">My profile</a>
+                        }
                         @if (!string.IsNullOrEmpty(accountUrl))
                         {
-                            <a class="dropdown-item" href="@accountUrl">My profile</a>
+                            <a class="dropdown-item" href="@accountUrl">My account</a>
                         }
                         <a class="dropdown-item" href="@memberModel.Chapter.Url">@memberModel.Chapter.Name</a>
                         <a class="dropdown-item" href="@logoutUrl">@logoutButtonText</a>
