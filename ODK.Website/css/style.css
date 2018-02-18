@@ -102,7 +102,7 @@ body {
 
 .account-links {
 	position: absolute;
-	right: 0;
+	right: 15px; /*match container padding-right*/
 	top: 2px;
 }
 
@@ -113,6 +113,11 @@ body {
 
 .account-links__user:hover {
     opacity: 0.7;
+}
+
+.account-links .dropdown-menu {
+    min-width: inherit;
+    text-align: right;
 }
 
 /* SECTIONS */
@@ -201,8 +206,10 @@ body {
 .member-tile .card-img-top {
     background-color: #eee; /*TEMP*/
     border-radius: calc(.5rem - 1px);
-    height: 150px;
+    max-height: 150px;
+    max-width: 100%;
     line-height: 150px;
+    width: inherit;
 }
 
 /* CHAPTER */

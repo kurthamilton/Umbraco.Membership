@@ -79,7 +79,7 @@ namespace ODK.Umbraco.Members
         {
             if (_umbracoMemberService.GetByUsername(model.Email) != null)
             {
-                return new ServiceResult(nameof(model.Email), "That email address is already registered");
+                return new ServiceResult(nameof(model.Email), "Email already registered");
             }
 
             IDictionary<string, string> validationMessages = ValidateModel(model, model.UploadedPicture);

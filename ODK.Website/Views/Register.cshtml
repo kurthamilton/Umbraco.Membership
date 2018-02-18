@@ -23,8 +23,6 @@
     {
         @Html.AntiForgeryToken()
 
-        @Html.ValidationSummary("", new { @class = "text-danger" })
-
         @Html.Partial("MemberForm", ModelFor<MemberModel>(model))
 
         <div>

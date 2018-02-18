@@ -26,6 +26,7 @@
 <div class="form-group required">
     @memberHelper.LabelFor(x => x.Email, new { @class = "form-control-label" })
     @memberHelper.TextBoxFor(x => x.Email, new { type = "email", @class = "form-control", required = "" })
+    @memberHelper.ValidationMessageFor(x => x.Email)
 </div>
 
 @if (registerHelper != null)
@@ -35,10 +36,12 @@
             <div class="col-6">
                 @registerHelper.LabelFor(x => x.Password, new { @class = "form-control-label" })
                 @registerHelper.TextBoxFor(x => x.Password, new { type = "password", @class = "form-control", required = "" })
+                @registerHelper.ValidationMessageFor(x => x.Password)
             </div>
             <div class="col-6">
                 @registerHelper.LabelFor(x => x.PasswordConfirm, new { @class = "form-control-label" })
                 @registerHelper.TextBoxFor(x => x.PasswordConfirm, new { type = "password", @class = "form-control", required = "" })
+                @registerHelper.ValidationMessageFor(x => x.PasswordConfirm)
             </div>
         </div>
     </div>
@@ -49,10 +52,12 @@
         <div class="col-6">
             @memberHelper.LabelFor(x => x.FirstName, new { @class = "form-control-label" })
             @memberHelper.TextBoxFor(x => x.FirstName, new { @class = "form-control", required = "" })
+            @memberHelper.ValidationMessageFor(x => x.FirstName)
         </div>
         <div class="col-6">
             @memberHelper.LabelFor(x => x.LastName, new { @class = "form-control-label" })
             @memberHelper.TextBoxFor(x => x.LastName, new { @class = "form-control", required = "" })
+            @memberHelper.ValidationMessageFor(x => x.LastName)
         </div>
     </div>
 </div>
@@ -78,33 +83,39 @@ else if (updateHelper != null)
     @memberHelper.LabelFor(x => x.Neighbourhood, new { @class = "form-control-label" })
     @Html.Partial("Tooltip", "For other Knitwits to see who's nearby")
     @memberHelper.TextBoxFor(x => x.Neighbourhood, new { @class = "form-control" })
+    @memberHelper.ValidationMessageFor(x => x.Neighbourhood)
 </div>
 
 <div class="form-group">
     @memberHelper.LabelFor(x => x.Hometown, new { @class = "form-control-label" })
     @Html.Partial("Tooltip", "Your hometown")
     @memberHelper.TextBoxFor(x => x.Hometown, new { @class = "form-control" })
+    @memberHelper.ValidationMessageFor(x => x.Hometown)
 </div>
 
 <div class="form-group required">
     @memberHelper.LabelFor(x => x.FavouriteBeverage, new { @class = "form-control-label" })
     @memberHelper.TextBoxFor(x => x.FavouriteBeverage, new { @class = "form-control", required = "" })
+    @memberHelper.ValidationMessageFor(x => x.FavouriteBeverage)
 </div>
 
 <div class="form-group required">
     @memberHelper.LabelFor(x => x.KnittingExperience, new { @class = "form-control-label" })
     <label class="text-muted">You don't have to be a great knitter to be a Drunken Knitwit!</label>
     @memberHelper.DropDownListFor(x => x.KnittingExperience, knittingExperienceOptions, "Select...", new { @class = "form-control" })
+    @memberHelper.ValidationMessageFor(x => x.KnittingExperience)
 </div>
 
 <div class="form-group required" data-other-for="@Html.IdFor(x => x.Value.KnittingExperience)" data-other-key="@knittingExperienceOptions.Last().Value">
     @memberHelper.LabelFor(x => x.KnittingExperienceOther, new { @class = "form-control-label", required = "" })
     @memberHelper.TextBoxFor(x => x.KnittingExperienceOther, new { @class = "form-control" })
+    @memberHelper.ValidationMessageFor(x => x.KnittingExperienceOther)
 </div>
 
 <div class="form-group required">
     @memberHelper.LabelFor(x => x.Reason, new { @class = "form-control-label" })
-    @memberHelper.TextAreaFor(x => x.Reason, new { rows = 3, @class = "form-control", required = "" })
+    @memberHelper.TextAreaFor(x => x.Reason, new { rows = 3, @class = "form-control", required = "", maxlength = 500 })
+    @memberHelper.ValidationMessageFor(x => x.Reason)
 </div>
 
 <div class="form-group">
@@ -115,6 +126,7 @@ else if (updateHelper != null)
             <span class="input-group-text">https://www.facebook.com/</span>
         </div>
         @memberHelper.TextBoxFor(x => x.FacebookProfile, new { @class = "form-control" })
+        @memberHelper.ValidationMessageFor(x => x.FacebookProfile)
     </div>
 </div>
 

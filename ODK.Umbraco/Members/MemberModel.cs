@@ -65,11 +65,11 @@ namespace ODK.Umbraco.Members
 
         [Required]
         [EmailAddress]
-        [MaxLength(500)]
+        [MaxLength(500, ErrorMessage = "Must not exceed 500 characters in length")]
         public string Email { get; set; }
 
         [DisplayName("Facebook profile")]
-        [MaxLength(500)]
+        [MaxLength(500, ErrorMessage = "Must not exceed 500 characters in length")]
         public string FacebookProfile
         {
             get { return _facebookProfile?.Value; }
@@ -78,7 +78,7 @@ namespace ODK.Umbraco.Members
 
         [DisplayName("Your favourite alcoholic beverage")]
         [Required]
-        [MaxLength(500)]
+        [MaxLength(500, ErrorMessage = "Must not exceed 500 characters in length")]
         public string FavouriteBeverage
         {
             get { return _favouriteBeverage?.Value; }
@@ -87,7 +87,7 @@ namespace ODK.Umbraco.Members
 
         [DisplayName("First Name")]
         [Required]
-        [MaxLength(500)]
+        [MaxLength(500, ErrorMessage = "Must not exceed 500 characters in length")]
         public string FirstName
         {
             get { return _firstName?.Value; }
@@ -97,7 +97,7 @@ namespace ODK.Umbraco.Members
         public string FullName => FirstName + " " + LastName;
 
         [DisplayName("Where are you from?")]
-        [MaxLength(500)]
+        [MaxLength(500, ErrorMessage = "Must not exceed 500 characters in length")]
         public string Hometown
         {
             get { return _hometown?.Value; }
@@ -117,7 +117,7 @@ namespace ODK.Umbraco.Members
         }
 
         [DisplayName("Please specify")]
-        [MaxLength(500)]
+        [MaxLength(500, ErrorMessage = "Must not exceed 500 characters in length")]
         public string KnittingExperienceOther
         {
             get { return _knittingExperienceOther?.Value; }
@@ -126,14 +126,14 @@ namespace ODK.Umbraco.Members
 
         [DisplayName("Last Name")]
         [Required]
-        [MaxLength(500)]
+        [MaxLength(500, ErrorMessage = "Must not exceed 500 characters in length")]
         public string LastName
         {
             get { return _lastName?.Value; }
             set { _lastName.Value = value; }
         }
 
-        [MaxLength(500)]
+        [MaxLength(500, ErrorMessage = "Must not exceed 500 characters in length")]
         public string Neighbourhood
         {
             get { return _neighbourhood?.Value; }
@@ -144,7 +144,7 @@ namespace ODK.Umbraco.Members
 
         [DisplayName("Why are you a Drunken Knitwit?")]
         [Required]
-        [MaxLength(500)]
+        [MaxLength(500, ErrorMessage = "Must not exceed 500 characters in length")]
         public string Reason
         {
             get { return _reason?.Value; }
