@@ -219,6 +219,7 @@
     <Compile Include="Members\LoginModel.cs" />
     <Compile Include="Members\MemberExtensions.cs" />
     <Compile Include="Members\MemberModelTemplate.cs" />
+    <Compile Include="Members\MemberSearchCriteria.cs" />
     <Compile Include="Members\RegisterMemberModel.cs" />
     <Compile Include="Members\MemberModel.cs" />
     <Compile Include="Members\MemberPropertyNames.cs" />

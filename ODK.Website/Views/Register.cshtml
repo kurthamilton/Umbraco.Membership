@@ -1,7 +1,6 @@
 ﻿@using System.Web.Mvc;
 @using ODK.Umbraco.Content;
 @using ODK.Umbraco.Members;
-@using ODK.Umbraco.Web.Mvc;
 @inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
     Layout = "Master.cshtml";
@@ -30,7 +29,7 @@
 
         @Html.ValidationSummary("", new { @class = "text-danger" })
 
-        @Html.Partial("MemberForm", new OdkUmbracoTemplateModel<MemberModel>(model, Umbraco))
+        @Html.Partial("MemberForm", ModelFor<MemberModel>(model))
 
         <div>
             <button type="submit" class="btn btn-primary">@registerButtonText</button>

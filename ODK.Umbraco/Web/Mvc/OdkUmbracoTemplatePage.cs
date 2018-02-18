@@ -18,7 +18,7 @@ namespace ODK.Umbraco.Web.Mvc
             _currentMember = new RequestCacheItem<IPublishedContent>(nameof(_currentMember), () => Umbraco.MembershipHelper.GetCurrentMember());
             _currentMemberModel = new RequestCacheItem<MemberModel>(nameof(_currentMemberModel), () => new MemberModel(CurrentMember));
             _homePage = new RequestCacheItem<IPublishedContent>(nameof(_homePage), () => Model.Content.HomePage());
-            _memberService = new RequestCacheItem<OdkMemberService>(nameof(_memberService), () => new OdkMemberService(ApplicationContext.Services.MemberService, Umbraco));
+            _memberService = new RequestCacheItem<OdkMemberService>(nameof(_memberService), () => new OdkMemberService(CurrentMember, ApplicationContext.Services.MemberService, Umbraco));
         }
 
         public bool IsRestricted { get; set; }
@@ -44,5 +44,10 @@ namespace ODK.Umbraco.Web.Mvc
         public IPublishedContent HomePage => _homePage.Value;
 
         public OdkMemberService MemberService => _memberService.Value;
+
+        public OdkUmbracoTemplateModel<T> ModelFor<T>(T value)
+        {
+            return new OdkUmbracoTemplateModel<T>(value, Model.Content, Umbraco);
+        }
     }
 }

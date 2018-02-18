@@ -1,0 +1,23 @@
+﻿@using ODK.Umbraco.Members;
+@using ODK.Umbraco.Web.Mvc;
+@model OdkUmbracoTemplateModel<MemberModel>
+@{
+    MemberModel member = Model.Value;
+    string memberUrl = Model.Content.GetPropertyValue<IPublishedContent>("memberPage", recurse: true).Url + "?id=" + member.Id;
+}
+
+<div id="member-@member.Id" class="card member-tile">
+    <a href="@memberUrl">
+        @if (member.Picture != null)
+        {
+            <img class="card-img-top" src="@member.Picture.GetCropUrl(height: 150)" alt="Photo of @member.FirstName @member.LastName">
+        }
+        else
+        {
+            <i class="card-img-top fas fa-user fa-5x"></i>
+        }
+        <div class="member-tile__footer">
+            @member.FirstName @member.LastName
+        </div>
+    </a>
+</div>

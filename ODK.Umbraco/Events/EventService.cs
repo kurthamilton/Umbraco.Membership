@@ -33,9 +33,9 @@ namespace ODK.Umbraco.Events
                 events = events.Where(x => x.Date.Month == criteria.Month.Value);
             }
 
-            if (criteria.PageSize > 0)
+            if (criteria.MaxItems > 0)
             {
-                events = events.Take(criteria.PageSize.Value);
+                events = events.Take(criteria.MaxItems.Value);
             }
 
             return events;

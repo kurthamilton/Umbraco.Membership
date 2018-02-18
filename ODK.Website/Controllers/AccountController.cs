@@ -13,7 +13,7 @@ namespace ODK.Website.Controllers
 
         public AccountController()
         {
-            _memberService = new OdkMemberService(Services.MemberService, Umbraco);
+            _memberService = new OdkMemberService(Umbraco.MembershipHelper.GetCurrentMember(), Services.MemberService, Umbraco);
         }
 
         [HttpPost]
@@ -100,7 +100,7 @@ namespace ODK.Website.Controllers
         {
             if (Umbraco.MemberIsLoggedOn())
             {
-                MemberModel member = _memberService.GetMember(Umbraco.MembershipHelper.CurrentUserName);
+                MemberModel member = _memberService.GetMember(Umbraco.MembershipHelper.GetCurrentMemberId());
                 RedirectToChapter(member?.ChapterId);
             }
         }

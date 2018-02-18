@@ -315,6 +315,7 @@
     <Content Include="Views\Partials\Feedback.cshtml" />
     <Content Include="Views\Partials\PageHeader.cshtml" />
     <Content Include="Views\Profile.cshtml" />
+    <Content Include="Views\Partials\PersonThumbnail.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

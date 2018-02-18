@@ -52,7 +52,7 @@
             </ul>
         </div>
 
-        <div class="account-links">
+        <div class="account-links align-middle-x">
             @if (member == null)
             {
                 <button class="btn btn-primary" data-toggle="modal" data-target="#login-modal">@loginButtonText</button>
@@ -64,10 +64,10 @@
             }
             else
             {
-                <div class="dropdown navbar-nav">
-                    <span class="text-light account-links__user" data-toggle="dropdown">
+                <div class="dropdown">
+                    <div class="text-light account-links__user" data-toggle="dropdown">
                         <i class="fas fa-user fa-2x"></i>
-                    </span>
+                    </div>
                     <div class="dropdown-menu dropdown-menu-right" role="menu">
                         @if (!string.IsNullOrEmpty(accountUrl))
                         {

@@ -4,11 +4,12 @@
     Layout = "Master.cshtml";
 
     int chapterId = HomePage.Id;
-    IReadOnlyCollection<MemberModel> members = MemberService.GetMembers(chapterId)
-                                                            .OrderBy(x => x.FirstName)
-                                                            .ThenBy(x => x.LastName).ToArray();
+    MemberSearchCriteria criteria = new MemberSearchCriteria(HomePage.Id)
+    {
+        Sort = m => m.OrderBy(x => x.FirstName).ThenBy(x => x.LastName)
+    };
 
-    string memberUrl = Model.Content.GetPropertyValue<IPublishedContent>("memberProfilePage").Url;
+    IEnumerable<MemberModel> members = MemberService.GetMembers(criteria);
 }
 
 <section class="section">
@@ -16,27 +17,10 @@
         <div class="row">
             @foreach (MemberModel member in members)
             {
-                @RenderMember(member, memberUrl)
+                <div class="col-2">
+                    @Html.Partial("PersonThumbnail", ModelFor<MemberModel>(member))
+                </div>
             }
         </div>
     </div>
 </section>
-
-@helper RenderMember(MemberModel member, string memberUrl)
-{
-    <div id="member-@member.Id" class="card member-tile">
-        <a href="@memberUrl?id=@member.Id">
-            @if (member.Picture != null)
-            {
-                <img class="card-img-top" src="@member.Picture.GetCropUrl(height: 150)" alt="Photo of @member.FirstName">
-            }
-            else
-            {
-                <i class="card-img-top fas fa-user fa-5x"></i>
-            }
-            <div class="member-tile__footer">
-                @member.FirstName @member.LastName
-            </div>
-        </a>
-    </div>
-}

@@ -1,5 +1,4 @@
 ﻿@using ODK.Umbraco.Members;
-@using ODK.Umbraco.Web.Mvc;
 @inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
 	Layout = "Master.cshtml";
@@ -11,7 +10,7 @@
         {
             @Html.AntiForgeryToken()
 
-            @Html.Partial("MemberForm", new OdkUmbracoTemplateModel<MemberModel>(CurrentMemberModel, Umbraco))
+            @Html.Partial("MemberForm", ModelFor<MemberModel>(CurrentMemberModel))
 
             @Html.ValidationSummary()
 

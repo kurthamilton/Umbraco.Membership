@@ -1,22 +1,116 @@
-﻿@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
+﻿@using ODK.Umbraco.Events;
+@using ODK.Umbraco.Members;
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
-	Layout = "Master.cshtml";
+    Layout = "Master.cshtml";
 
-	string redirectUrl = Model.Content.GetPropertyValue<string>("redirectUrl");
-	if (!string.IsNullOrWhiteSpace(redirectUrl) && Model.Content.GetPropertyValue<bool>("redirectEnabled"))
-	{
-	    Response.Redirect(redirectUrl);
-	}
-
-	string instagramApiKey = Model.Content.GetPropertyValue<string>("instagramApiKey");
+    string redirectUrl = Model.Content.GetPropertyValue<string>("redirectUrl");
+    if (!string.IsNullOrWhiteSpace(redirectUrl) && Model.Content.GetPropertyValue<bool>("redirectEnabled"))
+    {
+        Response.Redirect(redirectUrl);
+    }
 }
 
-@if (false && !string.IsNullOrEmpty(instagramApiKey))
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            @Html.Partial("Content")
+
+            @RenderInstagramFeed()
+            @RenderLatestMembers()
+        </div>
+
+        <div class="col-md-3 offset-md-1">
+            <div class="content sidebar">
+                @RenderNextEvent()
+            </div>
+        </div>
+    </div>
+</div>
+
+@helper RenderNextEvent()
 {
-    <div id="pixlee_container">
+    IPublishedContent member = CurrentMember;
+    IPublishedContent eventsPage = Model.Content.GetPropertyValue<IPublishedContent>("eventsPage");
+    EventService eventService = new EventService(eventsPage, member);
+
+    EventSearchCriteria criteria = new EventSearchCriteria
+    {
+        FutureOnly = true,
+        MaxItems = 1
+    };
+
+    EventModel nextEvent = eventService.SearchEvents(criteria).FirstOrDefault();
+    if (nextEvent == null)
+    {
+        return;
+    }
+
+    <div class="card">
+        <div class="card-header">
+            Next event
+        </div>
+        <div class="card-body">
+            <h5 class="card-title"><a href="@nextEvent.Url">@nextEvent.Name</a></h5>
+            <h6>@nextEvent.Date.ToString("dd MMMM yyyy")</h6>
+            <h6>Location: @nextEvent.Location</h6>
+        </div>
+    </div>
+}
+
+@helper RenderInstagramFeed()
+{
+    string username = Model.Content.GetPropertyValue<string>("instagramUsername");
+    if (string.IsNullOrEmpty(username))
+    {
+        return;
+    }
+
+    int maxItems = Model.Content.GetPropertyValue<int>("instagramMaxItems");
+    if (maxItems <= 0)
+    {
+        maxItems = 8;
+    }
+
+    <div class="content">
+        <h3>Latest Instagram Photos</h3>
+        <div class="feed--instagram row" data-instagram-username="@username" data-instagram-maxitems="@maxItems">
+
+        </div>
+        <p class="text-right">
+            <i class="fab fa-instagram"></i>&nbsp;<a href="https://instagram.com/@username" target="_blank">@username</a>
+        </p>
     </div>
 
-    <script type="text/javascript">window.PixleeAsyncInit = function() {Pixlee.init({apiKey:'@instagramApiKey'});Pixlee.addSimpleWidget({widgetId:'1808'});};</script><script src="//instafeed.assets.pixlee.com/assets/pixlee_widget_1_0_0.js"></script>
+    <div class="d-none media-template--instagram">
+        <div class="media-item col-3">
+            <a><img class="media-item__image" /></a>
+        </div>
+    </div>
 }
 
-@Html.Partial("Content")
+@helper RenderLatestMembers()
+{
+    MemberModel[] members = MemberService.GetMembers(new MemberSearchCriteria(Model.Content.Id)
+    {
+        MaxItems = 4,
+        Sort = m => m.OrderByDescending(x => x.Joined)
+    }).ToArray();
+
+    if (members.Length == 0)
+    {
+        return;
+    }
+
+    <div class="content">
+        <h3>Latest members</h3>
+        <div class="row">
+            @foreach (MemberModel member in members)
+            {
+                <div class="col-3">
+                    @Html.Partial("PersonThumbnail", ModelFor<MemberModel>(member))
+                </div>
+            }
+        </div>
+    </div>
+}

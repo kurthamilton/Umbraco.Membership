@@ -9,29 +9,24 @@ namespace ODK.Umbraco.Members
 {
     public class OdkMemberService
     {
+        private readonly IPublishedContent _currentMember;
         private readonly UmbracoHelper _umbracoHelper;
-
         private readonly IMemberService _umbracoMemberService;
 
-        public OdkMemberService(IMemberService umbracoMemberService, UmbracoHelper umbracoHelper)
+        public OdkMemberService(IPublishedContent currentMember, IMemberService umbracoMemberService, UmbracoHelper umbracoHelper)
         {
+            _currentMember = currentMember;
             _umbracoHelper = umbracoHelper;
             _umbracoMemberService = umbracoMemberService;
         }
 
-        public MemberModel GetMember(string username)
+        public MemberModel GetMember(int id)
         {
-            IMember umbracoMember = _umbracoMemberService.GetByUsername(username);
-            if (umbracoMember == null)
+            if (_currentMember == null)
             {
                 return null;
             }
 
-            return new MemberModel(umbracoMember, _umbracoHelper);
-        }
-
-        public MemberModel GetMember(int id)
-        {
             IMember umbracoMember = _umbracoMemberService.GetById(id);
             if (umbracoMember == null)
             {
@@ -41,12 +36,34 @@ namespace ODK.Umbraco.Members
             return new MemberModel(umbracoMember, _umbracoHelper);
         }
 
-        public IReadOnlyCollection<MemberModel> GetMembers(int chapterId)
+        public IReadOnlyCollection<MemberModel> GetMembers(MemberSearchCriteria criteria)
         {
+            if (_currentMember == null)
+            {
+                return new MemberModel[] { };
+            }
+
             IEnumerable<IMember> members = _umbracoMemberService.GetAllMembers();
-            return members.Select(x => new MemberModel(x, _umbracoHelper))
-                          .Where(x => x.ChapterId == chapterId)
-                          .ToArray();
+
+            IEnumerable<MemberModel> models = members.Select(x => new MemberModel(x, _umbracoHelper))
+                                                     .Where(x => x.ChapterId == criteria.ChapterId);
+
+            if (!criteria.ShowAll)
+            {
+                models = models.Where(x => !x.Disabled);
+            }
+
+            if (criteria.Sort != null)
+            {
+                models = criteria.Sort(models);
+            }
+
+            if (criteria.MaxItems > 0)
+            {
+                models = models.Take(criteria.MaxItems.Value);
+            }
+
+            return models.ToArray();
         }
 
         public ServiceResult Register(RegisterMemberModel model)

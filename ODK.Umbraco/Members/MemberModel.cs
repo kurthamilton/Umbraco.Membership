@@ -10,6 +10,7 @@ namespace ODK.Umbraco.Members
     {
         public const int DefaultKnittingExperienceOptionId = 0;
 
+        private readonly Lazy<bool> _disabled;
         private readonly MutableLazy<string> _favouriteBeverage;
         private readonly MutableLazy<string> _facebookProfile;
         private readonly MutableLazy<string> _firstName;
@@ -36,6 +37,7 @@ namespace ODK.Umbraco.Members
                 Joined = member.CreateDate;
             }
 
+            _disabled = new Lazy<bool>(() => member?.GetPropertyValue<bool>("disabled") ?? false);
             _facebookProfile = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.FacebookProfile));
             _favouriteBeverage = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.FavouriteBeverage));
             _firstName = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.FirstName));
@@ -56,6 +58,8 @@ namespace ODK.Umbraco.Members
                 Email = member.Email;
                 Id = member.Id;
                 Joined = member.CreateDate;
+
+                _disabled = new Lazy<bool>(() => !member.IsApproved);
             }
 
             _facebookProfile = new MutableLazy<string>(() => member?.GetStringPropertyValue(MemberPropertyNames.FacebookProfile));
@@ -73,6 +77,8 @@ namespace ODK.Umbraco.Members
         public IPublishedContent Chapter { get; protected set; }
 
         public int ChapterId => Chapter?.Id ?? 0;
+
+        public bool Disabled => _disabled.Value;
 
         [Required]
         [EmailAddress]
