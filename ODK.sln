@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODK.Umbraco", "ODK.Umbraco\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODK.Website", "ODK.Website\ODK.Website.csproj", "{41E808E0-3A47-45DF-8634-2CBA94A19783}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODK.Data", "ODK.Data\ODK.Data.csproj", "{1DCE0BCD-4BC3-487D-8655-0B99375B9059}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{41E808E0-3A47-45DF-8634-2CBA94A19783}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41E808E0-3A47-45DF-8634-2CBA94A19783}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41E808E0-3A47-45DF-8634-2CBA94A19783}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DCE0BCD-4BC3-487D-8655-0B99375B9059}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DCE0BCD-4BC3-487D-8655-0B99375B9059}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DCE0BCD-4BC3-487D-8655-0B99375B9059}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DCE0BCD-4BC3-487D-8655-0B99375B9059}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

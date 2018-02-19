@@ -1,6 +1,95 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+﻿@using ODK.Umbraco.Members;
+@using ODK.Umbraco.Web.Mvc;
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
-	Layout = "Master.cshtml";
+    Layout = "Master.cshtml";
+
+    MemberModel member = CurrentMemberModel;
+    HtmlHelper<MemberModel> memberHelper = Html.For<MemberModel>(member);
+
+    string currencyCode = Model.Content.GetPropertyValue<string>("subscriptionCurrency");
+    string currencySymbol = GetCurrencySymbol(currencyCode);
+
+    IPublishedContent[] subscriptions = Model.Content.Children.ToArray();
 }
 
-My account page
+<div class="content">
+    <div class="container">
+        @if (member.Type != MemberTypes.None)
+        {
+            <div class="form-group">
+                @memberHelper.LabelFor(x => x.Type, "Current Membership Type", new { @class = "form-control-label" })
+                <span class="form-control-plaintext">@member.Type</span>
+            </div>
+        }
+
+        @if (subscriptions.Length == 1)
+        {
+            IPublishedContent subscription = subscriptions.Single();
+            <h3>@subscription.GetPropertyValue("title")</h3>
+            @Html.Raw(subscription.GetPropertyValue("description"))
+
+            <a href="#" class="btn btn-primary">Buy</a>
+            @currencySymbol@subscription.GetPropertyValue("charge")
+        }
+        else
+        {
+            <div id="subscriptionTypes">
+                @for (int i = 0; i < subscriptions.Length; i++)
+                {
+                    @SubscriptionAccordionItem(subscriptions[i], currencySymbol, i == 0)
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@helper SubscriptionAccordionItem(IPublishedContent subscription, string currencySymbol, bool expanded)
+{
+    string type = subscription.Name;
+    string title = subscription.GetPropertyValue<string>("title");
+    string description = subscription.GetPropertyValue<string>("description");
+    double charge = subscription.GetPropertyValue<double>("charge");
+
+    <div class="card">
+        <div class="card-header" id="heading-@type">
+            <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-@type" aria-expanded="true" aria-controls="collapse-@type">@title</button>
+            </h5>
+        </div>
+
+        <div id="collapse-@type" class="collapse @Html.Raw(expanded ? "show" : null)" aria-labelledby="heading-@type" data-parent="#subscriptionTypes">
+            <div class="card-body">
+                @Html.Raw(@description)
+                @SubscriptionButton(currencySymbol, charge)
+            </div>
+        </div>
+    </div>
+}
+
+@helper SubscriptionButton(string currencySymbol, double charge)
+{
+    <a href="#" class="btn btn-primary">Buy</a>
+    @currencySymbol@charge
+}
+
+@functions
+{
+    string GetCurrencySymbol(string code)
+    {
+        switch (code)
+        {
+            case "GBP":
+                return "£";
+
+            case "USD":
+            case "AUD":
+                return "$";
+
+            case "EUR":
+                return "€";
+        }
+
+        return null;
+    }
+}

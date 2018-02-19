@@ -146,14 +146,12 @@ else if (updateHelper != null)
     </div>
 }
 
-@*TODO: picture*@
-
 @helper RequiredIf(bool condition)
+{
+    if (!condition)
     {
-        if (!condition)
-        {
-            return;
-        }
+        return;
+    }
 
-        @Html.Raw("required")
+    @Html.Raw("required")
 }
