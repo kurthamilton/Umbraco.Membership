@@ -1,9 +1,19 @@
 html {
-	font-size: 21px;
+    font-size: 16px;
+}
+
+@media (min-width:992px) {
+    html {
+        font-size: 21px;
+    }
 }
 
 body {
 	font-family: 'Josefin Sans';
+}
+
+img {
+    max-width: 100%;
 }
 
 .background-image-full {
@@ -152,17 +162,12 @@ body {
 
 .section--hero {
 	background-position-y: 0;
-	padding: 100px 20px;
-	min-height: 100vh;
+	padding: 50px 20px;
 }
 
 .section--hero__content {
 	font-size: 1.4rem;
 	max-width: 760px;
-}
-
-.section--image {
-    max-width: 100%;
 }
 
 .overlay--dark .section--hero__content {
@@ -221,7 +226,6 @@ body {
     background-color: #eee; /*TEMP*/
     border-radius: calc(.5rem - 1px);
     max-height: 150px;
-    max-width: 100%;
     line-height: 150px;
     width: inherit;
 }
