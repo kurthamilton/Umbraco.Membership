@@ -24,6 +24,11 @@ namespace ODK.Umbraco.Members
             _umbracoMemberService = umbracoMemberService;
         }
 
+        public MemberModel GetCurrentMember()
+        {
+            return GetMember(_currentMember);
+        }
+
         public MemberModel GetMember(int id)
         {
             if (_currentMember == null)
@@ -32,12 +37,7 @@ namespace ODK.Umbraco.Members
             }
 
             IPublishedContent member = _umbracoHelper.TypedMember(id);
-            if (member == null)
-            {
-                return null;
-            }
-
-            return new MemberModel(member);
+            return GetMember(member);
         }
 
         public IReadOnlyCollection<MemberModel> GetMembers(MemberSearchCriteria criteria)
@@ -130,6 +130,16 @@ namespace ODK.Umbraco.Members
             _umbracoMemberService.Save(member);
 
             return new ServiceResult(true);
+        }
+
+        private MemberModel GetMember(IPublishedContent member)
+        {
+            if (member == null)
+            {
+                return null;
+            }
+
+            return new MemberModel(member);
         }
 
         private static void UpdateMemberProperties(IMember member, MemberModel model, IMedia picture)

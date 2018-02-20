@@ -2,6 +2,7 @@
 {
     public static class MemberPropertyNames
     {
+        public const string AdminUserId = "memberAdminUserId";
         public const string Approved = "umbracoMemberApproved";
         public const string ChapterId = "memberChapterId";
         public const string Email = "Email";

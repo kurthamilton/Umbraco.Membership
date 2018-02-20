@@ -102,7 +102,7 @@ namespace ODK.Website.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ImportMemberPictures(IEnumerable<HttpPostedFileBase> files)
         {
-            if (AdminUser == null)
+            if (CurrentMemberModel.AdminUserId == null)
             {
                 return RedirectToHome();
             }
@@ -116,10 +116,12 @@ namespace ODK.Website.Controllers
             foreach (HttpPostedFileBase file in files)
             {
                 FileInfo fileInfo = new FileInfo(file.FileName);
-                MemberModel memberModel = memberModels.FirstOrDefault(x => x.FullName.Equals(fileInfo.Name, StringComparison.OrdinalIgnoreCase));
+                string fullName = fileInfo.Name.Substring(0, fileInfo.Name.Length - fileInfo.Extension.Length);
+                MemberModel memberModel = memberModels.FirstOrDefault(x => x.FullName.Equals(fullName, StringComparison.OrdinalIgnoreCase));
                 if (memberModel == null)
                 {
                     notFound.Add(file.FileName);
+                    continue;
                 }
 
                 IPublishedContent member = Members.GetById(memberModel.Id);
@@ -163,8 +165,7 @@ namespace ODK.Website.Controllers
         {
             if (Umbraco.MemberIsLoggedOn())
             {
-                MemberModel member = _memberService.GetMember(Umbraco.MembershipHelper.GetCurrentMemberId());
-                RedirectToChapter(member?.ChapterId);
+                RedirectToChapter(CurrentMemberModel?.ChapterId);
             }
         }
 

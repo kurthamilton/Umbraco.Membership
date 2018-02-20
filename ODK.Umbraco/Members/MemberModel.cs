@@ -10,6 +10,7 @@ namespace ODK.Umbraco.Members
     {
         public const int DefaultKnittingExperienceOptionId = 0;
 
+        private readonly Lazy<int?> _adminUserId;
         private readonly Lazy<bool> _disabled;
         private readonly MutableLazy<string> _favouriteBeverage;
         private readonly MutableLazy<string> _facebookProfile;
@@ -43,6 +44,7 @@ namespace ODK.Umbraco.Members
                 Joined = member.CreateDate;
             }
 
+            _adminUserId = new Lazy<int?>(() => member?.GetPropertyValue<int?>(MemberPropertyNames.AdminUserId));
             _disabled = new Lazy<bool>(() => member != null ? !member.GetPropertyValue<bool>(MemberPropertyNames.Approved) : false);
             _facebookProfile = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.FacebookProfile));
             _favouriteBeverage = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.FavouriteBeverage));
@@ -56,6 +58,8 @@ namespace ODK.Umbraco.Members
             _reason = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.Reason));
             _type = new Lazy<MemberTypes>(() => member != null ? (MemberTypes)Enum.Parse(typeof(MemberTypes), member.GetPropertyValue<string>(MemberPropertyNames.Type)) : MemberTypes.Trial);
         }
+
+        public int? AdminUserId => _adminUserId.Value;
 
         public IPublishedContent Chapter { get; private set; }
 

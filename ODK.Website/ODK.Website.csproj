@@ -317,6 +317,8 @@
     <Content Include="Views\Profile.cshtml" />
     <Content Include="Views\Partials\PersonThumbnail.cshtml" />
     <Content Include="Views\Account.cshtml" />
+    <Content Include="Views\Admin.cshtml" />
+    <Content Include="Views\Partials\BlogpostMeta.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

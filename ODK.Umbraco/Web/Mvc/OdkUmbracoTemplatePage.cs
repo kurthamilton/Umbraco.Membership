@@ -1,8 +1,6 @@
 ﻿using ODK.Umbraco.Members;
-using ODK.Umbraco.Security;
 using ODK.Umbraco.Settings;
 using Umbraco.Core.Models;
-using Umbraco.Core.Models.Membership;
 using Umbraco.Core.Services;
 using Umbraco.Web.Mvc;
 
@@ -10,7 +8,6 @@ namespace ODK.Umbraco.Web.Mvc
 {
     public abstract class OdkUmbracoTemplatePage : UmbracoTemplatePage
     {
-        private RequestCacheItem<IUser> _adminUser = new RequestCacheItem<IUser>(nameof(_adminUser), () => SecurityHelper.CurrentAdminUser());
         private RequestCacheItem<IPublishedContent> _currentMember;
         private RequestCacheItem<MemberModel> _currentMemberModel;
         private RequestCacheItem<IPublishedContent> _homePage;
@@ -38,8 +35,6 @@ namespace ODK.Umbraco.Web.Mvc
 
             base.InitializePage();
         }
-
-        public IUser AdminUser => _adminUser.Value;
 
         public IPublishedContent CurrentMember => _currentMember.Value;
 

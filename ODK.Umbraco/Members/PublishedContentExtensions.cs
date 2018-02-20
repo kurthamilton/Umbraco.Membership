@@ -9,12 +9,17 @@ namespace ODK.Umbraco.Members
     {
         public static bool IsRestricted(this IPublishedContent content, IPublishedContent member, bool recurse = true)
         {
-            if (member != null)
+            if (member == null)
+            {
+                return content.GetPropertyValue(PropertyNames.Restricted, recurse: recurse, defaultValue: false);
+            }
+
+            if (!content.GetPropertyValue<bool>(PropertyNames.Admin))
             {
                 return false;
             }
 
-            return content.GetPropertyValue(PropertyNames.Restricted, recurse: recurse, defaultValue: false);
+            return member.GetPropertyValue<int?>(MemberPropertyNames.AdminUserId) == null;
         }
 
         public static IEnumerable<IPublishedContent> MenuItems(this IPublishedContent content, IPublishedContent member)

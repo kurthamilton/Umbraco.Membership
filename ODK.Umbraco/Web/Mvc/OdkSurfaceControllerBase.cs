@@ -1,19 +1,27 @@
-﻿using ODK.Umbraco.Security;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Web.Mvc;
-using Umbraco.Core.Models.Membership;
+using ODK.Umbraco.Members;
 using Umbraco.Web.Mvc;
 
 namespace ODK.Umbraco.Web.Mvc
 {
     public abstract class OdkSurfaceControllerBase : SurfaceController
     {
+        private readonly Lazy<MemberModel> _currentMemberModel;
         private readonly List<string> _feedbackMessages = new List<string>();
         private readonly List<bool> _feedbackSuccesses = new List<bool>();
-        private readonly Lazy<IUser> _adminUser = new Lazy<IUser>(() => SecurityHelper.CurrentAdminUser());
+        private readonly Lazy<OdkMemberService> _memberService;
 
-        protected IUser AdminUser => _adminUser.Value;
+        protected MemberModel CurrentMemberModel => _currentMemberModel.Value;
+
+        protected OdkMemberService MemberService => _memberService.Value;
+
+        protected OdkSurfaceControllerBase()
+        {
+            _currentMemberModel = new Lazy<MemberModel>(() => MemberService.GetCurrentMember());
+            _memberService = new Lazy<OdkMemberService>(() => new OdkMemberService(Umbraco.MembershipHelper.GetCurrentMember(), Services.MediaService, Services.MemberService, Umbraco));
+        }
 
         protected void AddFeedback(string message, bool success)
         {
