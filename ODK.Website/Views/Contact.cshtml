@@ -1,5 +1,4 @@
-﻿@inherits UmbracoTemplatePage<Contact>
-@using ContentModels = Umbraco.Web.PublishedContentModels;
+﻿@inherits UmbracoTemplatePage
 @{
     Layout = "Master.cshtml";
 }
@@ -8,8 +7,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h2>@Model.Content.ContactFormHeader</h2>
-                @Model.Content.ContactIntro
+                <h2>@Model.Content.GetPropertyValue("ContactFormHeader")</h2>
+                @Model.Content.GetPropertyValue("ContactIntro")
 
                 @using (Html.BeginUmbracoForm("Index", "Contact", FormMethod.Post))
                 {

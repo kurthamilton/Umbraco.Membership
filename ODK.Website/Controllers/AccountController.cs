@@ -16,9 +16,9 @@ namespace ODK.Website.Controllers
     {
         private readonly OdkMemberService _memberService;
 
-        public AccountController()
+        public AccountController(OdkMemberService memberService)
         {
-            _memberService = new OdkMemberService(Umbraco.MembershipHelper.GetCurrentMember(), Services.MediaService, Services.MemberService, Umbraco);
+            _memberService = memberService;
         }
 
         [HttpPost]
@@ -61,7 +61,7 @@ namespace ODK.Website.Controllers
             IPublishedContent chapter = Umbraco.AssignedContentItem.HomePage();
             model.SetChapter(chapter);
 
-            ServiceResult result = _memberService.Register(model);
+            ServiceResult result = _memberService.Register(model, Umbraco);
             if (!result.Success)
             {
                 return OnError(model, result);
@@ -87,7 +87,7 @@ namespace ODK.Website.Controllers
             IPublishedContent chapter = Umbraco.AssignedContentItem.HomePage();
             model.SetChapter(chapter);
 
-            ServiceResult result = _memberService.Update(member.Id, model);
+            ServiceResult result = _memberService.Update(member.Id, model, Umbraco);
             if (!result.Success)
             {
                 return OnError(model, result);
@@ -112,7 +112,7 @@ namespace ODK.Website.Controllers
 
             IPublishedContent chapter = Umbraco.AssignedContentItem.HomePage();
 
-            IReadOnlyCollection<MemberModel> memberModels = _memberService.GetMembers(new MemberSearchCriteria(chapter.Id));
+            IReadOnlyCollection<MemberModel> memberModels = _memberService.GetMembers(new MemberSearchCriteria(chapter.Id), Umbraco);
             foreach (HttpPostedFileBase file in files)
             {
                 FileInfo fileInfo = new FileInfo(file.FileName);
@@ -129,7 +129,7 @@ namespace ODK.Website.Controllers
                 UpdateMemberModel updateMemberModel = new UpdateMemberModel(member);
                 updateMemberModel.UploadedPicture = file;
 
-                _memberService.Update(member.Id, updateMemberModel);
+                _memberService.Update(member.Id, updateMemberModel, Umbraco);
 
                 updated.Add(file.FileName);
             }

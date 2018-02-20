@@ -107,12 +107,12 @@
     {
         maxItems = 8;
     }
-    
+
     MemberModel[] members = MemberService.GetMembers(new MemberSearchCriteria(Model.Content.Id)
     {
         MaxItems = maxItems,
         Sort = m => m.OrderByDescending(x => x.Joined)
-    }).ToArray();
+    }, Umbraco).ToArray();
 
     if (members.Length == 0)
     {

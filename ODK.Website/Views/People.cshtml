@@ -10,7 +10,7 @@
         Types = new[] { MemberTypes.Full, MemberTypes.Partial, MemberTypes.Trial }
     };
 
-    IEnumerable<MemberModel> members = MemberService.GetMembers(criteria);
+    IEnumerable<MemberModel> members = MemberService.GetMembers(criteria, Umbraco);
 }
 
 <section class="section">

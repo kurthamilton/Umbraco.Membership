@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using ODK.Data.Payments;
 using ODK.Umbraco.Content;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
@@ -10,47 +11,39 @@ namespace ODK.Umbraco.Members
 {
     public class OdkMemberService
     {
-        private readonly IPublishedContent _currentMember;
-        private readonly UmbracoHelper _umbracoHelper;
+        private readonly PaymentsDataService _paymentsDataService;
         private readonly IMediaService _umbracoMediaService;
         private readonly IMemberService _umbracoMemberService;
 
-        public OdkMemberService(IPublishedContent currentMember, IMediaService umbracoMediaService, IMemberService umbracoMemberService,
-            UmbracoHelper umbracoHelper)
+        public OdkMemberService(IMediaService umbracoMediaService, IMemberService umbracoMemberService, PaymentsDataService paymentsDataService)
         {
-            _currentMember = currentMember;
-            _umbracoHelper = umbracoHelper;
             _umbracoMediaService = umbracoMediaService;
             _umbracoMemberService = umbracoMemberService;
         }
 
-        public MemberModel GetCurrentMember()
+        public MemberModel GetMember(int id, UmbracoHelper helper)
         {
-            return GetMember(_currentMember);
-        }
-
-        public MemberModel GetMember(int id)
-        {
-            if (_currentMember == null)
+            if (!IsAllowed(helper))
             {
                 return null;
             }
 
-            IPublishedContent member = _umbracoHelper.TypedMember(id);
+            IPublishedContent member = helper.TypedMember(id);
             return GetMember(member);
         }
 
-        public IReadOnlyCollection<MemberModel> GetMembers(MemberSearchCriteria criteria)
+        public IReadOnlyCollection<MemberModel> GetMembers(MemberSearchCriteria criteria, UmbracoHelper helper)
         {
-            if (_currentMember == null)
+            if (!IsAllowed(helper))
             {
                 return new MemberModel[] { };
             }
 
-            IEnumerable<IMember> members = _umbracoMemberService.GetAllMembers();
-
-            IEnumerable<MemberModel> models = members.Select(x => new MemberModel(x, _umbracoHelper))
-                                                     .Where(x => x.ChapterId == criteria.ChapterId);
+            IEnumerable<MemberModel> models = _umbracoMemberService
+                .GetAllMembers()
+                .Select(x => helper.TypedMember(x.Id))
+                .Select(x => new MemberModel(x))
+                .Where(x => x.ChapterId == criteria.ChapterId);
 
             if (!criteria.ShowAll)
             {
@@ -75,14 +68,14 @@ namespace ODK.Umbraco.Members
             return models.ToArray();
         }
 
-        public ServiceResult Register(RegisterMemberModel model)
+        public ServiceResult Register(RegisterMemberModel model, UmbracoHelper helper)
         {
             if (_umbracoMemberService.GetByUsername(model.Email) != null)
             {
                 return new ServiceResult(nameof(model.Email), "Email already registered");
             }
 
-            IDictionary<string, string> validationMessages = ValidateModel(model, model.UploadedPicture);
+            IDictionary<string, string> validationMessages = ValidateModel(model, model.UploadedPicture, helper);
             if (validationMessages.Any())
             {
                 return new ServiceResult(validationMessages);
@@ -92,7 +85,7 @@ namespace ODK.Umbraco.Members
 
             IMember member = _umbracoMemberService.CreateMember(model.Email, model.Email, model.FullName, memberType);
 
-            member.SetValue(MemberPropertyNames.ChapterId, _umbracoHelper.GetPublishedContentAsPropertyValue(model.ChapterId));
+            member.SetValue(MemberPropertyNames.ChapterId, helper.GetPublishedContentAsPropertyValue(model.ChapterId));
 
             IMedia picture = SaveImage(model.UploadedPicture, model);
 
@@ -104,7 +97,7 @@ namespace ODK.Umbraco.Members
             return new ServiceResult(true);
         }
 
-        public ServiceResult Update(int id, UpdateMemberModel model)
+        public ServiceResult Update(int id, UpdateMemberModel model, UmbracoHelper helper)
         {
             IMember member = _umbracoMemberService.GetById(id);
             if (member == null)
@@ -112,7 +105,7 @@ namespace ODK.Umbraco.Members
                 return new ServiceResult("", "Member not found");
             }
 
-            IDictionary<string, string> validationMessages = ValidateModel(model, model.UploadedPicture);
+            IDictionary<string, string> validationMessages = ValidateModel(model, model.UploadedPicture, helper);
             if (validationMessages.Any())
             {
                 return new ServiceResult(validationMessages);
@@ -132,14 +125,9 @@ namespace ODK.Umbraco.Members
             return new ServiceResult(true);
         }
 
-        private MemberModel GetMember(IPublishedContent member)
+        private static bool IsAllowed(UmbracoHelper helper)
         {
-            if (member == null)
-            {
-                return null;
-            }
-
-            return new MemberModel(member);
+            return !string.IsNullOrEmpty(helper.MembershipHelper.CurrentUserName);
         }
 
         private static void UpdateMemberProperties(IMember member, MemberModel model, IMedia picture)
@@ -158,6 +146,16 @@ namespace ODK.Umbraco.Members
             {
                 member.SetValue(MemberPropertyNames.Picture, picture.ToPropertyValue());
             }
+        }
+
+        private MemberModel GetMember(IPublishedContent member)
+        {
+            if (member == null)
+            {
+                return null;
+            }
+
+            return new MemberModel(member);
         }
 
         private IMedia SaveImage(HttpPostedFileBase file, MemberModel member)
@@ -191,11 +189,11 @@ namespace ODK.Umbraco.Members
             return memberImage;
         }
 
-        private IDictionary<string, string> ValidateModel<T>(T model, HttpPostedFileBase image) where T : MemberModel, IMemberPictureUpload
+        private IDictionary<string, string> ValidateModel<T>(T model, HttpPostedFileBase image, UmbracoHelper helper) where T : MemberModel, IMemberPictureUpload
         {
             Dictionary<string, string> messages = new Dictionary<string, string>();
 
-            IEnumerable<string> knittingExperienceOptions = _umbracoHelper.GetKnittingExperienceOptions();
+            IEnumerable<string> knittingExperienceOptions = helper.GetKnittingExperienceOptions();
             if (!knittingExperienceOptions.Contains(model.KnittingExperience))
             {
                 messages.Add(nameof(model.KnittingExperience), "Knitting know-how required");

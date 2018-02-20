@@ -7,6 +7,8 @@ namespace ODK.Data.Payments
 {
     public class PaymentsDataService
     {
+        private const string TableName = "dbo.odkPayments";
+
         private readonly string _connectionString;
 
         public PaymentsDataService(string connectionString)
@@ -14,13 +16,13 @@ namespace ODK.Data.Payments
             _connectionString = connectionString;
         }
 
-        public async Task<IReadOnlyCollection<Payment>> GetMemberPayments(int memberId)
+        public async Task<IReadOnlyCollection<Payment>> GetPayments(int memberId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                using (SqlCommand command = new SqlCommand("SELECT Amount, Date FROM dbo.odkPayments WHERE MemberId = @MemberId", connection))
+                using (SqlCommand command = new SqlCommand($"SELECT Amount, Date FROM {TableName} WHERE MemberId = @MemberId", connection))
                 {
                     command.Parameters.Add("@MemberId", SqlDbType.Int).Value = memberId;
 
@@ -35,6 +37,24 @@ namespace ODK.Data.Payments
                     }
 
                     return payments;
+                }
+            }
+        }
+
+        public async Task LogPayment(Payment payment)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (SqlCommand command = new SqlCommand($"INSERT INTO {TableName} (memberId, name, amount, date) VALUES (@MemberId, @MemberName, @Amount, @Date)", connection))
+                {
+                    command.Parameters.Add("@MemberId", SqlDbType.Int).Value = payment.MemberId;
+                    command.Parameters.Add("@MemberName", SqlDbType.NVarChar).Value = payment.MemberName;
+                    command.Parameters.Add("@Amount", SqlDbType.Float).Value = payment.Amount;
+                    command.Parameters.Add("@Date", SqlDbType.DateTime).Value = payment.Date;
+
+                    await command.ExecuteNonQueryAsync();
                 }
             }
         }

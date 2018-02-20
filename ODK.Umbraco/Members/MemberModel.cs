@@ -29,11 +29,6 @@ namespace ODK.Umbraco.Members
         {
         }
 
-        public MemberModel(IMember member, UmbracoHelper helper)
-            : this(helper.TypedMember(member.Id))
-        {
-        }
-
         public MemberModel(IPublishedContent member)
         {
             if (member != null)
