@@ -1,4 +1,8 @@
-﻿using System.Web;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using ODK.Umbraco;
 using ODK.Umbraco.Members;
@@ -90,6 +94,51 @@ namespace ODK.Website.Controllers
             }
 
             AddFeedback("Profile updated", true);
+
+            return RedirectToCurrentUmbracoPage();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ImportMemberPictures(IEnumerable<HttpPostedFileBase> files, int chapterId)
+        {
+            if (AdminUser == null)
+            {
+                return RedirectToHome();
+            }
+
+            List<string> notFound = new List<string>();
+            List<string> updated = new List<string>();
+
+            IReadOnlyCollection<MemberModel> memberModels = _memberService.GetMembers(new MemberSearchCriteria(chapterId));
+            foreach (HttpPostedFileBase file in files)
+            {
+                FileInfo fileInfo = new FileInfo(file.FileName);
+                MemberModel memberModel = memberModels.FirstOrDefault(x => x.FullName.Equals(fileInfo.Name, StringComparison.OrdinalIgnoreCase));
+                if (memberModel == null)
+                {
+                    notFound.Add(file.FileName);
+                }
+
+                IPublishedContent member = Members.GetById(memberModel.Id);
+
+                UpdateMemberModel updateMemberModel = new UpdateMemberModel(member);
+                updateMemberModel.UploadedPicture = file;
+
+                _memberService.Update(member.Id, updateMemberModel);
+
+                updated.Add(file.FileName);
+            }
+
+            if (notFound.Count > 0)
+            {
+                AddFeedback("Members not found: " + string.Join(", ", notFound), false);
+            }
+
+            if (updated.Count > 0)
+            {
+                AddFeedback("Members updated: " + string.Join(", ", updated), true);
+            }
 
             return RedirectToCurrentUmbracoPage();
         }
