@@ -1,21 +1,16 @@
-﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<ContentModels.Blogpost>
-@using ContentModels = Umbraco.Web.PublishedContentModels;
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
 @{
     Layout = "Master.cshtml";
+    
+    string excerpt = Model.Content.GetPropertyValue<string>("excerpt");
 }
 
-<section class="section">
+<section class="section section--main">
     <div class="container">
         <article>
-            <div class="blogpost-meta">
-                <small class="blogpost-date">@Model.Content.CreateDate.ToShortDateString()</small>
-                <span class="blogpost-cat">
-                    @Html.Partial("CategoryLinks", Model.Content.Categories)
-                </span>
-            </div>
-            <h3>@Model.Content.Excerpt</h3>
-            @Html.GetGridHtml(Model.Content, "bodyText", "bootstrap3-fluid")
-            <!-- todo: implement discus comments -->
+            @Html.Partial("BlogpostMeta", Model.Content)
+            <h3>@excerpt</h3>
+            @Html.Partial("Content")
         </article>
     </div>
 </section>

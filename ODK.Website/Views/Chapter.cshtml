@@ -13,47 +13,58 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-lg-9 col-md-8 order-2 order-md-1">
             @Html.Partial("Content")
 
-            @RenderInstagramFeed()
             @RenderLatestMembers()
+            @RenderInstagramFeed()
         </div>
 
-        <div class="col-md-3 offset-md-1">
-            <div class="content sidebar">
-                @RenderNextEvent()
+        <div class="col-lg-3 col-md-4 order-1 order-md-2">
+            <div class="sidebar">
+                @RenderUpcomingEvents()
             </div>
         </div>
     </div>
 </div>
 
-@helper RenderNextEvent()
+@helper RenderUpcomingEvents()
 {
     IPublishedContent member = CurrentMember;
     IPublishedContent eventsPage = Model.Content.GetPropertyValue<IPublishedContent>("eventsPage");
     EventService eventService = new EventService(eventsPage, member);
 
+    int maxItems = Model.Content.GetPropertyValue<int>("numberOfNextEvents");
+    if (maxItems <= 0)
+    {
+        maxItems = 3;
+    }
+
     EventSearchCriteria criteria = new EventSearchCriteria
     {
         FutureOnly = true,
-        MaxItems = 1
+        MaxItems = 3
     };
 
-    EventModel nextEvent = eventService.SearchEvents(criteria).FirstOrDefault();
-    if (nextEvent == null)
+    EventModel[] nextEvents = eventService.SearchEvents(criteria).OrderBy(x => x.Date).ToArray();
+    if (nextEvents.Length == 0)
     {
         return;
     }
 
     <div class="card">
         <div class="card-header">
-            Next event
+            Upcoming events
         </div>
-        <div class="card-body">
-            <h5 class="card-title"><a href="@nextEvent.Url">@nextEvent.Name</a></h5>
-            <h6>@nextEvent.Date.ToString("dd MMMM yyyy")</h6>
-            <h6>Location: @nextEvent.Location</h6>
+        <div class="card-body events">
+            @foreach (EventModel ev in nextEvents)
+            {
+                <div class="event">
+                    <h5 class="card-title"><a href="@ev.Url">@ev.Name</a></h5>
+                    <h6>@ev.Date.ToString("dd MMMM yyyy")</h6>
+                    <div>@ev.Location</div>
+                </div>
+            }
         </div>
     </div>
 }
@@ -91,9 +102,15 @@
 
 @helper RenderLatestMembers()
 {
+    int maxItems = Model.Content.GetPropertyValue<int>("numberOfLatestMembers");
+    if (maxItems <= 0)
+    {
+        maxItems = 8;
+    }
+    
     MemberModel[] members = MemberService.GetMembers(new MemberSearchCriteria(Model.Content.Id)
     {
-        MaxItems = 4,
+        MaxItems = maxItems,
         Sort = m => m.OrderByDescending(x => x.Joined)
     }).ToArray();
 

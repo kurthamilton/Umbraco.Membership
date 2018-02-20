@@ -1,0 +1,28 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+	Layout = "Master.cshtml";
+}
+
+<section class="section section--main">
+    <div class="container">
+        @using (Html.BeginUmbracoForm("ImportMemberPictures", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+    
+            <div class="form-group">
+                <label class="form-control-label">Import member pictures</label>
+                <div class="input-group mb-3">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" accept="image/*" 
+                               name="files" id="files" multiple>
+                        <label class="custom-file-label" for="files">Choose files</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <button type="submit" class="btn btn-primary">Import</button>
+            </div>
+        }
+    </div>
+</section>

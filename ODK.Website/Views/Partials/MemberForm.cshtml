@@ -10,7 +10,7 @@
 
     RegisterMemberModel registerMember = Model.Value as RegisterMemberModel;
     UpdateMemberModel updateMember = Model.Value as UpdateMemberModel;
-
+    
     HtmlHelper<MemberModel> memberHelper = Html.For<MemberModel>(Model.Value);
     HtmlHelper<RegisterMemberModel> registerHelper = registerMember != null ? Html.For<RegisterMemberModel>(registerMember) : null;
     HtmlHelper<UpdateMemberModel> updateHelper = updateMember != null ? Html.For<UpdateMemberModel>(updateMember) : null;
@@ -66,7 +66,13 @@
 {
     <div class="form-group required">
         @registerHelper.LabelFor(x => x.UploadedPicture, new { @class = "form-control-label" })
-        <input type="file" name="@registerHelper.NameFor(x => x.UploadedPicture)" class="form-control-file" accept="image/*" required />
+        <div class="input-group mb-3">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" accept="image/*" 
+                       name="@registerHelper.NameFor(x => x.UploadedPicture)" id="@registerHelper.IdFor(x => x.UploadedPicture)">
+                <label class="custom-file-label" for="@registerHelper.NameFor(x => x.UploadedPicture)">Choose file</label>
+            </div>
+        </div>
         @registerHelper.ValidationMessageFor(x => x.UploadedPicture)
     </div>
 }
@@ -74,7 +80,13 @@ else if (updateHelper != null)
 {
     <div class="form-group">
         @updateHelper.LabelFor(x => x.UploadedPicture, new { @class = "form-control-label" })
-        <input type="file" name="@updateHelper.NameFor(x => x.UploadedPicture)" class="form-control-file" accept="image/*" />
+        <div class="input-group mb-3">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" accept="image/*" 
+                       name="@updateHelper.NameFor(x => x.UploadedPicture)" id="@updateHelper.IdFor(x => x.UploadedPicture)">
+                <label class="custom-file-label" for="@updateHelper.NameFor(x => x.UploadedPicture)">Choose file</label>
+            </div>
+        </div>
         @updateHelper.ValidationMessageFor(x => x.UploadedPicture)
     </div>
 }
@@ -123,11 +135,12 @@ else if (updateHelper != null)
     @Html.Partial("Tooltip", "This is optional, and only other members will be able to see it.")
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text">https://www.facebook.com/</span>
+            <span class="input-group-text d-none d-md-inline">https://www.facebook.com/</span>
+            <span class="input-group-text d-md-none"><i class="fab fa-facebook-square"></i>&nbsp;<span class="align-middle">/</span></span>
         </div>
         @memberHelper.TextBoxFor(x => x.FacebookProfile, new { @class = "form-control" })
-        @memberHelper.ValidationMessageFor(x => x.FacebookProfile)
     </div>
+    @memberHelper.ValidationMessageFor(x => x.FacebookProfile)
 </div>
 
 @if (Model.Value.Joined != null)

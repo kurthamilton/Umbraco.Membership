@@ -8,9 +8,14 @@
         return;
     }
 
+    if (Model.Content.GetPropertyValue<bool>("admin") && AdminUser == null)
+    {
+        return;
+    }
+
     string favicon = HomePage.GetHomePageValue<IPublishedContent>("favicon").Url;
-    int scriptVersion = 1;
-    int stylesheetVersion = 4;
+    int scriptVersion = 3;
+    int stylesheetVersion = 7;
 }
 
 <!doctype html>

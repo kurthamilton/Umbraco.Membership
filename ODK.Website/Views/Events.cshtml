@@ -20,20 +20,20 @@
         {
             if (member == null)
             {
-                <p>There are no forthcoming public events. Sign in to see private events.</p>
+                <p>There are no upcoming public events. Sign in to see private events.</p>
             }
             else
             {
-                <p>There are no forthcoming events.</p>
+                <p>There are no upcoming events.</p>
             }
         }
 
         @foreach (EventModel ev in events)
         {
-            <div class="events__event mb-2 pt-2">
+            <div class="list-item">
                 <h2><a href="@ev.Url">@ev.Name</a></h2>
                 <h3>@ev.Date.ToString("dddd, dd MMMM yyyy")</h3>
-                <div>Location: @ev.Location</div>
+                <div>@ev.Location</div>
                 @if (!string.IsNullOrEmpty(ev.Description))
                 {
                     <div>@Html.Raw(ev.Description)</div>

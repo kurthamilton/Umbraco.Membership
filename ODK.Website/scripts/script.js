@@ -1,21 +1,46 @@
 (function() {
     $(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-        $('.modal.show').modal('show');
+        bindCustomFileInputs();
+        bindDropDownOther();
+        bindModals();
+        bindTooltips();
+        
         loadInstagramFeed();
     });
 
-    $('[data-other-for]').each(function() {
-        var other = $(this);
-        var parent = $('#' + other.data('other-for'));
-        var match = other.data('other-key');
-
-        setOtherVisibility(parent, match, other);
-        parent.on('change', function () {
-            setOtherVisibility(parent, match, other);
+    function bindCustomFileInputs() {
+        $('.custom-file-input').on('change',function() {
+            var files = $(this)[0].files;
+            var fileNames = [];
+            for (var i = 0; i < files.length; i++) {
+                fileNames.push(files[i].name);
+            }
+            
+            $(this).next('.custom-file-label').html(fileNames.join('; '));
         });
-    });
-
+    }
+    
+    function bindDropDownOther() {
+        $('[data-other-for]').each(function() {
+            var other = $(this);
+            var parent = $('#' + other.data('other-for'));
+            var match = other.data('other-key');
+    
+            setOtherVisibility(parent, match, other);
+            parent.on('change', function () {
+                setOtherVisibility(parent, match, other);
+            });
+        });
+    }
+    
+    function bindModals() {
+        $('.modal.show').modal('show');
+    }
+    
+    function bindTooltips() {
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+    
     function loadInstagramFeed() {
         var container = $('[data-instagram-username]');
         if (container.length === 0) {
