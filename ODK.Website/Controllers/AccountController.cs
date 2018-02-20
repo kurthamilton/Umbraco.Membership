@@ -100,7 +100,7 @@ namespace ODK.Website.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ImportMemberPictures(IEnumerable<HttpPostedFileBase> files, int chapterId)
+        public ActionResult ImportMemberPictures(IEnumerable<HttpPostedFileBase> files)
         {
             if (AdminUser == null)
             {
@@ -110,7 +110,9 @@ namespace ODK.Website.Controllers
             List<string> notFound = new List<string>();
             List<string> updated = new List<string>();
 
-            IReadOnlyCollection<MemberModel> memberModels = _memberService.GetMembers(new MemberSearchCriteria(chapterId));
+            IPublishedContent chapter = Umbraco.AssignedContentItem.HomePage();
+
+            IReadOnlyCollection<MemberModel> memberModels = _memberService.GetMembers(new MemberSearchCriteria(chapter.Id));
             foreach (HttpPostedFileBase file in files)
             {
                 FileInfo fileInfo = new FileInfo(file.FileName);

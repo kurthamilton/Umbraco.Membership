@@ -39,6 +39,8 @@ namespace ODK.Umbraco.Web.Mvc
             base.InitializePage();
         }
 
+        public IUser AdminUser => _adminUser.Value;
+
         public IPublishedContent CurrentMember => _currentMember.Value;
 
         public MemberModel CurrentMemberModel => _currentMemberModel.Value;
