@@ -16,6 +16,10 @@ img {
     max-width: 100%;
 }
 
+.img--hero {
+    width: 100%;
+}
+
 .background-image-full {
     background-repeat: no-repeat;
     background-size: cover;

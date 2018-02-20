@@ -7,7 +7,6 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h2>@Model.Content.GetPropertyValue("ContactFormHeader")</h2>
                 @Model.Content.GetPropertyValue("ContactIntro")
 
                 @using (Html.BeginUmbracoForm("Index", "Contact", FormMethod.Post))
