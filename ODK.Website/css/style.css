@@ -20,6 +20,10 @@ img {
     width: 100%;
 }
 
+.img--profile {
+    max-height: 500px;
+}
+
 .background-image-full {
     background-repeat: no-repeat;
     background-size: cover;
@@ -79,11 +83,6 @@ img {
 .overlay * {
     position: relative;
     z-index: 1;
-}
-
-.picture--profile {
-    max-height: 300px;
-    max-width: 100%;
 }
 
 /* NAV */

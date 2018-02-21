@@ -13,12 +13,18 @@
     IEnumerable<MemberModel> members = MemberService.GetMembers(criteria, Umbraco);
 }
 
-<section class="section">
+<section class="section section--main">
     <div class="container">
+        <div class="clearfix">
+            <div class="form-inline float-right">
+                <label for="member-search">Search</label>&nbsp;
+                <input type="text" class="form-control search" id="member-search" />
+            </div>
+        </div>
         <div class="row members">
             @foreach (MemberModel member in members)
             {
-                <div class="col-md-2 col-4 member">
+                <div class="col-md-2 col-4 member search-target">
                     @Html.Partial("PersonThumbnail", ModelFor<MemberModel>(member))
                 </div>
             }

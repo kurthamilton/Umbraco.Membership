@@ -280,6 +280,7 @@
     <Content Include="config\404handlers.config" />
     <None Include="packages.config" />
     <Content Include="css\calendar.css" />
+    <Content Include="css\home.css" />
     <Content Include="css\style.css" />
     <Content Include="css\theme-base.css" />
     <Content Include="css\theme-oxford.css" />
