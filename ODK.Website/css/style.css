@@ -210,6 +210,15 @@ img {
 
 /* PEOPLE */
 
+.input-group--search {
+    margin-bottom: 0.5rem;
+}
+
+.input-group--search .input-group-text {
+    background-color: #fff;
+    color: #bbb;
+}
+
 .members .member {
 	padding-right: 0;
 	padding-left: 0;

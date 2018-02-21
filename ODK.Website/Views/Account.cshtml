@@ -11,6 +11,13 @@
     string currencySymbol = GetCurrencySymbol(currencyCode);
 
     IPublishedContent[] subscriptions = Model.Content.Children.ToArray();
+
+    string paypalButtonId = Model.Content.GetPropertyValue<string>("subscriptionPaypalButtonId");
+}
+
+@if (Request.QueryString["payment"] == "cancelled")
+{
+    <div>Payment cancelled</div>
 }
 
 <div class="content">
@@ -28,9 +35,6 @@
             IPublishedContent subscription = subscriptions.Single();
             <h3>@subscription.GetPropertyValue("title")</h3>
             @Html.Raw(subscription.GetPropertyValue("description"))
-
-            <a href="#" class="btn btn-primary">Buy</a>
-            @currencySymbol@subscription.GetPropertyValue("charge")
         }
         else
         {
@@ -41,36 +45,50 @@
                 }
             </div>
         }
+
+        <div class="mt-5">
+            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                <input type="hidden" name="cmd" value="_s-xclick">
+                <input type="hidden" name="hosted_button_id" value="@paypalButtonId">
+                <input type="hidden" name="currency_code" value="@currencyCode">
+                <input type="hidden" name="on0" value="Membership Types">
+                <div class="form-group">
+                    <select class="form-control" id="payment-type" name="os0">
+                        @foreach (IPublishedContent subscription in subscriptions)
+                        {
+                            string title = subscription.GetPropertyValue<string>("title");
+                            string type = subscription.GetPropertyValue<string>("payPalMembershipType");
+                            double charge = subscription.GetPropertyValue<double>("charge");
+                            <option value="@type">@title @string.Format("{0}{1:0.00}", currencySymbol, charge)</option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Pay now</button>
+                <span class="text-muted">You will be redirected to PayPal to finalise the payment</span>
+            </form>
+        </div>
     </div>
 </div>
 
 @helper SubscriptionAccordionItem(IPublishedContent subscription, string currencySymbol, bool expanded)
-{
-    string type = subscription.Name;
-    string title = subscription.GetPropertyValue<string>("title");
-    string description = subscription.GetPropertyValue<string>("description");
-    double charge = subscription.GetPropertyValue<double>("charge");
+    {
+        string type = subscription.Name.Replace(" ", "-");
+        string title = subscription.GetPropertyValue<string>("title");
+        string description = subscription.GetPropertyValue<string>("description");
 
-    <div class="card">
-        <div class="card-header" id="heading-@type">
-            <h5 class="mb-0">
-                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-@type" aria-expanded="true" aria-controls="collapse-@type">@title</button>
-            </h5>
-        </div>
+        <div class="card">
+            <div class="card-header" id="heading-@type">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-@type" aria-expanded="true" aria-controls="collapse-@type">@title</button>
+                </h5>
+            </div>
 
-        <div id="collapse-@type" class="collapse @Html.Raw(expanded ? "show" : null)" aria-labelledby="heading-@type" data-parent="#subscriptionTypes">
-            <div class="card-body">
-                @Html.Raw(@description)
-                @SubscriptionButton(currencySymbol, charge)
+            <div id="collapse-@type" class="collapse @Html.Raw(expanded ? "show" : null)" aria-labelledby="heading-@type" data-parent="#subscriptionTypes">
+                <div class="card-body">
+                    @Html.Raw(@description)
+                </div>
             </div>
         </div>
-    </div>
-}
-
-@helper SubscriptionButton(string currencySymbol, double charge)
-{
-    <a href="#" class="btn btn-primary">Buy</a>
-    @currencySymbol@charge
 }
 
 @functions
