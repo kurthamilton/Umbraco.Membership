@@ -15,10 +15,10 @@
 
 <section class="section">
     <div class="container">
-        <div class="row">
+        <div class="row members">
             @foreach (MemberModel member in members)
             {
-                <div class="col-md-2 col-4">
+                <div class="col-md-2 col-4 member">
                     @Html.Partial("PersonThumbnail", ModelFor<MemberModel>(member))
                 </div>
             }

@@ -7,7 +7,7 @@
     int id = 0;
     int.TryParse(Request.QueryString["id"], out id);
 
-    MemberModel member = MemberService.GetMember(id);
+    MemberModel member = MemberService.GetMember(id, Umbraco);
     if (member == null)
     {
         Response.Redirect(Model.Content.Parent.Url);

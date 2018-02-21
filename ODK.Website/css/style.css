@@ -210,6 +210,12 @@ img {
 }
 
 /* PEOPLE */
+
+.members .member {
+	padding-right: 0;
+	padding-left: 0;
+}
+
 .member-tile {
 	border: none;
 	margin: 5px;
@@ -220,10 +226,6 @@ img {
 .member-tile a:hover {
 	opacity: 0.8;
 	text-decoration: none;
-}
-
-.member-tile__footer {
-    font-size: 0.8rem;
 }
 
 .member-tile .card-img-top {
