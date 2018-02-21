@@ -7,7 +7,8 @@ namespace ODK.Data.Payments
 {
     public class PaymentsDataService
     {
-        private const string TableName = "dbo.odkPayments";
+        private const string PaymentRequestsTableName = "dbo.odkPaymentRequests";
+        private const string PaymentsTableName = "dbo.odkPayments";
 
         private readonly string _connectionString;
 
@@ -16,13 +17,30 @@ namespace ODK.Data.Payments
             _connectionString = connectionString;
         }
 
+        public async Task CreatePaymentRequest(PaymentRequest paymentRequest)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                using (SqlCommand command = new SqlCommand($"INSERT INTO {PaymentRequestsTableName} (memberId, token, amount) VALUES (@MemberId, @Token, @Amount)", connection))
+                {
+                    command.Parameters.Add("@MemberId", SqlDbType.Int).Value = paymentRequest.MemberId;
+                    command.Parameters.Add("@Token", SqlDbType.NVarChar).Value = paymentRequest.Token;
+                    command.Parameters.Add("@Amount", SqlDbType.Float).Value = paymentRequest.Amount;
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
         public async Task<IReadOnlyCollection<Payment>> GetPayments(int memberId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                using (SqlCommand command = new SqlCommand($"SELECT Amount, Date FROM {TableName} WHERE MemberId = @MemberId", connection))
+                using (SqlCommand command = new SqlCommand($"SELECT Amount, Date FROM {PaymentsTableName} WHERE MemberId = @MemberId", connection))
                 {
                     command.Parameters.Add("@MemberId", SqlDbType.Int).Value = memberId;
 
@@ -47,7 +65,7 @@ namespace ODK.Data.Payments
             {
                 await connection.OpenAsync();
 
-                using (SqlCommand command = new SqlCommand($"INSERT INTO {TableName} (memberId, name, amount, date) VALUES (@MemberId, @MemberName, @Amount, @Date)", connection))
+                using (SqlCommand command = new SqlCommand($"INSERT INTO {PaymentsTableName} (memberId, name, amount, date) VALUES (@MemberId, @MemberName, @Amount, @Date)", connection))
                 {
                     command.Parameters.Add("@MemberId", SqlDbType.Int).Value = payment.MemberId;
                     command.Parameters.Add("@MemberName", SqlDbType.NVarChar).Value = payment.MemberName;
