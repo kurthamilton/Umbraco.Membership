@@ -214,6 +214,7 @@
     <Compile Include="Content\UmbracoHelperExtensions.cs" />
     <Compile Include="Events\EventModel.cs" />
     <Compile Include="Events\EventPropertyNames.cs" />
+    <Compile Include="Events\EventResponseType.cs" />
     <Compile Include="Events\EventSearchCriteria.cs" />
     <Compile Include="Events\EventService.cs" />
     <Compile Include="Members\IMemberPictureUpload.cs" />

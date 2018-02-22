@@ -9,19 +9,19 @@ namespace ODK.Umbraco.Web.Mvc
 {
     public abstract class OdkSurfaceControllerBase : SurfaceController
     {
+        private readonly Lazy<IPublishedContent> _currentMember;
         private readonly Lazy<MemberModel> _currentMemberModel;
         private readonly List<string> _feedbackMessages = new List<string>();
         private readonly List<bool> _feedbackSuccesses = new List<bool>();
+
+        protected IPublishedContent CurrentMember => _currentMember.Value;
 
         protected MemberModel CurrentMemberModel => _currentMemberModel.Value;
 
         protected OdkSurfaceControllerBase()
         {
-            _currentMemberModel = new Lazy<MemberModel>(() =>
-            {
-                IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
-                return member != null ? new MemberModel(member) : null;
-            });
+            _currentMember = new Lazy<IPublishedContent>(() => Umbraco.MembershipHelper.GetCurrentMember());
+            _currentMemberModel = new Lazy<MemberModel>(() => CurrentMember != null ? new MemberModel(CurrentMember) : null);
         }
 
         protected void AddFeedback(string message, bool success)

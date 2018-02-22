@@ -3,7 +3,7 @@
 @{
 	Layout = "Master.cshtml";
 
-	EventModel eventModel = new EventModel(Model.Content);
+    EventModel eventModel = new EventModel(Model.Content);
 
 	bool restricted = CurrentMember == null && !eventModel.Public;
 	if (restricted)
@@ -11,24 +11,36 @@
 	    Response.Redirect(Model.Content.Parent.Url);
 	}
 
+    Dictionary<int, EventResponseType> eventResponses = EventService.GetEventResponses(Model.Content.Id);
+
 	string mapApiKey = Model.Content.Site().GetPropertyValue<string>("googleMapsApiKey");
 	string mapUrl = "https://www.google.com/maps/embed/v1/place?key=" + mapApiKey + "&q=" + eventModel.MapQuery;
 }
 
 <section class="section section--main">
-    <div class="container event">
-        <h2>@eventModel.Location</h2>
-        <h2>@eventModel.Date.ToString("dd MMMM yyyy")</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+                <h2>@eventModel.Location</h2>
+                <h2>@eventModel.Date.ToString("dd MMMM yyyy")</h2>
 
-        @if (!string.IsNullOrEmpty(eventModel.Address))
-        {
-            <p>
-                @eventModel.Address
-            </p>
-        }
+                @if (!string.IsNullOrEmpty(eventModel.Address))
+                {
+                    <p>
+                        @eventModel.Address
+                    </p>
+                }
 
-        @Html.Raw(eventModel.Description)
+                @Html.Raw(eventModel.Description)
 
-        <iframe width="600" height="450" frameborder="0" style="border:0" src="@mapUrl" allowfullscreen></iframe>
+                <iframe width="600" height="450" frameborder="0" style="border:0" src="@mapUrl" allowfullscreen></iframe>
+            </div>
+            <div class="col-md-3">
+                @using (Html.BeginUmbracoForm("Respond", "Events", FormMethod.Post))
+                {
+
+                }
+            </div>
+        </div>
     </div>
 </section>

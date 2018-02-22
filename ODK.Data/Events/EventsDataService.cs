@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -11,6 +12,29 @@ namespace ODK.Data.Events
         public EventsDataService(string connectionString)
             : base(connectionString)
         {
+        }
+
+        public async Task<IReadOnlyCollection<EventResponse>> GetEventResponses(int eventId)
+        {
+            using (SqlConnection connection = await OpenConnection())
+            {
+                using (SqlCommand command = new SqlCommand($"SELECT memberId, responseTypeId FROM {EventResponsesTableName} WHERE eventId = @EventId", connection))
+                {
+                    command.Parameters.Add("@EventId", SqlDbType.Int).Value = eventId;
+
+                    SqlDataReader reader = await command.ExecuteReaderAsync();
+
+                    List<EventResponse> eventResponses = new List<EventResponse>();
+
+                    while (await reader.ReadAsync())
+                    {
+                        EventResponse payment = ReadEventResponse(reader);
+                        eventResponses.Add(payment);
+                    }
+
+                    return eventResponses;
+                }
+            }
         }
 
         public async Task UpdateEventResponse(EventResponse eventResponse)
@@ -31,6 +55,15 @@ namespace ODK.Data.Events
                     await command.ExecuteNonQueryAsync();
                 }
             }
+        }
+
+        private static EventResponse ReadEventResponse(SqlDataReader reader)
+        {
+            return new EventResponse
+            {
+                MemberId = reader.GetInt32(reader.GetOrdinal("memberId")),
+                ResponseTypeId = reader.GetInt32(reader.GetOrdinal("responseTypeId"))
+            };
         }
     }
 }

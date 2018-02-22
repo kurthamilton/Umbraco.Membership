@@ -78,8 +78,7 @@ namespace ODK.Website.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Update(UpdateMemberModel model)
         {
-            IPublishedContent member = Umbraco.MembershipHelper.GetCurrentMember();
-            if (member == null)
+            if (CurrentMember == null)
             {
                 return RedirectToHome();
             }
@@ -87,7 +86,7 @@ namespace ODK.Website.Controllers
             IPublishedContent chapter = Umbraco.AssignedContentItem.HomePage();
             model.SetChapter(chapter);
 
-            ServiceResult result = _memberService.Update(member.Id, model, Umbraco);
+            ServiceResult result = _memberService.Update(CurrentMember.Id, model, Umbraco);
             if (!result.Success)
             {
                 return OnError(model, result);
