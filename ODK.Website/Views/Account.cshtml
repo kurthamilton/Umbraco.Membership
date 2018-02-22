@@ -35,60 +35,61 @@
             IPublishedContent subscription = subscriptions.Single();
             <h3>@subscription.GetPropertyValue("title")</h3>
             @Html.Raw(subscription.GetPropertyValue("description"))
+            @PaymentButton(subscription, currencySymbol, currencyCode, paypalButtonId)
         }
         else
         {
             <div id="subscriptionTypes">
                 @for (int i = 0; i < subscriptions.Length; i++)
                 {
-                    @SubscriptionAccordionItem(subscriptions[i], currencySymbol, i == 0)
+                    @SubscriptionAccordionItem(subscriptions[i], currencySymbol, currencyCode, paypalButtonId, i == 0)
                 }
             </div>
         }
-
-        <div class="mt-5">
-            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                <input type="hidden" name="cmd" value="_s-xclick">
-                <input type="hidden" name="hosted_button_id" value="@paypalButtonId">
-                <input type="hidden" name="currency_code" value="@currencyCode">
-                <input type="hidden" name="on0" value="Membership Types">
-                <div class="form-group">
-                    <select class="form-control" id="payment-type" name="os0">
-                        @foreach (IPublishedContent subscription in subscriptions)
-                        {
-                            string title = subscription.GetPropertyValue<string>("title");
-                            string type = subscription.GetPropertyValue<string>("payPalMembershipType");
-                            double charge = subscription.GetPropertyValue<double>("charge");
-                            <option value="@type">@title @string.Format("{0}{1:0.00}", currencySymbol, charge)</option>
-                        }
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Pay now</button>
-                <span class="text-muted">You will be redirected to PayPal to finalise the payment</span>
-            </form>
-        </div>
     </div>
 </div>
 
-@helper SubscriptionAccordionItem(IPublishedContent subscription, string currencySymbol, bool expanded)
-    {
-        string type = subscription.Name.Replace(" ", "-");
-        string title = subscription.GetPropertyValue<string>("title");
-        string description = subscription.GetPropertyValue<string>("description");
+<div id="paypal-button"></div>
 
-        <div class="card">
-            <div class="card-header" id="heading-@type">
-                <h5 class="mb-0">
-                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-@type" aria-expanded="true" aria-controls="collapse-@type">@title</button>
-                </h5>
-            </div>
+@helper SubscriptionAccordionItem(IPublishedContent subscription, string currencySymbol, string currencyCode, string paypalButtonId, bool expanded)
+{
+    string type = subscription.Name.Replace(" ", "-");
+    string title = subscription.GetPropertyValue<string>("title");
+    string description = subscription.GetPropertyValue<string>("description");
 
-            <div id="collapse-@type" class="collapse @Html.Raw(expanded ? "show" : null)" aria-labelledby="heading-@type" data-parent="#subscriptionTypes">
-                <div class="card-body">
-                    @Html.Raw(@description)
-                </div>
+    <div class="card">
+        <div class="card-header" id="heading-@type">
+            <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-@type" aria-expanded="true" aria-controls="collapse-@type">@title</button>
+            </h5>
+        </div>
+
+        <div id="collapse-@type" class="collapse @Html.Raw(expanded ? "show" : null)" aria-labelledby="heading-@type" data-parent="#subscriptionTypes">
+            <div class="card-body">
+                @Html.Raw(@description)
+
+                @PaymentButton(subscription, currencySymbol, currencyCode, paypalButtonId)
             </div>
         </div>
+    </div>
+}
+
+@helper PaymentButton(IPublishedContent subscription, string currencySymbol, string currencyCode, string paypalButtonId)
+{
+    string type = subscription.GetPropertyValue<string>("payPalMembershipType");
+    double charge = subscription.GetPropertyValue<double>("charge");
+
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="hosted_button_id" value="@paypalButtonId">
+        <input type="hidden" name="currency_code" value="@currencyCode">
+        <input type="hidden" name="on0" value="Membership Types">
+        <input type="hidden" name="os0" value="@type" />
+
+        <button type="submit" class="btn btn-primary">Pay now</button>
+        <span>@currencySymbol@string.Format("{0:0.00}", charge)</span>
+        <span class="text-muted">You will be redirected to PayPal to finalise the payment</span>
+    </form>
 }
 
 @functions
@@ -110,4 +111,50 @@
 
         return null;
     }
+}
+
+@section Scripts
+{
+    @{
+        return;
+    }
+
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+    <script>
+    paypal.Button.render({
+      env: 'sandbox', // 'production' Or 'sandbox',
+
+      commit: true, // Show a 'Pay Now' button
+
+      style: {
+        color: 'gold',
+        size: 'small'
+      },
+
+      payment: function(data, actions) {
+        /*
+         * Set up the payment here
+         */
+      },
+
+      onAuthorize: function(data, actions) {
+        /*
+         * Execute the payment here
+         */
+      },
+
+      onCancel: function(data, actions) {
+        /*
+         * Buyer cancelled the payment
+         */
+      },
+
+      onError: function(err) {
+        /*
+         * An error occurred during the transaction
+         */
+      }
+    }, '#paypal-button');
+  </script>
 }
