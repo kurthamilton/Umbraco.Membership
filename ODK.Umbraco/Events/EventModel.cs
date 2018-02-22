@@ -15,6 +15,7 @@ namespace ODK.Umbraco.Events
         public EventModel(IPublishedContent content)
         {
             Name = content.Name;
+            Id = content.Id;
             Public = content.GetPropertyValue<bool>(EventPropertyNames.Public);
             Url = content.Url;
 
@@ -30,6 +31,8 @@ namespace ODK.Umbraco.Events
         public DateTime Date => _date.Value;
 
         public string Description => _description.Value;
+
+        public int Id { get; }
 
         public string Location => _location.Value;
 

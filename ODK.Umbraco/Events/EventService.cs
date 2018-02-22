@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ODK.Data.Events;
+using ODK.Umbraco.Members;
 using Umbraco.Core.Models;
 using Umbraco.Web;
-using Task = System.Threading.Tasks.Task;
 
 namespace ODK.Umbraco.Events
 {
@@ -18,11 +17,34 @@ namespace ODK.Umbraco.Events
             _eventDataService = eventsDataService;
         }
 
-        public Dictionary<int, EventResponseType> GetEventResponses(int eventId)
+        public Dictionary<EventResponseType, IReadOnlyCollection<MemberModel>> GetEventResponses(int eventId, UmbracoHelper helper)
         {
-            // TODO - make async
-            IReadOnlyCollection<EventResponse> responses = Task.Run(() => _eventDataService.GetEventResponses(eventId)).Result;
-            return responses.ToDictionary(k => k.MemberId, v => (EventResponseType)v.ResponseTypeId);
+            IReadOnlyCollection<EventResponse> responses = _eventDataService.GetEventResponses(eventId);
+
+            Dictionary<EventResponseType, List<MemberModel>> dictionary = new Dictionary<EventResponseType, List<MemberModel>>();
+            foreach (EventResponse response in responses)
+            {
+                EventResponseType responseType = (EventResponseType)response.ResponseTypeId;
+                if (!dictionary.ContainsKey(responseType))
+                {
+                    dictionary.Add(responseType, new List<MemberModel>());
+                }
+
+                IPublishedContent member = helper.TypedMember(response.MemberId);
+                if (member != null)
+                {
+                    MemberModel memberModel = new MemberModel(member);
+                    dictionary[responseType].Add(memberModel);
+                }
+            }
+
+            return dictionary.ToDictionary(x => x.Key, x => (IReadOnlyCollection<MemberModel>)x.Value.ToArray());
+        }
+
+        public Dictionary<int, EventResponseType> GetMemberResponses(int memberId, IEnumerable<int> eventIds)
+        {
+            IReadOnlyCollection<EventResponse> responses = _eventDataService.GetMemberResponses(memberId, eventIds);
+            return responses.ToDictionary(x => x.EventId, x => (EventResponseType)x.ResponseTypeId);
         }
 
         public IEnumerable<EventModel> SearchEvents(IPublishedContent eventsPage, IPublishedContent member, EventSearchCriteria criteria)
@@ -49,7 +71,7 @@ namespace ODK.Umbraco.Events
             return events;
         }
 
-        public async Task UpdateEventResponse(IPublishedContent @event, IPublishedContent member, EventResponseType responseType)
+        public void UpdateEventResponse(IPublishedContent @event, IPublishedContent member, EventResponseType responseType)
         {
             if (@event == null)
             {
@@ -67,7 +89,7 @@ namespace ODK.Umbraco.Events
                 return;
             }
 
-            await _eventDataService.UpdateEventResponse(new EventResponse
+            _eventDataService.UpdateEventResponse(new EventResponse
             {
                 EventId = @event.Id,
                 MemberId = member.Id,

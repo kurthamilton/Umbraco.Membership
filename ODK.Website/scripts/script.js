@@ -35,30 +35,34 @@
     }
 
     function bindImageSubmit() {
-        $('[data-submit]').each(function() {
+        $(document).on('click', '[data-submit]', function() {
             var submitter = $(this);
             var form = submitter.closest('form');
             if (form.length === 0) {
-               return;
+                return;
             }
-           
-            submitter.on('click', function() {
-                var input = $('[data-submit-value]', form);
-                if (input.length === 1) {
-                    input.val($(this).data('value'));
+
+            var input = $('[data-submit-value]', form);
+            if (input.length === 1) {
+                input.val($(this).data('value'));
+            }
+
+            var ajaxContainer = submitter.closest('[data-ajax-container]');
+
+            onAjaxStart(form);
+
+            $.ajax({
+                data: form.serialize(),
+                method: 'POST',
+                url: form.attr('action'),
+                complete: function () {
+                    onAjaxEnd(form);
+                },
+                success: function (response) {
+                    ajaxContainer.empty();
+                    var child = $(response);
+                    ajaxContainer.append(child);
                 }
-                
-                var cssClass = submitter.data('active-class');
-                
-                $.ajax({
-                    data: form.serialize(),
-                    method: 'POST',
-                    url: form.attr('action'),
-                    success: function() {
-                        $('[data-submit]', form).removeClass(cssClass);
-                        submitter.addClass(cssClass);
-                    }
-                });
             });
         });
     }
@@ -66,25 +70,22 @@
     function bindInstagramFeed() {
         $('[data-instagram-url]').each(function() {
             var container = $(this);
-            var maxItems = container.data('instagram-maxitems');
-            var template = $('.media-template--instagram').children().first();
-        
+            onAjaxStart(container);
+
             var url = container.data('instagram-url');
             $.ajax({
                 url: url,
-                success: function(data) {
+                complete: function() {
+                    onAjaxEnd(container);
+                },
+                success: function (data) {
                     var items = data.user.media.nodes;
-                    for (var i = 0; i < Math.min(items.length, maxItems); i++) {
-                        var clone = template.clone();
-                
-                        var img = $('img', clone);
-                        img[0].src = items[i].thumbnail_src;
-                
-                        var link = $('a', clone);
-                        link[0].href = link[0].href.replace('{code}', items[i].code);
-                
-                        clone.appendTo(container);
-                    }
+                    $('.media-item', container).each(function (i) {
+                        var mediaItem = $(this);
+                        $('img', mediaItem).attr('src', items[i].thumbnail_src);
+                        var link = $('a', mediaItem);
+                        link.attr('href', link.attr('href').replace('{code}', items[i].code));
+                    });
                 }
             });
         });
@@ -124,6 +125,14 @@
 
     function bindTooltips() {
         $('[data-toggle="tooltip"]').tooltip();
+    }
+
+    function onAjaxStart(target) {
+        target.addClass('loading').addClass('overlay');
+    }
+
+    function onAjaxEnd(target) {
+        target.removeClass('loading').removeClass('overlay');
     }
 
     function setOtherVisibility(parent, match, other) {

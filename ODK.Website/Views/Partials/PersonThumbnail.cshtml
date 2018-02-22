@@ -1,19 +1,24 @@
-﻿@using ODK.Umbraco.Members;
-@using ODK.Umbraco.Web.Mvc;
-@model OdkUmbracoTemplateModel<MemberModel>
+﻿@using ODK.Umbraco.Web.Mvc;
+@using ODK.Website.ViewModels;
+@model OdkUmbracoTemplateModel<PersonThumbnailViewModel>
 @{
-    MemberModel member = Model.Value;
-    string memberUrl = Model.Content.GetPropertyValue<IPublishedContent>("personPage", recurse: true).Url + "?id=" + member.Id;
+    PersonThumbnailViewModel viewModel = Model.Value;
+    string memberUrl = viewModel.PersonPageUrl + "?id=" + viewModel.MemberId;
 }
 
-<div id="member-@member.Id" class="card member-tile">
+<div id="member-@viewModel.MemberId" class="card member-tile">
     <a href="@memberUrl">
-        @if (member.Picture != null)
+        @if (viewModel.Picture != null)
         {
-            <img class="card-img-top" src="@member.Picture.GetCropUrl(height: 150, width: 150)" alt="Photo of @member.FullName">
+            <img class="card-img-top" src="@viewModel.Picture.GetCropUrl(height: 150, width: 150)" alt="Photo of @viewModel.FullName"
+                 data-toggle="tooltip" title="@(viewModel.ShowFullName ? null : viewModel.FullName)">
         }
-        <div class="search-field member-tile__footer">
-            @member.FullName
-        </div>
+
+        @if (viewModel.ShowFullName)
+        {
+            <div class="search-field member-tile__footer">
+                @viewModel.FullName
+            </div>
+        }
     </a>
 </div>

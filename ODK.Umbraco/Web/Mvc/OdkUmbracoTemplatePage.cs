@@ -52,7 +52,7 @@ namespace ODK.Umbraco.Web.Mvc
 
         public OdkUmbracoTemplateModel<T> ModelFor<T>(T value)
         {
-            return new OdkUmbracoTemplateModel<T>(value, Model.Content, Umbraco);
+            return new OdkUmbracoTemplateModel<T>(value, Umbraco);
         }
     }
 }

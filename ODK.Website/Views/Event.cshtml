@@ -1,69 +1,49 @@
 ﻿@using ODK.Umbraco.Events;
 @inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
-	Layout = "Master.cshtml";
+    Layout = "Master.cshtml";
 
     EventModel eventModel = new EventModel(Model.Content);
 
-	bool restricted = CurrentMember == null && !eventModel.Public;
-	if (restricted)
-	{
-	    Response.Redirect(Model.Content.Parent.Url);
-	}
+    bool restricted = CurrentMember == null && !eventModel.Public;
+    if (restricted)
+    {
+        Response.Redirect(Model.Content.Parent.Url);
+    }
 
-    Dictionary<int, EventResponseType> eventResponses = EventService.GetEventResponses(Model.Content.Id);
-    EventResponseType memberResponseType = eventResponses.ContainsKey(CurrentMember.Id) ? eventResponses[CurrentMember.Id] : EventResponseType.None;
-
-	string mapApiKey = Model.Content.Site().GetPropertyValue<string>("googleMapsApiKey");
-	string mapUrl = "https://www.google.com/maps/embed/v1/place?key=" + mapApiKey + "&q=" + eventModel.MapQuery;
+    string mapApiKey = Model.Content.Site().GetPropertyValue<string>("googleMapsApiKey");
+    string mapUrl = "https://www.google.com/maps/embed/v1/place?key=" + mapApiKey + "&q=" + eventModel.MapQuery;
 }
-
 <section class="section section--main">
     <div class="container">
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-lg-9 col-md-8">
                 <h2>@eventModel.Location</h2>
                 <h2>@eventModel.Date.ToString("dd MMMM yyyy")</h2>
-
-                @if (!string.IsNullOrEmpty(eventModel.Address))
-                {
-                    <p>
-                        @eventModel.Address
-                    </p>
-                }
+                <p>
+                    <a class="d-md-none" href="#map">@eventModel.Address</a>
+                    <span class="d-none d-md-inline">@eventModel.Address</span>
+                </p>
 
                 @Html.Raw(eventModel.Description)
 
-                <iframe width="600" height="450" frameborder="0" style="border:0" src="@mapUrl" allowfullscreen></iframe>
+                <div class="d-none d-md-block">
+                    @RenderMap(mapUrl)
+                </div>
             </div>
-            <div class="col-md-3">
-                @using (Html.BeginUmbracoForm("Respond", "Events", FormMethod.Post))
-                {
-                    <input type="hidden" name="eventId" value="@Model.Content.Id" />
-                    <input type="hidden" name="responseType" data-submit-value />
-                    <div>
-                        @RenderResponseOption("check", "success", EventResponseType.Yes, memberResponseType)
-                        @RenderResponseOption("question", "warning", EventResponseType.Maybe, memberResponseType)
-                        @RenderResponseOption("times", "danger", EventResponseType.No, memberResponseType)
-                    </div>
-                }
+            <div class="col-lg-3 col-md-4">
+                <div class="sidebar" data-ajax-container>
+                    @Html.Action("EventSidebar", "Events", new { eventId = Model.Content.Id })
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-8 d-md-none mt-5" id="map">
+                @RenderMap(mapUrl)
             </div>
         </div>
     </div>
 </section>
 
-@helper ActiveIf(bool condition)
+@helper RenderMap(string url)
 {
-    if (!condition)
-    {
-        return;
-    }
-    
-    @Html.Raw("active")
-}
-
-@helper RenderResponseOption(string icon, string colour, EventResponseType responseType, EventResponseType memberResponseType)
-{
-    <i class="fas fa-@icon-circle text-@colour event-response-option @ActiveIf(memberResponseType == responseType)"
-       data-submit="" data-active-class="active" data-value="@responseType" data-toggle="tooltip" title="@responseType"></i>
+    <iframe width="100%" height="450" frameborder="0" style="border:0" src="@url" allowfullscreen></iframe>
 }

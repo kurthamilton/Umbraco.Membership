@@ -1,0 +1,84 @@
+﻿@using ODK.Umbraco.Events;
+@using ODK.Umbraco.Members;
+@using ODK.Umbraco.Web.Mvc;
+@using ODK.Website.ViewModels;
+@model EventSidebarViewModel
+
+<div class="card">
+    <div class="card-header">
+        RSVP
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("EventSidebar", "Events", FormMethod.Post, new { @class = "content--ajax" }))
+        {
+            <input type="hidden" name="eventId" value="@Model.EventId" />
+            <input type="hidden" name="responseType" data-submit-value />
+            <div class="text-center">
+                @RenderResponseOption(EventResponseType.Yes)
+                @RenderResponseOption(EventResponseType.Maybe)
+                @RenderResponseOption(EventResponseType.No)
+            </div>
+            <div class="text-center mt-2">
+                You have replied <strong>@Model.MemberResponse.ToString().ToLower()</strong> to this event
+            </div>
+        }
+    </div>
+</div>
+
+@RenderMemberResponses(EventResponseType.Yes)
+@RenderMemberResponses(EventResponseType.Maybe)
+@RenderMemberResponses(EventResponseType.No)
+
+@helper RenderMemberResponses(EventResponseType responseType)
+{
+    if (!Model.MemberResponses.ContainsKey(responseType))
+    {
+        return;
+    }
+
+    IReadOnlyCollection<MemberModel> members = Model.MemberResponses[responseType];
+    if (members.Count == 0)
+    {
+        return;
+    }
+
+    string title =
+        responseType == EventResponseType.Yes
+        ? "Going"
+        : responseType == EventResponseType.Maybe
+        ? "Maybe"
+        : "Not going";
+
+    <div class="card">
+        <div class="card-header">
+            @title (@members.Count)
+        </div>
+        <div class="card-body event-attendees">
+            <div class="row">
+                @foreach (MemberModel member in members)
+                {
+                    <div class="col-3 col-md-4">
+                        @Html.Partial("PersonThumbnail", new OdkUmbracoTemplateModel<PersonThumbnailViewModel>(new PersonThumbnailViewModel(member, false), null))
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@helper RenderResponseOption(EventResponseType responseType)
+{
+    <span class="event-response-option @ActiveIf(Model.MemberResponse == responseType)" data-submit data-value="@responseType">
+        @Html.Partial("EventResponseIcon", responseType)
+    </span>
+}
+
+@helper ActiveIf(bool condition)
+{
+    if (!condition)
+    {
+        return;
+    }
+
+    @Html.Raw("active")
+}

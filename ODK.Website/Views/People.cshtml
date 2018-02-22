@@ -1,4 +1,5 @@
 ﻿@using ODK.Umbraco.Members;
+@using ODK.Website.ViewModels;
 @inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
     Layout = "Master.cshtml";
@@ -29,7 +30,7 @@
             @foreach (MemberModel member in members)
             {
                 <div class="col-md-2 col-4 member search-target">
-                    @Html.Partial("PersonThumbnail", ModelFor<MemberModel>(member))
+                    @Html.Partial("PersonThumbnail", ModelFor<PersonThumbnailViewModel>(new PersonThumbnailViewModel(member)))
                 </div>
             }
         </div>

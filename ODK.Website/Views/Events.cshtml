@@ -11,6 +11,8 @@
 	};
 
 	EventModel[] events = EventService.SearchEvents(Model.Content, member, criteria).ToArray();
+
+    Dictionary<int, EventResponseType> responses = EventService.GetMemberResponses(CurrentMember.Id, events.Select(x => x.Id));
 }
 
 <section class="section section--main">
@@ -30,7 +32,13 @@
         @foreach (EventModel ev in events)
         {
             <div class="list-item">
-                <h2><a href="@ev.Url">@ev.Name</a></h2>
+                <h2>
+                    @if (responses.ContainsKey(ev.Id))
+                    {
+                        @Html.Partial("EventResponseIcon", responses[ev.Id])
+                    }
+                    <a href="@ev.Url">@ev.Name</a>
+                </h2>
                 <h3>@ev.Date.ToString("dddd, dd MMMM yyyy")</h3>
                 <div>@ev.Location</div>
                 @if (!string.IsNullOrEmpty(ev.Description))

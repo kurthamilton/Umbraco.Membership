@@ -1,18 +1,14 @@
-﻿using Umbraco.Core.Models;
-using Umbraco.Web;
+﻿using Umbraco.Web;
 
 namespace ODK.Umbraco.Web.Mvc
 {
     public class OdkUmbracoTemplateModel<T>
     {
-        public OdkUmbracoTemplateModel(T value, IPublishedContent content, UmbracoHelper helper)
+        public OdkUmbracoTemplateModel(T value, UmbracoHelper helper)
         {
-            Content = content;
             Helper = helper;
             Value = value;
         }
-
-        public IPublishedContent Content { get; }
 
         public UmbracoHelper Helper { get; }
 

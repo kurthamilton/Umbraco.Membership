@@ -39,6 +39,16 @@ img {
     margin-bottom: 0;
 }
 
+.content--ajax.loading:after {
+    background-color: #fff;
+    background-image: url('/assets/loading.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 0.8;
+    z-index: 1000;
+}
+
 .form-group.required .form-control-label:after {
     content: " *";
     color: #dc3545;
@@ -68,8 +78,8 @@ img {
 	position: absolute;
 	top: 0;
 	left: 0;
-	width: 100%;
 	height: 100%;
+	width: 100%;
 }
 
 .overlay--dark:after {
@@ -196,10 +206,6 @@ img {
 }
 
 /* SIDEBAR */
-.sidebar {
-	margin-top: 2rem;
-}
-
 .sidebar .card:not(:first-child) {
     margin-top: 1rem;
 }
@@ -259,7 +265,7 @@ img {
 
 /* EVENTS */
 .event-response-option:not(.active) {
-	opacity: 0.7;
+    opacity: 0.7;
 }
 
 .event-response-option:not(.active):hover {
@@ -269,6 +275,20 @@ img {
 
 .event-response-option.active {
 	font-size: 2em;
+}
+
+.event-attendees {
+    padding: 0.25rem;
+}
+
+.event-attendees .row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.event-attendees .row > * {
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
 }
 
 /* Bootstrap overrides */

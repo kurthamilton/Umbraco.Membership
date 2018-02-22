@@ -1,5 +1,4 @@
 ﻿using System.Data.SqlClient;
-using System.Threading.Tasks;
 
 namespace ODK.Data
 {
@@ -12,10 +11,10 @@ namespace ODK.Data
             _connectionString = connectionString;
         }
 
-        protected async Task<SqlConnection> OpenConnection()
+        protected SqlConnection OpenConnection()
         {
             SqlConnection connection = new SqlConnection(_connectionString);
-            await connection.OpenAsync();
+            connection.Open();
             return connection;
         }
     }

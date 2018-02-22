@@ -17,7 +17,7 @@ namespace ODK.Data.Payments
 
         public async Task CreatePaymentRequest(PaymentRequest paymentRequest)
         {
-            using (SqlConnection connection = await OpenConnection())
+            using (SqlConnection connection = OpenConnection())
             {
                 using (SqlCommand command = new SqlCommand($"INSERT INTO {PaymentRequestsTableName} (memberId, token, amount) VALUES (@MemberId, @Token, @Amount)", connection))
                 {
@@ -33,7 +33,7 @@ namespace ODK.Data.Payments
 
         public async Task<IReadOnlyCollection<Payment>> GetPayments(int memberId)
         {
-            using (SqlConnection connection = await OpenConnection())
+            using (SqlConnection connection = OpenConnection())
             {
                 using (SqlCommand command = new SqlCommand($"SELECT Amount, Date FROM {PaymentsTableName} WHERE MemberId = @MemberId", connection))
                 {
@@ -56,7 +56,7 @@ namespace ODK.Data.Payments
 
         public async Task LogPayment(Payment payment)
         {
-            using (SqlConnection connection = await OpenConnection())
+            using (SqlConnection connection = OpenConnection())
             {
                 using (SqlCommand command = new SqlCommand($"INSERT INTO {PaymentsTableName} (memberId, name, amount, date) VALUES (@MemberId, @MemberName, @Amount, @Date)", connection))
                 {
