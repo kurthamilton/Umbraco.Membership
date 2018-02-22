@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using ODK.Umbraco.Events;
 using ODK.Umbraco.Members;
 using ODK.Umbraco.Settings;
 using Umbraco.Core.Models;
@@ -18,6 +19,8 @@ namespace ODK.Umbraco.Web.Mvc
             _currentMember = new RequestCacheItem<IPublishedContent>(nameof(_currentMember), () => Umbraco.MembershipHelper.GetCurrentMember());
             _currentMemberModel = new RequestCacheItem<MemberModel>(nameof(_currentMemberModel), () => new MemberModel(CurrentMember));
             _homePage = new RequestCacheItem<IPublishedContent>(nameof(_homePage), () => Model.Content.HomePage());
+
+            EventService = DependencyResolver.Current.GetService<EventService>();
             MemberService = DependencyResolver.Current.GetService<OdkMemberService>();
         }
 
@@ -40,6 +43,8 @@ namespace ODK.Umbraco.Web.Mvc
         public MemberModel CurrentMemberModel => _currentMemberModel.Value;
 
         public IDataTypeService DataTypeService => ApplicationContext.Services.DataTypeService;
+
+        public EventService EventService { get; }
 
         public IPublishedContent HomePage => _homePage.Value;
 

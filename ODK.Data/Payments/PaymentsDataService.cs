@@ -5,24 +5,20 @@ using System.Threading.Tasks;
 
 namespace ODK.Data.Payments
 {
-    public class PaymentsDataService
+    public class PaymentsDataService : DataServiceBase
     {
         private const string PaymentRequestsTableName = "dbo.odkPaymentRequests";
         private const string PaymentsTableName = "dbo.odkPayments";
 
-        private readonly string _connectionString;
-
         public PaymentsDataService(string connectionString)
+            : base(connectionString)
         {
-            _connectionString = connectionString;
         }
 
         public async Task CreatePaymentRequest(PaymentRequest paymentRequest)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = await OpenConnection())
             {
-                await connection.OpenAsync();
-
                 using (SqlCommand command = new SqlCommand($"INSERT INTO {PaymentRequestsTableName} (memberId, token, amount) VALUES (@MemberId, @Token, @Amount)", connection))
                 {
                     command.Parameters.Add("@MemberId", SqlDbType.Int).Value = paymentRequest.MemberId;
@@ -34,12 +30,11 @@ namespace ODK.Data.Payments
             }
         }
 
+
         public async Task<IReadOnlyCollection<Payment>> GetPayments(int memberId)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = await OpenConnection())
             {
-                await connection.OpenAsync();
-
                 using (SqlCommand command = new SqlCommand($"SELECT Amount, Date FROM {PaymentsTableName} WHERE MemberId = @MemberId", connection))
                 {
                     command.Parameters.Add("@MemberId", SqlDbType.Int).Value = memberId;
@@ -61,10 +56,8 @@ namespace ODK.Data.Payments
 
         public async Task LogPayment(Payment payment)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+            using (SqlConnection connection = await OpenConnection())
             {
-                await connection.OpenAsync();
-
                 using (SqlCommand command = new SqlCommand($"INSERT INTO {PaymentsTableName} (memberId, name, amount, date) VALUES (@MemberId, @MemberName, @Amount, @Date)", connection))
                 {
                     command.Parameters.Add("@MemberId", SqlDbType.Int).Value = payment.MemberId;

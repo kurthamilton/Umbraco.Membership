@@ -32,7 +32,6 @@
 {
     IPublishedContent member = CurrentMember;
     IPublishedContent eventsPage = Model.Content.GetPropertyValue<IPublishedContent>("eventsPage");
-    EventService eventService = new EventService(eventsPage, member);
 
     int maxItems = Model.Content.GetPropertyValue<int>("numberOfNextEvents");
     if (maxItems <= 0)
@@ -46,7 +45,7 @@
         MaxItems = 3
     };
 
-    EventModel[] nextEvents = eventService.SearchEvents(criteria).OrderBy(x => x.Date).ToArray();
+    EventModel[] nextEvents = EventService.SearchEvents(eventsPage, member, criteria).OrderBy(x => x.Date).ToArray();
     if (nextEvents.Length == 0)
     {
         return;

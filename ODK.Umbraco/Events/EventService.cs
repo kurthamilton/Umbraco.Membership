@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ODK.Data.Events;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 
@@ -8,20 +9,18 @@ namespace ODK.Umbraco.Events
 {
     public class EventService
     {
-        private readonly IPublishedContent _eventsPage;
-        private readonly IPublishedContent _member;
+        private readonly EventsDataService _eventDataService;
 
-        public EventService(IPublishedContent eventsPage, IPublishedContent member)
+        public EventService(EventsDataService eventsDataService)
         {
-            _eventsPage = eventsPage;
-            _member = member;
+            _eventDataService = eventsDataService;
         }
 
-        public IEnumerable<EventModel> SearchEvents(EventSearchCriteria criteria)
+        public IEnumerable<EventModel> SearchEvents(IPublishedContent eventsPage, IPublishedContent member, EventSearchCriteria criteria)
         {
-            IEnumerable<EventModel> events = _eventsPage.Children
-                                                        .Select(x => new EventModel(x))
-                                                        .Where(x => _member != null || x.Public);
+            IEnumerable<EventModel> events = eventsPage.Children
+                                                       .Select(x => new EventModel(x))
+                                                       .Where(x => member != null || x.Public);
 
             if (criteria.FutureOnly == true)
             {

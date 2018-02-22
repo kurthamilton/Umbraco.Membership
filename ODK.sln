@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODK.Website", "ODK.Website\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODK.Data", "ODK.Data\ODK.Data.csproj", "{1DCE0BCD-4BC3-487D-8655-0B99375B9059}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODK.Infrastructure", "ODK.Infrastructure\ODK.Infrastructure.csproj", "{232D1F34-651D-4184-8553-ECD7AD84188A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{1DCE0BCD-4BC3-487D-8655-0B99375B9059}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DCE0BCD-4BC3-487D-8655-0B99375B9059}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DCE0BCD-4BC3-487D-8655-0B99375B9059}.Release|Any CPU.Build.0 = Release|Any CPU
+		{232D1F34-651D-4184-8553-ECD7AD84188A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{232D1F34-651D-4184-8553-ECD7AD84188A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{232D1F34-651D-4184-8553-ECD7AD84188A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{232D1F34-651D-4184-8553-ECD7AD84188A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

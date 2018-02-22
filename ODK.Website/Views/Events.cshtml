@@ -4,14 +4,13 @@
 	Layout = "Master.cshtml";
 
 	IPublishedContent member = CurrentMember;
-	EventService eventService = new EventService(Model.Content, member);
 
 	EventSearchCriteria criteria = new EventSearchCriteria
 	{
 	    FutureOnly = true
 	};
 
-	EventModel[] events = eventService.SearchEvents(criteria).ToArray();
+	EventModel[] events = EventService.SearchEvents(Model.Content, member, criteria).ToArray();
 }
 
 <section class="section section--main">
