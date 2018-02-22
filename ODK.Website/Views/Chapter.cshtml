@@ -82,19 +82,20 @@
         maxItems = 8;
     }
 
+    string baseUrl = "https://www.instagram.com";
+
     <div class="content">
         <h3>Latest Instagram Photos</h3>
-        <div class="feed--instagram row" data-instagram-username="@username" data-instagram-maxitems="@maxItems">
-
+        <div class="feed--instagram row" data-instagram-url="@baseUrl/@username/?__a=1" data-instagram-maxitems="@maxItems">
         </div>
         <p class="text-right">
-            <i class="fab fa-instagram"></i>&nbsp;<a href="https://instagram.com/@username" target="_blank">@username</a>
+            <i class="fab fa-instagram"></i>&nbsp;<a href="@baseUrl/@username" target="_blank">@username</a>
         </p>
     </div>
 
     <div class="d-none media-template--instagram">
         <div class="media-item col-3">
-            <a target="_blank"><img class="media-item__image" /></a>
+            <a href="@baseUrl/p/{code}" target="_blank"><img class="media-item__image" /></a>
         </div>
     </div>
 }

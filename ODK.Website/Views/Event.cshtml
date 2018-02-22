@@ -12,6 +12,7 @@
 	}
 
     Dictionary<int, EventResponseType> eventResponses = EventService.GetEventResponses(Model.Content.Id);
+    EventResponseType memberResponseType = eventResponses.ContainsKey(CurrentMember.Id) ? eventResponses[CurrentMember.Id] : EventResponseType.None;
 
 	string mapApiKey = Model.Content.Site().GetPropertyValue<string>("googleMapsApiKey");
 	string mapUrl = "https://www.google.com/maps/embed/v1/place?key=" + mapApiKey + "&q=" + eventModel.MapQuery;
@@ -38,9 +39,31 @@
             <div class="col-md-3">
                 @using (Html.BeginUmbracoForm("Respond", "Events", FormMethod.Post))
                 {
-
+                    <input type="hidden" name="eventId" value="@Model.Content.Id" />
+                    <input type="hidden" name="responseType" data-submit-value />
+                    <div>
+                        @RenderResponseOption("check", "success", EventResponseType.Yes, memberResponseType)
+                        @RenderResponseOption("question", "warning", EventResponseType.Maybe, memberResponseType)
+                        @RenderResponseOption("times", "danger", EventResponseType.No, memberResponseType)
+                    </div>
                 }
             </div>
         </div>
     </div>
 </section>
+
+@helper ActiveIf(bool condition)
+{
+    if (!condition)
+    {
+        return;
+    }
+    
+    @Html.Raw("active")
+}
+
+@helper RenderResponseOption(string icon, string colour, EventResponseType responseType, EventResponseType memberResponseType)
+{
+    <i class="fas fa-@icon-circle text-@colour event-response-option @ActiveIf(memberResponseType == responseType)"
+       data-submit="" data-active-class="active" data-value="@responseType" data-toggle="tooltip" title="@responseType"></i>
+}
