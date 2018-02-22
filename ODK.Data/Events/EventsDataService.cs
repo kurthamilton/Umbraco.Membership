@@ -41,10 +41,10 @@ namespace ODK.Data.Events
         {
             using (SqlConnection connection = await OpenConnection())
             {
-                string sql = $"IF NOT EXISTS(SELECT * FROM {EventResponsesTableName} WHERE eventId = @EventId AND memberId = @MemberId)" +
-                             $"INSERT INTO {EventResponsesTableName} (eventId, memberId, responseTypeId) VALUES (@EventId, @MemberId, @ResponseTypeId)" +
-                             $"ELSE" +
-                             $"UPDATE {EventResponsesTableName} SET responseTypeId = @ResponseTypeId WHERE eventId = @EventId AND memberId = @MemberId";
+                string sql = $" IF NOT EXISTS(SELECT * FROM {EventResponsesTableName} WHERE eventId = @EventId AND memberId = @MemberId)" +
+                             $" INSERT INTO {EventResponsesTableName} (eventId, memberId, responseTypeId) VALUES (@EventId, @MemberId, @ResponseTypeId)" +
+                             $" ELSE" +
+                             $" UPDATE {EventResponsesTableName} SET responseTypeId = @ResponseTypeId WHERE eventId = @EventId AND memberId = @MemberId";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
