@@ -18,9 +18,12 @@
                 @RenderResponseOption(EventResponseType.Maybe)
                 @RenderResponseOption(EventResponseType.No)
             </div>
-            <div class="text-center mt-2">
-                You have replied <strong>@Model.MemberResponse.ToString().ToLower()</strong> to this event
-            </div>
+            if (Model.MemberResponse != EventResponseType.None)
+            {
+                <div class="text-center mt-2">
+                    You have replied <strong>@Model.MemberResponse.ToString().ToLower()</strong> to this event
+                </div>
+            }
         }
     </div>
 </div>
