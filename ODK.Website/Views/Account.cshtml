@@ -52,26 +52,26 @@
 <div id="paypal-button"></div>
 
 @helper SubscriptionAccordionItem(IPublishedContent subscription, string currencySymbol, string currencyCode, string paypalButtonId, bool expanded)
-{
-    string type = subscription.Name.Replace(" ", "-");
-    string title = subscription.GetPropertyValue<string>("title");
-    string description = subscription.GetPropertyValue<string>("description");
+    {
+        string type = subscription.Name.Replace(" ", "-");
+        string title = subscription.GetPropertyValue<string>("title");
+        string description = subscription.GetPropertyValue<string>("description");
 
-    <div class="card">
-        <div class="card-header" id="heading-@type">
-            <h5 class="mb-0">
-                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-@type" aria-expanded="true" aria-controls="collapse-@type">@title</button>
-            </h5>
-        </div>
+        <div class="card">
+            <div class="card-header" id="heading-@type">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-@type" aria-expanded="true" aria-controls="collapse-@type">@title</button>
+                </h5>
+            </div>
 
-        <div id="collapse-@type" class="collapse @Html.Raw(expanded ? "show" : null)" aria-labelledby="heading-@type" data-parent="#subscriptionTypes">
-            <div class="card-body">
-                @Html.Raw(@description)
+            <div id="collapse-@type" class="collapse @Html.Raw(expanded ? "show" : null)" aria-labelledby="heading-@type" data-parent="#subscriptionTypes">
+                <div class="card-body">
+                    @Html.Raw(@description)
 
-                @PaymentButton(subscription, currencySymbol, currencyCode, paypalButtonId)
+                    @PaymentButton(subscription, currencySymbol, currencyCode, paypalButtonId)
+                </div>
             </div>
         </div>
-    </div>
 }
 
 @helper PaymentButton(IPublishedContent subscription, string currencySymbol, string currencyCode, string paypalButtonId)
@@ -79,12 +79,18 @@
     string type = subscription.GetPropertyValue<string>("payPalMembershipType");
     double charge = subscription.GetPropertyValue<double>("charge");
 
-    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+    using (Html.BeginUmbracoForm("Start", "Payments", FormMethod.Post, new { id = "payments-form-" + subscription.Id }))
+    {
+        <input type="hidden" name="amount" value="@charge" />
+    }
+
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" data-payment-form="#payments-form-@subscription.Id">
         <input type="hidden" name="cmd" value="_s-xclick">
         <input type="hidden" name="hosted_button_id" value="@paypalButtonId">
         <input type="hidden" name="currency_code" value="@currencyCode">
         <input type="hidden" name="on0" value="Membership Types">
         <input type="hidden" name="os0" value="@type" />
+        <input type="hidden" name="custom" data-payment-token />
 
         <button type="submit" class="btn btn-primary">Pay now</button>
         <span>@currencySymbol@string.Format("{0:0.00}", charge)</span>
@@ -115,6 +121,8 @@
 
 @section Scripts
 {
+    <script src="@Url.Content("~/scripts/payments.js")"></script>
+
     @{
         return;
     }
@@ -122,39 +130,32 @@
     <script src="https://www.paypalobjects.com/api/checkout.js"></script>
 
     <script>
-    paypal.Button.render({
-      env: 'sandbox', // 'production' Or 'sandbox',
+        var CREATE_PAYMENT_URL = '/umbraco/surface/payments/create';
+        var EXECUTE_PAYMENT_URL = '/umbraco/surface/payments/execute';
 
-      commit: true, // Show a 'Pay Now' button
+        paypal.Button.render({
 
-      style: {
-        color: 'gold',
-        size: 'small'
-      },
+            env: 'production', // Or 'sandbox'
 
-      payment: function(data, actions) {
-        /*
-         * Set up the payment here
-         */
-      },
+            commit: true, // Show a 'Pay Now' button
 
-      onAuthorize: function(data, actions) {
-        /*
-         * Execute the payment here
-         */
-      },
+            payment: function () {
+                return paypal.request.post(CREATE_PAYMENT_URL).then(function (data) {
+                    return data.id;
+                });
+            },
 
-      onCancel: function(data, actions) {
-        /*
-         * Buyer cancelled the payment
-         */
-      },
+            onAuthorize: function (data) {
+                return paypal.request.post(EXECUTE_PAYMENT_URL, {
+                    paymentID: data.paymentID,
+                    payerID: data.payerID
+                }).then(function () {
 
-      onError: function(err) {
-        /*
-         * An error occurred during the transaction
-         */
-      }
-    }, '#paypal-button');
-  </script>
+                    // The payment is complete!
+                    // You can now show a confirmation message to the customer
+                });
+            }
+
+        }, '#paypal-button');
+    </script>
 }

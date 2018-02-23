@@ -278,6 +278,7 @@
     <Content Include="css\theme-oxford.css" />
     <Content Include="Global.asax" />
     <Content Include="scripts\calendar.js" />
+    <Content Include="scripts\payments.js" />
     <Content Include="scripts\script.js" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Partials\Grid\Editors\Textstring.cshtml" />
@@ -361,6 +362,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
+    <Compile Include="Controllers\IpnController.cs" />
+    <Compile Include="Controllers\PaymentsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Threading.Tasks;
 
 namespace ODK.Data.Payments
 {
@@ -15,23 +15,72 @@ namespace ODK.Data.Payments
         {
         }
 
-        public async Task CreatePaymentRequest(PaymentRequest paymentRequest)
+        public void CreatePaymentRequest(PaymentRequest paymentRequest)
         {
             using (SqlConnection connection = OpenConnection())
             {
-                using (SqlCommand command = new SqlCommand($"INSERT INTO {PaymentRequestsTableName} (memberId, token, amount) VALUES (@MemberId, @Token, @Amount)", connection))
+                string sql = $"INSERT INTO {PaymentRequestsTableName} (memberId, name, token, amount, secret) " +
+                             $"VALUES (@MemberId, @MemberName, @Token, @Amount, @Secret)";
+                using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.Add("@MemberId", SqlDbType.Int).Value = paymentRequest.MemberId;
-                    command.Parameters.Add("@Token", SqlDbType.NVarChar).Value = paymentRequest.Token;
+                    command.Parameters.Add("@MemberName", SqlDbType.NVarChar).Value = paymentRequest.MemberName;
+                    command.Parameters.Add("@Token", SqlDbType.NVarChar).Value = paymentRequest.Token.ToString();
                     command.Parameters.Add("@Amount", SqlDbType.Float).Value = paymentRequest.Amount;
+                    command.Parameters.Add("@Secret", SqlDbType.NVarChar).Value = paymentRequest.Secret;
 
-                    await command.ExecuteNonQueryAsync();
+                    command.ExecuteNonQuery();
                 }
             }
         }
 
+        public void DeletePaymentRequest(PaymentRequest paymentRequest)
+        {
+            using (SqlConnection connection = OpenConnection())
+            {
+                string sql = $"DELETE {PaymentRequestsTableName} " +
+                             $"WHERE memberId = @MemberId AND Token = @Token";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.Add("@MemberId", SqlDbType.Int).Value = paymentRequest.MemberId;
+                    command.Parameters.Add("@Token", SqlDbType.NVarChar).Value = paymentRequest.Token.ToString();
 
-        public async Task<IReadOnlyCollection<Payment>> GetPayments(int memberId)
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public PaymentRequest GetPaymentRequest(Guid token, string secret)
+        {
+            using (SqlConnection connection = OpenConnection())
+            {
+                string sql = $" SELECT memberId, name, token, amount, secret " +
+                             $" FROM {PaymentRequestsTableName} " +
+                             $" WHERE token = @Token AND secret = @Secret";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.Add("@Token", SqlDbType.NVarChar).Value = token.ToString();
+                    command.Parameters.Add("@Secret", SqlDbType.NVarChar).Value = secret;
+
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (!reader.Read())
+                    {
+                        return null;
+                    }
+
+                    return new PaymentRequest
+                    {
+                        Amount = reader.GetDouble(reader.GetOrdinal("amount")),
+                        MemberId = reader.GetInt32(reader.GetOrdinal("memberId")),
+                        MemberName = reader.GetString(reader.GetOrdinal("name")),
+                        Secret = reader.GetString(reader.GetOrdinal("secret")),
+                        Token = reader.GetGuid(reader.GetOrdinal("token"))
+                    };
+                }
+            }
+        }
+
+        public IReadOnlyCollection<Payment> GetPayments(int memberId)
         {
             using (SqlConnection connection = OpenConnection())
             {
@@ -39,11 +88,11 @@ namespace ODK.Data.Payments
                 {
                     command.Parameters.Add("@MemberId", SqlDbType.Int).Value = memberId;
 
-                    SqlDataReader reader = await command.ExecuteReaderAsync();
+                    SqlDataReader reader = command.ExecuteReader();
 
                     List<Payment> payments = new List<Payment>();
 
-                    while (await reader.ReadAsync())
+                    while (reader.Read())
                     {
                         Payment payment = ReadPayment(reader);
                         payments.Add(payment);
@@ -54,7 +103,7 @@ namespace ODK.Data.Payments
             }
         }
 
-        public async Task LogPayment(Payment payment)
+        public void LogPayment(Payment payment)
         {
             using (SqlConnection connection = OpenConnection())
             {
@@ -65,7 +114,7 @@ namespace ODK.Data.Payments
                     command.Parameters.Add("@Amount", SqlDbType.Float).Value = payment.Amount;
                     command.Parameters.Add("@Date", SqlDbType.DateTime).Value = payment.Date;
 
-                    await command.ExecuteNonQueryAsync();
+                    command.ExecuteNonQuery();
                 }
             }
         }

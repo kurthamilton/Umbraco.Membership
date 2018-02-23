@@ -7,6 +7,7 @@ using ODK.Data.Events;
 using ODK.Data.Payments;
 using ODK.Umbraco.Events;
 using ODK.Umbraco.Members;
+using ODK.Umbraco.Payments;
 using MvcDependencyResolver = System.Web.Mvc.IDependencyResolver;
 using WebApiDependencyResolver = System.Web.Http.Dependencies.IDependencyResolver;
 
@@ -55,6 +56,7 @@ namespace ODK.Infrastructure
         {
             _builder.RegisterType<EventService>().InstancePerRequest();
             _builder.RegisterType<OdkMemberService>().InstancePerRequest();
+            _builder.RegisterType<PaymentService>().InstancePerRequest();
         }
 
         private void RegisterDataServices()
