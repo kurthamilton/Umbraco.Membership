@@ -12,7 +12,7 @@
 
 	EventModel[] events = EventService.SearchEvents(Model.Content, member, criteria).ToArray();
 
-    Dictionary<int, EventResponseType> responses = EventService.GetMemberResponses(CurrentMember.Id, events.Select(x => x.Id));
+    Dictionary<int, EventResponseType> responses = member != null ? EventService.GetMemberResponses(member.Id, events.Select(x => x.Id)) : null;
 }
 
 <section class="section section--main">
@@ -33,7 +33,7 @@
         {
             <div class="list-item">
                 <h2>
-                    @if (responses.ContainsKey(ev.Id))
+                    @if (responses != null && responses.ContainsKey(ev.Id))
                     {
                         @Html.Partial("EventResponseIcon", responses[ev.Id])
                     }

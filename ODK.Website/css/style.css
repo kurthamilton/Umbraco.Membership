@@ -264,17 +264,19 @@ img {
 }
 
 /* EVENTS */
+.event-response-option {
+	font-size: 1.2em;
+	height: 50px;
+	line-height: 50px;
+}
+
 .event-response-option:not(.active) {
-    opacity: 0.7;
+    opacity: 0.5;
 }
 
 .event-response-option:not(.active):hover {
 	cursor: pointer;
 	opacity: 0.9;
-}
-
-.event-response-option.active {
-	font-size: 2em;
 }
 
 .event-attendees {
@@ -289,6 +291,14 @@ img {
 .event-attendees .row > * {
     padding-left: 0.2rem;
     padding-right: 0.2rem;
+}
+
+.icon--event-response {
+    font-size: 1.2rem;
+}
+
+.event-response-option.active .icon--event-response {
+    font-size: 2rem;
 }
 
 /* Bootstrap overrides */

@@ -9,6 +9,7 @@
     if (restricted)
     {
         Response.Redirect(Model.Content.Parent.Url);
+        return;
     }
 
     string mapApiKey = Model.Content.Site().GetPropertyValue<string>("googleMapsApiKey");

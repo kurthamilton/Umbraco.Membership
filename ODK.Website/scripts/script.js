@@ -124,10 +124,15 @@
     }
 
     function bindTooltips() {
-        $('[data-toggle="tooltip"]').tooltip();
+        $(document).tooltip({ selector: '[data-toggle="tooltip"]' });
+    }
+
+    function disposeTooltips(target) {
+        $('[data-toggle="tooltip"]', target).tooltip('dispose');
     }
 
     function onAjaxStart(target) {
+        disposeTooltips(target);
         target.addClass('loading').addClass('overlay');
     }
 

@@ -13,7 +13,7 @@
         {
             <input type="hidden" name="eventId" value="@Model.EventId" />
             <input type="hidden" name="responseType" data-submit-value />
-            <div class="text-center">
+            <div class="text-center row">
                 @RenderResponseOption(EventResponseType.Yes)
                 @RenderResponseOption(EventResponseType.Maybe)
                 @RenderResponseOption(EventResponseType.No)
@@ -23,7 +23,7 @@
                 <div class="text-center mt-2">
                     You have replied <strong>@Model.MemberResponse.ToString().ToLower()</strong> to this event
                 </div>
-            }
+            }         
         }
     </div>
 </div>
@@ -54,9 +54,9 @@
 
     <div class="card">
         <div class="card-header">
-            @title (@members.Count)
+            <a href="#" data-toggle="collapse" data-target="#responses-@responseType">@title (@members.Count)</a>
         </div>
-        <div class="card-body event-attendees">
+        <div id="responses-@responseType" class="card-body event-attendees collapse @(responseType == EventResponseType.Yes ? "show" : null)">
             <div class="row">
                 @foreach (MemberModel member in members)
                 {
@@ -71,7 +71,7 @@
 
 @helper RenderResponseOption(EventResponseType responseType)
 {
-    <span class="event-response-option @ActiveIf(Model.MemberResponse == responseType)" data-submit data-value="@responseType">
+    <span class="event-response-option col-4 align-middle @ActiveIf(Model.MemberResponse == responseType)" data-submit data-value="@responseType">
         @Html.Partial("EventResponseIcon", responseType)
     </span>
 }
