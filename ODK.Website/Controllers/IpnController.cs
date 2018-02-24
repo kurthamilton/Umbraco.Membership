@@ -1,16 +1,16 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using ODK.Umbraco.Payments;
 using ODK.Umbraco.Web.Mvc;
+using ODK.Website.ViewModels.Payments;
 
 namespace ODK.Website.Controllers
 {
-    // https://github.com/paypal/ipn-code-samples/blob/master/C%23/paypal_ipn_mvc.cs
     public class IpnController : OdkSurfaceControllerBase
     {
         private readonly PaymentService _paymentService;
@@ -21,68 +21,67 @@ namespace ODK.Website.Controllers
         }
 
         [HttpPost]
-        public HttpStatusCodeResult Receive(string appSecret)
+        public HttpStatusCodeResult Receive()
         {
-            //Store the IPN received from PayPal
-            LogRequest(Request);
+            PaypalNotification notification = new PaypalNotification(Request);
+            LogRequest(notification);
 
-            //Fire and forget verification task
-            Task.Run(() => VerifyTask(Request, appSecret));
+            string verificationResponse = GetVerificationResponse(Request);
+
+            ProcessVerificationResponse(notification, verificationResponse);
 
             //Reply back a 200 code
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
-        private void VerifyTask(HttpRequestBase ipnRequest, string appSecret)
+        // https://github.com/paypal/ipn-code-samples/blob/master/C%23/paypal_ipn_mvc.cs
+        private string GetVerificationResponse(HttpRequestBase ipnRequest)
         {
-            var verificationResponse = string.Empty;
-
             try
             {
-                var verificationRequest = (HttpWebRequest)WebRequest.Create("https://www.sandbox.paypal.com/cgi-bin/webscr");
+                WebRequest verificationRequest = WebRequest.Create("https://ipnpb.paypal.com/cgi-bin/webscr");
 
                 //Set values for the verification request
-                verificationRequest.Method = "POST";
+                verificationRequest.Method = HttpMethod.Post.Method;
                 verificationRequest.ContentType = "application/x-www-form-urlencoded";
-                var param = Request.BinaryRead(ipnRequest.ContentLength);
-                var strRequest = Encoding.ASCII.GetString(param);
+                byte[] param = Request.BinaryRead(ipnRequest.ContentLength);
+                string request = Encoding.ASCII.GetString(param);
 
                 //Add cmd=_notify-validate to the payload
-                strRequest = "cmd=_notify-validate&" + strRequest;
-                verificationRequest.ContentLength = strRequest.Length;
+                request = "cmd=_notify-validate&" + request;
+                verificationRequest.ContentLength = request.Length;
 
                 //Attach payload to the verification request
-                var streamOut = new StreamWriter(verificationRequest.GetRequestStream(), Encoding.ASCII);
-                streamOut.Write(strRequest);
-                streamOut.Close();
+                using (StreamWriter streamOut = new StreamWriter(verificationRequest.GetRequestStream(), Encoding.ASCII))
+                {
+                    streamOut.Write(request);
+                }
 
                 //Send the request to PayPal and get the response
-                var streamIn = new StreamReader(verificationRequest.GetResponse().GetResponseStream());
-                verificationResponse = streamIn.ReadToEnd();
-                streamIn.Close();
-
+                using (StreamReader streamIn = new StreamReader(verificationRequest.GetResponse().GetResponseStream()))
+                {
+                    return streamIn.ReadToEnd();
+                }
             }
             catch (Exception exception)
             {
                 //Capture exception for manual investigation
+                return string.Empty;
             }
-
-            ProcessVerificationResponse(verificationResponse, appSecret);
         }
 
-
-        private void LogRequest(HttpRequestBase request)
+        private void LogRequest(PaypalNotification notification)
         {
             // Persist the request values into a database or temporary data store
         }
 
-        private void ProcessVerificationResponse(string verificationResponse, string appSecret)
+        private void ProcessVerificationResponse(PaypalNotification notification, string verificationResponse)
         {
             if (verificationResponse.Equals("VERIFIED"))
             {
-                if (Request["Payment_status"] == "Completed" && Guid.TryParse(Request["custom"], out Guid token))
+                if (notification.PaymentStatus == PaymentStatus.Completed)
                 {
-                    _paymentService.CompletePayment(token, appSecret);
+                    _paymentService.CompletePayment(notification.Token, notification.CurrencyCode, notification.Amount);
                 }
 
                 // check that Payment_status=Completed

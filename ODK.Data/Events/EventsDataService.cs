@@ -6,7 +6,7 @@ namespace ODK.Data.Events
 {
     public class EventsDataService : DataServiceBase
     {
-        private const string EventResponsesTableName = "dbo.odkEventResponses";
+        private const string TableName = "dbo.odkEventResponses";
 
         public EventsDataService(string connectionString)
             : base(connectionString)
@@ -17,11 +17,11 @@ namespace ODK.Data.Events
         {
             using (SqlConnection connection = OpenConnection())
             {
-                using (SqlCommand command = new SqlCommand($"SELECT memberId, eventId, responseTypeId FROM {EventResponsesTableName} WHERE eventId = @EventId", connection))
+                using (SqlCommand command = new SqlCommand($"SELECT memberId, eventId, responseTypeId FROM {TableName} WHERE eventId = @EventId", connection))
                 {
                     command.Parameters.Add("@EventId", SqlDbType.Int).Value = eventId;
 
-                    IReadOnlyCollection<EventResponse> eventResponses = ReadEventResponses(command);
+                    IReadOnlyCollection<EventResponse> eventResponses = ReadRecords(command, ReadEventResponse);
                     return eventResponses;
                 }
             }
@@ -38,14 +38,14 @@ namespace ODK.Data.Events
             using (SqlConnection connection = OpenConnection())
             {
                 string sql = $" SELECT memberId, eventId, responseTypeId" +
-                             $" FROM {EventResponsesTableName}" +
+                             $" FROM {TableName}" +
                              $" WHERE memberId = @memberId AND eventId IN (" + eventIdString + ")";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.Add("@MemberId", SqlDbType.Int).Value = memberId;
 
-                    IReadOnlyCollection<EventResponse> eventResponses = ReadEventResponses(command);
+                    IReadOnlyCollection<EventResponse> eventResponses = ReadRecords(command, ReadEventResponse);
                     return eventResponses;
                 }
             }
@@ -55,10 +55,10 @@ namespace ODK.Data.Events
         {
             using (SqlConnection connection = OpenConnection())
             {
-                string sql = $" IF NOT EXISTS(SELECT * FROM {EventResponsesTableName} WHERE eventId = @EventId AND memberId = @MemberId)" +
-                             $" INSERT INTO {EventResponsesTableName} (eventId, memberId, responseTypeId) VALUES (@EventId, @MemberId, @ResponseTypeId)" +
+                string sql = $" IF NOT EXISTS(SELECT * FROM {TableName} WHERE eventId = @EventId AND memberId = @MemberId)" +
+                             $" INSERT INTO {TableName} (eventId, memberId, responseTypeId) VALUES (@EventId, @MemberId, @ResponseTypeId)" +
                              $" ELSE" +
-                             $" UPDATE {EventResponsesTableName} SET responseTypeId = @ResponseTypeId WHERE eventId = @EventId AND memberId = @MemberId";
+                             $" UPDATE {TableName} SET responseTypeId = @ResponseTypeId WHERE eventId = @EventId AND memberId = @MemberId";
 
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -79,21 +79,6 @@ namespace ODK.Data.Events
                 MemberId = reader.GetInt32(reader.GetOrdinal("memberId")),
                 ResponseTypeId = reader.GetInt32(reader.GetOrdinal("responseTypeId"))
             };
-        }
-
-        private static IReadOnlyCollection<EventResponse> ReadEventResponses(SqlCommand command)
-        {
-            SqlDataReader reader = command.ExecuteReader();
-
-            List<EventResponse> eventResponses = new List<EventResponse>();
-
-            while (reader.Read())
-            {
-                EventResponse eventResponse = ReadEventResponse(reader);
-                eventResponses.Add(eventResponse);
-            }
-
-            return eventResponses;
         }
     }
 }

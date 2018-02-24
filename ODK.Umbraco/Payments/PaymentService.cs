@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using ODK.Data.Payments;
 
 namespace ODK.Umbraco.Payments
@@ -12,35 +14,38 @@ namespace ODK.Umbraco.Payments
             _paymentsDataService = paymentsDataService;
         }
 
-        public void CreatePaymentRequest(int memberId, string memberName, double amount, Guid token, string secret)
+        public void CreatePayment(int memberId, string memberName, string currencyCode, double amount, Guid token)
         {
-            _paymentsDataService.CreatePaymentRequest(new PaymentRequest
-            {
-                Amount = amount,
-                MemberId = memberId,
-                MemberName = memberName,
-                Token = token,
-                Secret = secret
-            });
+            Payment payment = new Payment(memberId, memberName, currencyCode, amount, token);
+            _paymentsDataService.CreatePayment(payment);
         }
 
-        public void CompletePayment(Guid token, string secret)
+        public void CompletePayment(Guid token, string currencyCode, double amount)
         {
-            PaymentRequest paymentRequest = _paymentsDataService.GetPaymentRequest(token, secret);
-            if (paymentRequest == null)
+            Payment payment = _paymentsDataService.GetIncompletePayment(token);
+            if (payment == null)
             {
                 return;
             }
 
-            _paymentsDataService.LogPayment(new Payment
-            {
-                Amount = paymentRequest.Amount,
-                Date = DateTime.UtcNow,
-                MemberId = paymentRequest.MemberId,
-                MemberName = paymentRequest.MemberName
-            });
+            _paymentsDataService.CompletePayment(payment.Id, currencyCode, amount);
+        }
 
-            _paymentsDataService.DeletePaymentRequest(paymentRequest);
+        public MemberPayment GetLastPayment(int memberId)
+        {
+            IReadOnlyCollection<Payment> payments = _paymentsDataService.GetCompletePayments(memberId);
+            Payment lastPayment = payments.OrderByDescending(x => x.Date).FirstOrDefault();
+            if (lastPayment == null)
+            {
+                return null;
+            }
+
+            return new MemberPayment
+            {
+                Amount = lastPayment.Amount,
+                CurrencyCode = lastPayment.CurrencyCode,
+                Date = lastPayment.Date
+            };
         }
     }
 }

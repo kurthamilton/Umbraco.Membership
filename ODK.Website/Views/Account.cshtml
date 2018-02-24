@@ -1,4 +1,5 @@
 ﻿@using ODK.Umbraco.Members;
+@using ODK.Umbraco.Payments;
 @using ODK.Umbraco.Web.Mvc;
 @inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
@@ -8,11 +9,12 @@
     HtmlHelper<MemberModel> memberHelper = Html.For<MemberModel>(member);
 
     string currencyCode = Model.Content.GetPropertyValue<string>("subscriptionCurrency");
-    string currencySymbol = GetCurrencySymbol(currencyCode);
 
     IPublishedContent[] subscriptions = Model.Content.Children.ToArray();
 
     string paypalButtonId = Model.Content.GetPropertyValue<string>("subscriptionPaypalButtonId");
+
+    MemberPayment lastPayment = PaymentService.GetLastPayment(CurrentMember.Id);
 }
 
 @if (Request.QueryString["payment"] == "cancelled")
@@ -22,27 +24,41 @@
 
 <div class="content">
     <div class="container">
-        @if (member.Type != MemberTypes.None)
-        {
-            <div class="form-group">
-                @memberHelper.LabelFor(x => x.Type, "Current Membership Type", new { @class = "form-control-label" })
-                <span class="form-control-plaintext">@member.Type</span>
-            </div>
-        }
+        <div class="row">
+            @if (member.Type != MemberTypes.None)
+            {
+                <div class="col-6">
+                    <div class="form-group">
+                        @memberHelper.LabelFor(x => x.Type, "Current Membership Type", new { @class = "form-control-label" })
+                        <span class="form-control-plaintext">@member.Type</span>
+                    </div>
+                </div>
+            }
+            @if (lastPayment != null)
+            {
+                string lastPaymentCurrencySymbol = GetCurrencySymbol(lastPayment.CurrencyCode);
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="form-control-label">Last payment</label>
+                        <span class="form-control-plaintext">@GetAmount(lastPayment.CurrencyCode, lastPayment.Amount) on @lastPayment.Date.ToString("dd MMMM yyyy")</span>
+                    </div>
+                </div>
+            }
+        </div>
 
         @if (subscriptions.Length == 1)
         {
             IPublishedContent subscription = subscriptions.Single();
             <h3>@subscription.GetPropertyValue("title")</h3>
             @Html.Raw(subscription.GetPropertyValue("description"))
-            @PaymentButton(subscription, currencySymbol, currencyCode, paypalButtonId)
+            @PaymentButton(subscription, currencyCode, paypalButtonId)
         }
         else
         {
             <div id="subscriptionTypes">
                 @for (int i = 0; i < subscriptions.Length; i++)
                 {
-                    @SubscriptionAccordionItem(subscriptions[i], currencySymbol, currencyCode, paypalButtonId, i == 0)
+                    @SubscriptionAccordionItem(subscriptions[i], currencyCode, paypalButtonId, i == 0)
                 }
             </div>
         }
@@ -51,37 +67,38 @@
 
 <div id="paypal-button"></div>
 
-@helper SubscriptionAccordionItem(IPublishedContent subscription, string currencySymbol, string currencyCode, string paypalButtonId, bool expanded)
-    {
-        string type = subscription.Name.Replace(" ", "-");
-        string title = subscription.GetPropertyValue<string>("title");
-        string description = subscription.GetPropertyValue<string>("description");
+@helper SubscriptionAccordionItem(IPublishedContent subscription, string currencyCode, string paypalButtonId, bool expanded)
+{
+    string type = subscription.Name.Replace(" ", "-");
+    string title = subscription.GetPropertyValue<string>("title");
+    string description = subscription.GetPropertyValue<string>("description");
 
-        <div class="card">
-            <div class="card-header" id="heading-@type">
-                <h5 class="mb-0">
-                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-@type" aria-expanded="true" aria-controls="collapse-@type">@title</button>
-                </h5>
-            </div>
+    <div class="card">
+        <div class="card-header" id="heading-@type">
+            <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-@type" aria-expanded="true" aria-controls="collapse-@type">@title</button>
+            </h5>
+        </div>
 
-            <div id="collapse-@type" class="collapse @Html.Raw(expanded ? "show" : null)" aria-labelledby="heading-@type" data-parent="#subscriptionTypes">
-                <div class="card-body">
-                    @Html.Raw(@description)
+        <div id="collapse-@type" class="collapse @Html.Raw(expanded ? "show" : null)" aria-labelledby="heading-@type" data-parent="#subscriptionTypes">
+            <div class="card-body">
+                @Html.Raw(@description)
 
-                    @PaymentButton(subscription, currencySymbol, currencyCode, paypalButtonId)
-                </div>
+                @PaymentButton(subscription, currencyCode, paypalButtonId)
             </div>
         </div>
+    </div>
 }
 
-@helper PaymentButton(IPublishedContent subscription, string currencySymbol, string currencyCode, string paypalButtonId)
+@helper PaymentButton(IPublishedContent subscription, string currencyCode, string paypalButtonId)
 {
     string type = subscription.GetPropertyValue<string>("payPalMembershipType");
-    double charge = subscription.GetPropertyValue<double>("charge");
+    double amount = subscription.GetPropertyValue<double>("amount");
 
     using (Html.BeginUmbracoForm("Start", "Payments", FormMethod.Post, new { id = "payments-form-" + subscription.Id }))
     {
-        <input type="hidden" name="amount" value="@charge" />
+        <input type="hidden" name="amount" value="@amount" />
+        <input type="hidden" name="currencyCode" value="@currencyCode" />
     }
 
     <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" data-payment-form="#payments-form-@subscription.Id">
@@ -93,7 +110,7 @@
         <input type="hidden" name="custom" data-payment-token />
 
         <button type="submit" class="btn btn-primary">Pay now</button>
-        <span>@currencySymbol@string.Format("{0:0.00}", charge)</span>
+        <span>@GetAmount(currencyCode, amount)</span>
         <span class="text-muted">You will be redirected to PayPal to finalise the payment</span>
     </form>
 }
@@ -117,45 +134,15 @@
 
         return null;
     }
+
+    string GetAmount(string currencyCode, double amount)
+    {
+        string currencySymbol = GetCurrencySymbol(currencyCode);
+        return string.Format("{0}{1:0.00}", currencySymbol, amount);
+    }
 }
 
 @section Scripts
 {
     <script src="@Url.Content("~/scripts/payments.js")"></script>
-
-    @{
-        return;
-    }
-
-    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
-
-    <script>
-        var CREATE_PAYMENT_URL = '/umbraco/surface/payments/create';
-        var EXECUTE_PAYMENT_URL = '/umbraco/surface/payments/execute';
-
-        paypal.Button.render({
-
-            env: 'production', // Or 'sandbox'
-
-            commit: true, // Show a 'Pay Now' button
-
-            payment: function () {
-                return paypal.request.post(CREATE_PAYMENT_URL).then(function (data) {
-                    return data.id;
-                });
-            },
-
-            onAuthorize: function (data) {
-                return paypal.request.post(EXECUTE_PAYMENT_URL, {
-                    paymentID: data.paymentID,
-                    payerID: data.payerID
-                }).then(function () {
-
-                    // The payment is complete!
-                    // You can now show a confirmation message to the customer
-                });
-            }
-
-        }, '#paypal-button');
-    </script>
 }

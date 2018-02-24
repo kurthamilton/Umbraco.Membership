@@ -1,6 +1,8 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using ODK.Umbraco.Events;
 using ODK.Umbraco.Members;
+using ODK.Umbraco.Payments;
 using ODK.Umbraco.Settings;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
@@ -10,9 +12,13 @@ namespace ODK.Umbraco.Web.Mvc
 {
     public abstract class OdkUmbracoTemplatePage : UmbracoTemplatePage
     {
-        private RequestCacheItem<IPublishedContent> _currentMember;
-        private RequestCacheItem<MemberModel> _currentMemberModel;
-        private RequestCacheItem<IPublishedContent> _homePage;
+        private readonly Lazy<EventService> _eventService;
+        private readonly Lazy<OdkMemberService> _memberService;
+        private readonly Lazy<PaymentService> _paymentService;
+
+        private readonly RequestCacheItem<IPublishedContent> _currentMember;
+        private readonly RequestCacheItem<MemberModel> _currentMemberModel;
+        private readonly RequestCacheItem<IPublishedContent> _homePage;
 
         protected OdkUmbracoTemplatePage()
         {
@@ -20,8 +26,10 @@ namespace ODK.Umbraco.Web.Mvc
             _currentMemberModel = new RequestCacheItem<MemberModel>(nameof(_currentMemberModel), () => new MemberModel(CurrentMember));
             _homePage = new RequestCacheItem<IPublishedContent>(nameof(_homePage), () => Model.Content.HomePage());
 
-            EventService = DependencyResolver.Current.GetService<EventService>();
-            MemberService = DependencyResolver.Current.GetService<OdkMemberService>();
+            IDependencyResolver dependencyResolver = DependencyResolver.Current;
+            _eventService = new Lazy<EventService>(() => dependencyResolver.GetService<EventService>());
+            _memberService = new Lazy<OdkMemberService>(() => dependencyResolver.GetService<OdkMemberService>());
+            _paymentService = new Lazy<PaymentService>(() => dependencyResolver.GetService<PaymentService>());
         }
 
         public bool IsRestricted { get; set; }
@@ -44,11 +52,13 @@ namespace ODK.Umbraco.Web.Mvc
 
         public IDataTypeService DataTypeService => ApplicationContext.Services.DataTypeService;
 
-        public EventService EventService { get; }
+        public EventService EventService => _eventService.Value;
 
         public IPublishedContent HomePage => _homePage.Value;
 
-        public OdkMemberService MemberService { get; }
+        public OdkMemberService MemberService => _memberService.Value;
+
+        public PaymentService PaymentService => _paymentService.Value;
 
         public OdkUmbracoTemplateModel<T> ModelFor<T>(T value)
         {

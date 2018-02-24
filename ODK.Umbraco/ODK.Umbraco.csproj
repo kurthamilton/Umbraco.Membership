@@ -231,6 +231,7 @@
     <Compile Include="Members\UmbracoHelperExtensions.cs" />
     <Compile Include="Members\UpdateMemberModel.cs" />
     <Compile Include="MutableLazy.cs" />
+    <Compile Include="Payments\MemberPayment.cs" />
     <Compile Include="Payments\PaymentService.cs" />
     <Compile Include="Web\Mvc\HtmlHelpers.cs" />
     <Compile Include="Web\Mvc\OdkSurfaceControllerBase.cs" />

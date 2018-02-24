@@ -369,6 +369,8 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\EventSidebarViewModel.cs" />
+    <Compile Include="ViewModels\Payments\PaymentStatus.cs" />
+    <Compile Include="ViewModels\Payments\PaypalNotification.cs" />
     <Compile Include="ViewModels\PersonThumbnailViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

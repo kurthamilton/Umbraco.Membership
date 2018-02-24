@@ -16,12 +16,11 @@ namespace ODK.Website.Controllers
         }
 
         [HttpPost]
-        public ActionResult Start(double amount)
+        public ActionResult Start(double amount, string currencyCode)
         {
             int memberId = CurrentMember.Id;
             Guid token = Guid.NewGuid();
-            string secret = CurrentMemberModel.Chapter.GetPropertyValue<string>("paypalIpnSecret");
-            _paymentService.CreatePaymentRequest(memberId, CurrentMemberModel.FullName, amount, token, secret);
+            _paymentService.CreatePayment(memberId, CurrentMemberModel.FullName, currencyCode, amount, token);
 
             return Json(token);
         }
