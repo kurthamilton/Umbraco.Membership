@@ -248,6 +248,132 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.controller.js" />
+    <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.htm" />
+    <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.resource.js" />
+    <Content Include="App_Plugins\Optimus\Content\images\application.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\code.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\cross.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\cross_grey.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\css.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\css_grey.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\db.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\delete.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\directory.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\directory_grey.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\doc.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\file.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\film.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\flash.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\folder_open.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\folder_open_grey.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\html.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\java.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\linux.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\music.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\OptimusLogo.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\pdf.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\php.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\picture.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\ppt.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\psd.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\ruby.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\script.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\script_grey.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\spinner.gif" />
+    <Content Include="App_Plugins\Optimus\Content\images\txt.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\xls.png" />
+    <Content Include="App_Plugins\Optimus\Content\images\zip.png" />
+    <Content Include="App_Plugins\Optimus\Content\jqueryFileTree.css" />
+    <Content Include="App_Plugins\Optimus\Content\Morphing.mp3" />
+    <Content Include="App_Plugins\Optimus\Content\style.css" />
+    <Content Include="App_Plugins\Optimus\Content\stylev6.css" />
+    <Content Include="App_Plugins\Optimus\Content\stylev7.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\images\animated-overlay.gif" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery-ui.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery.ui.accordion.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery.ui.all.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery.ui.autocomplete.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery.ui.base.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery.ui.button.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery.ui.core.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery.ui.datepicker.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery.ui.dialog.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery.ui.menu.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery.ui.progressbar.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery.ui.resizable.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery.ui.selectable.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery.ui.slider.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery.ui.spinner.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery.ui.tabs.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery.ui.theme.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\jquery.ui.tooltip.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\images\animated-overlay.gif" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\images\ui-icons_222222_256x240.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\images\ui-icons_454545_256x240.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\images\ui-icons_888888_256x240.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\jquery-ui.min.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\jquery.ui.accordion.min.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\jquery.ui.autocomplete.min.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\jquery.ui.button.min.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\jquery.ui.core.min.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\jquery.ui.datepicker.min.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\jquery.ui.dialog.min.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\jquery.ui.menu.min.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\jquery.ui.progressbar.min.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\jquery.ui.resizable.min.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\jquery.ui.selectable.min.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\jquery.ui.slider.min.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\jquery.ui.spinner.min.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\jquery.ui.tabs.min.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="App_Plugins\Optimus\Content\themes\base\minified\jquery.ui.tooltip.min.css" />
+    <Content Include="App_Plugins\Optimus\Dialogs\CreateScript.ascx" />
+    <Content Include="App_Plugins\Optimus\Dialogs\CreateStyleSheet.ascx" />
+    <Content Include="App_Plugins\Optimus\Dialogs\ProviderInstaller.ascx" />
+    <Content Include="App_Plugins\Optimus\Icons\bundle-icon.png" />
+    <Content Include="App_Plugins\Optimus\Icons\bundle_menu_icon.png" />
+    <Content Include="App_Plugins\Optimus\Icons\coffee-icon-grey.png" />
+    <Content Include="App_Plugins\Optimus\Icons\coffee-icon.png" />
+    <Content Include="App_Plugins\Optimus\Icons\less-icon-grey.png" />
+    <Content Include="App_Plugins\Optimus\Icons\less-icon.png" />
+    <Content Include="App_Plugins\Optimus\Icons\sass-icon-grey.png" />
+    <Content Include="App_Plugins\Optimus\Icons\sass-icon.png" />
+    <Content Include="App_Plugins\Optimus\Icons\typescript-icon-grey.png" />
+    <Content Include="App_Plugins\Optimus\Icons\typescript-icon.png" />
+    <Content Include="App_Plugins\Optimus\Pages\FileEditor.aspx" />
+    <None Include="App_Plugins\Optimus\Scripts\jquery-2.0.3.intellisense.js" />
+    <Content Include="App_Plugins\Optimus\Scripts\jquery-2.0.3.js" />
+    <Content Include="App_Plugins\Optimus\Scripts\jquery-2.0.3.min.js" />
+    <Content Include="App_Plugins\Optimus\Scripts\jquery-ui-1.10.2.js" />
+    <Content Include="App_Plugins\Optimus\Scripts\jquery-ui-1.10.2.min.js" />
+    <Content Include="App_Plugins\Optimus\Scripts\jqueryFileTree.js" />
+    <Content Include="App_Plugins\Optimus\Scripts\underscore.js" />
+    <Content Include="App_Plugins\Optimus\Scripts\underscore.min.js" />
+    <Content Include="App_Plugins\Optimus\Services\jqueryFileTree.aspx" />
     <Content Include="assets\loading.svg" />
     <Content Include="config\imageprocessor\security.config" />
     <Content Include="config\imageprocessor\processing.config" />
@@ -270,6 +396,12 @@
     <Content Include="config\BackOfficeTours\getting-started.json" />
     <Content Include="config\applications.config" />
     <Content Include="config\404handlers.config" />
+    <Content Include="App_Plugins\ModelsBuilder\package.manifest" />
+    <Content Include="App_Plugins\Optimus\Config\bundles.config" />
+    <Content Include="App_Plugins\Optimus\Scripts\jquery-2.0.3.min.map" />
+    <Content Include="App_Plugins\Optimus\Views\Dialog.cshtml" />
+    <Content Include="App_Plugins\Optimus\Views\Index.cshtml" />
+    <Content Include="App_Plugins\Optimus\Views\Web.config" />
     <None Include="packages.config" />
     <Content Include="css\calendar.css" />
     <Content Include="css\home.css" />
@@ -387,9 +519,7 @@
       <Name>ODK.Umbraco</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Plugins\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
