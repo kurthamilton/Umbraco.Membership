@@ -8,6 +8,9 @@
     UpdateMemberModel invalidUpdateMemberModel = GetInvalidModel<UpdateMemberModel>();
     UpdateMemberModel memberModel = new UpdateMemberModel(CurrentMember, invalidUpdateMemberModel);
 
+    IPublishedContent accountPage = CurrentMemberModel.Chapter.GetPropertyValue<IPublishedContent>("accountPage");
+    string accountUrl = accountPage != null ? accountPage.Url : null;
+
     ChangePasswordModel invalidChangePasswordModel = GetInvalidModel<ChangePasswordModel>();
     bool isChangePasswordError = invalidChangePasswordModel != null;
     HtmlHelper<ChangePasswordModel> changePasswordHelper = Html.For<ChangePasswordModel>(invalidChangePasswordModel != null ? invalidChangePasswordModel : new ChangePasswordModel());
@@ -17,8 +20,13 @@
     <div class="container">
         <div class="row">
             <div class="col-6">
-                <a href="#change-password-modal" data-toggle="modal">Change password</a>
+                @if (accountPage != null)
+                {
+                    <div><a href="@accountPage.Url">My subscription</a></div>
+                }
+                <div><a href="#change-password-modal" data-toggle="modal">Change password</a></div>
             </div>
+
             @if (memberModel.Picture != null)
             {
                 <div class="col-6">

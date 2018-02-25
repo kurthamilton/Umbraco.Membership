@@ -48,7 +48,7 @@
             {
                 <div class="col-6">
                     <div class="form-group">
-                        @memberHelper.LabelFor(x => x.Type, "Current Membership Type", new { @class = "form-control-label" })
+                        @memberHelper.LabelFor(x => x.Type, "Current membership type", new { @class = "form-control-label" })
                         <span class="form-control-plaintext">@member.Type</span>
                     </div>
                 </div>
@@ -65,6 +65,7 @@
             }
         </div>
 
+        <h1>@(CurrentMemberModel.Type != MemberTypes.Trial ? "Renew" : "Buy")</h1>
         @if (subscriptions.Length == 1)
         {
             IPublishedContent subscription = subscriptions.Single();
@@ -87,51 +88,51 @@
 <div id="paypal-button"></div>
 
 @helper SubscriptionAccordionItem(IPublishedContent subscription, string currencyCode, string paypalButtonId, bool expanded)
-    {
-        string type = subscription.Name.Replace(" ", "-");
-        string title = subscription.GetPropertyValue<string>("title");
-        string description = subscription.GetPropertyValue<string>("description");
+{
+    string type = subscription.Name.Replace(" ", "-");
+    string title = subscription.GetPropertyValue<string>("title");
+    string description = subscription.GetPropertyValue<string>("description");
 
-        <div class="card">
-            <div class="card-header" id="heading-@type">
-                <h5 class="mb-0">
-                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-@type" aria-expanded="true" aria-controls="collapse-@type">@title</button>
-                </h5>
-            </div>
+    <div class="card">
+        <div class="card-header" id="heading-@type">
+            <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-@type" aria-expanded="true" aria-controls="collapse-@type">@title</button>
+            </h5>
+        </div>
 
-            <div id="collapse-@type" class="collapse @Html.Raw(expanded ? "show" : null)" aria-labelledby="heading-@type" data-parent="#subscriptionTypes">
-                <div class="card-body">
-                    @Html.Raw(@description)
+        <div id="collapse-@type" class="collapse @Html.Raw(expanded ? "show" : null)" aria-labelledby="heading-@type" data-parent="#subscriptionTypes">
+            <div class="card-body">
+                @Html.Raw(@description)
 
-                    @PaymentButton(subscription, currencyCode, paypalButtonId)
-                </div>
+                @PaymentButton(subscription, currencyCode, paypalButtonId)
             </div>
         </div>
+    </div>
 }
 
 @helper PaymentButton(IPublishedContent subscription, string currencyCode, string paypalButtonId)
+{
+    string type = subscription.GetPropertyValue<string>("payPalMembershipType");
+    double amount = subscription.GetPropertyValue<double>("amount");
+
+    using (Html.BeginUmbracoForm("Start", "Payments", FormMethod.Post, new { id = "payments-form-" + subscription.Id }))
     {
-        string type = subscription.GetPropertyValue<string>("payPalMembershipType");
-        double amount = subscription.GetPropertyValue<double>("amount");
+        <input type="hidden" name="amount" value="@amount" />
+        <input type="hidden" name="currencyCode" value="@currencyCode" />
+    }
 
-        using (Html.BeginUmbracoForm("Start", "Payments", FormMethod.Post, new { id = "payments-form-" + subscription.Id }))
-        {
-            <input type="hidden" name="amount" value="@amount" />
-            <input type="hidden" name="currencyCode" value="@currencyCode" />
-        }
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" data-payment-form="#payments-form-@subscription.Id">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="hosted_button_id" value="@paypalButtonId">
+        <input type="hidden" name="currency_code" value="@currencyCode">
+        <input type="hidden" name="on0" value="Membership Types">
+        <input type="hidden" name="os0" value="@type" />
+        <input type="hidden" name="custom" data-payment-token />
 
-        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" data-payment-form="#payments-form-@subscription.Id">
-            <input type="hidden" name="cmd" value="_s-xclick">
-            <input type="hidden" name="hosted_button_id" value="@paypalButtonId">
-            <input type="hidden" name="currency_code" value="@currencyCode">
-            <input type="hidden" name="on0" value="Membership Types">
-            <input type="hidden" name="os0" value="@type" />
-            <input type="hidden" name="custom" data-payment-token />
-
-            <button type="submit" class="btn btn-primary">Pay now</button>
-            <span>@GetAmount(currencyCode, amount)</span>
-            <span class="text-muted">You will be redirected to PayPal to finalise the payment</span>
-        </form>
+        <button type="submit" class="btn btn-primary">Pay now</button>
+        <span>@GetAmount(currencyCode, amount)</span>
+        <span class="text-muted">You will be redirected to PayPal to finalise the payment</span>
+    </form>
 }
 
 @functions
