@@ -95,6 +95,13 @@ img {
     z-index: 1;
 }
 
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
 /* NAV */
 .logo--main {
 	max-width: 100%;
