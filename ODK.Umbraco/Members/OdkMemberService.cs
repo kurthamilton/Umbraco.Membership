@@ -11,14 +11,26 @@ namespace ODK.Umbraco.Members
 {
     public class OdkMemberService
     {
-        private readonly PaymentsDataService _paymentsDataService;
         private readonly IMediaService _umbracoMediaService;
         private readonly IMemberService _umbracoMemberService;
 
-        public OdkMemberService(IMediaService umbracoMediaService, IMemberService umbracoMemberService, PaymentsDataService paymentsDataService)
+        public OdkMemberService(IMediaService umbracoMediaService, IMemberService umbracoMemberService)
         {
             _umbracoMediaService = umbracoMediaService;
             _umbracoMemberService = umbracoMemberService;
+        }
+
+        public ServiceResult ChangePassword(int id, ChangePasswordModel model)
+        {
+            IMember member = _umbracoMemberService.GetById(id);
+            if (member == null)
+            {
+                return new ServiceResult("", "Member not found");
+            }
+
+            _umbracoMemberService.SavePassword(member, model.NewPassword);
+
+            return new ServiceResult(true);
         }
 
         public MemberModel GetMember(int id, UmbracoHelper helper)

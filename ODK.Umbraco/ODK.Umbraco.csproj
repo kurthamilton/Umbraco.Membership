@@ -217,6 +217,7 @@
     <Compile Include="Events\EventResponseType.cs" />
     <Compile Include="Events\EventSearchCriteria.cs" />
     <Compile Include="Events\EventService.cs" />
+    <Compile Include="Members\ChangePasswordModel.cs" />
     <Compile Include="Members\IMemberPictureUpload.cs" />
     <Compile Include="Members\LoginModel.cs" />
     <Compile Include="Members\MediaExtensions.cs" />

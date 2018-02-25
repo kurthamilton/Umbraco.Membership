@@ -60,6 +60,11 @@ namespace ODK.Umbraco.Web.Mvc
 
         public PaymentService PaymentService => _paymentService.Value;
 
+        public T GetInvalidModel<T>() where T : class
+        {
+            return TempData[typeof(T).Name] as T;
+        }
+
         public OdkUmbracoTemplateModel<T> ModelFor<T>(T value)
         {
             return new OdkUmbracoTemplateModel<T>(value, Umbraco);

@@ -14,15 +14,15 @@ namespace ODK.Umbraco.Web.Mvc
         private readonly List<string> _feedbackMessages = new List<string>();
         private readonly List<bool> _feedbackSuccesses = new List<bool>();
 
-        protected IPublishedContent CurrentMember => _currentMember.Value;
-
-        protected MemberModel CurrentMemberModel => _currentMemberModel.Value;
-
         protected OdkSurfaceControllerBase()
         {
             _currentMember = new Lazy<IPublishedContent>(() => Umbraco.MembershipHelper.GetCurrentMember());
             _currentMemberModel = new Lazy<MemberModel>(() => CurrentMember != null ? new MemberModel(CurrentMember) : null);
         }
+
+        protected IPublishedContent CurrentMember => _currentMember.Value;
+
+        protected MemberModel CurrentMemberModel => _currentMemberModel.Value;
 
         protected void AddFeedback(string message, bool success)
         {
@@ -41,9 +41,9 @@ namespace ODK.Umbraco.Web.Mvc
             base.OnResultExecuting(filterContext);
         }
 
-        protected void SetModel(object model)
+        protected void SetInvalidModel<T>(T model) where T : class
         {
-            TempData["Model"] = model;
+            TempData[typeof(T).Name] = model;
         }
     }
 }

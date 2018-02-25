@@ -23,6 +23,28 @@ namespace ODK.Website.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public ActionResult ChangePassword(ChangePasswordModel model)
+        {
+            HandleLoggedOffUser();
+
+            if (!ModelState.IsValid)
+            {
+                return OnError(model, null);
+            }
+
+            ServiceResult result = _memberService.ChangePassword(CurrentMember.Id, model);
+            if (!result.Success)
+            {
+                return OnError(model, result);
+            }
+
+            AddFeedback("Password changed", true);
+
+            return RedirectToCurrentUmbracoPage();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model)
         {
             HandleLoggedOnUser();
@@ -35,7 +57,7 @@ namespace ODK.Website.Controllers
                 }
             }
 
-            SetModel(model);
+            SetInvalidModel(model);
 
             return CurrentUmbracoPage();
         }
@@ -78,10 +100,7 @@ namespace ODK.Website.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Update(UpdateMemberModel model)
         {
-            if (CurrentMember == null)
-            {
-                return RedirectToHome();
-            }
+            HandleLoggedOffUser();
 
             IPublishedContent chapter = Umbraco.AssignedContentItem.HomePage();
             model.SetChapter(chapter);
@@ -146,7 +165,7 @@ namespace ODK.Website.Controllers
             return RedirectToCurrentUmbracoPage();
         }
 
-        private ActionResult OnError(object model, ServiceResult result)
+        private ActionResult OnError<T>(T model, ServiceResult result) where T : class
         {
             if (result != null)
             {
@@ -156,8 +175,16 @@ namespace ODK.Website.Controllers
                 }
             }
 
-            SetModel(model);
+            SetInvalidModel(model);
             return CurrentUmbracoPage();
+        }
+
+        private void HandleLoggedOffUser()
+        {
+            if (CurrentMember == null)
+            {
+                RedirectToHome();
+            }
         }
 
         private void HandleLoggedOnUser()

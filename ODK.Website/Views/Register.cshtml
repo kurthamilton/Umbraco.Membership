@@ -13,7 +13,8 @@
 
     string registerButtonText = HomePage.GetHomePageValue<string>("registerButtonText");
 
-    RegisterMemberModel model = new RegisterMemberModel(TempData["Model"] as RegisterMemberModel);
+    RegisterMemberModel invalidModel = GetInvalidModel<RegisterMemberModel>();
+    RegisterMemberModel model = new RegisterMemberModel(invalidModel);
 }
 
 <div class="container">

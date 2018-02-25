@@ -11,7 +11,7 @@
 
     string loginButtonText = HomePage.GetHomePageValue<string>("loginButtonText");
 
-    LoginModel model = TempData["Model"] as LoginModel;
+    LoginModel model = GetInvalidModel<LoginModel>();
     bool isError = model != null;
 
     HtmlHelper<LoginModel> loginHelper = Html.For<LoginModel>(model != null ? model : new LoginModel());

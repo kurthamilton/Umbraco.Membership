@@ -10,17 +10,10 @@
 
     RegisterMemberModel registerMember = Model.Value as RegisterMemberModel;
     UpdateMemberModel updateMember = Model.Value as UpdateMemberModel;
-    
+
     HtmlHelper<MemberModel> memberHelper = Html.For<MemberModel>(Model.Value);
     HtmlHelper<RegisterMemberModel> registerHelper = registerMember != null ? Html.For<RegisterMemberModel>(registerMember) : null;
     HtmlHelper<UpdateMemberModel> updateHelper = updateMember != null ? Html.For<UpdateMemberModel>(updateMember) : null;
-}
-
-@if (Model.Value.Picture != null)
-{
-    <div class="form-group">
-        <img src="@Model.Value.Picture.Url" class="picture--profile" />
-    </div>
 }
 
 <div class="form-group required">
@@ -68,7 +61,7 @@
         @registerHelper.LabelFor(x => x.UploadedPicture, new { @class = "form-control-label" })
         <div class="input-group mb-3">
             <div class="custom-file">
-                <input type="file" class="custom-file-input" accept="image/*" 
+                <input type="file" class="custom-file-input" accept="image/*"
                        name="@registerHelper.NameFor(x => x.UploadedPicture)" id="@registerHelper.IdFor(x => x.UploadedPicture)">
                 <label class="custom-file-label" for="@registerHelper.NameFor(x => x.UploadedPicture)">Choose file</label>
             </div>
@@ -82,7 +75,7 @@ else if (updateHelper != null)
         @updateHelper.LabelFor(x => x.UploadedPicture, new { @class = "form-control-label" })
         <div class="input-group mb-3">
             <div class="custom-file">
-                <input type="file" class="custom-file-input" accept="image/*" 
+                <input type="file" class="custom-file-input" accept="image/*"
                        name="@updateHelper.NameFor(x => x.UploadedPicture)" id="@updateHelper.IdFor(x => x.UploadedPicture)">
                 <label class="custom-file-label" for="@updateHelper.NameFor(x => x.UploadedPicture)">Choose file</label>
             </div>
@@ -135,8 +128,10 @@ else if (updateHelper != null)
     @Html.Partial("Tooltip", "This is optional, and only other members will be able to see it.")
     <div class="input-group mb-3">
         <div class="input-group-prepend">
-            <span class="input-group-text d-none d-md-inline">https://www.facebook.com/</span>
-            <span class="input-group-text d-md-none"><i class="fa fa-facebook-square"></i>&nbsp;<span class="align-middle">/</span></span>
+            <span class="input-group-text">
+                <span class="d-none d-md-inline">https://www.facebook.com/</span>
+                <span class="d-md-none"><i class="fa fa-facebook-square"></i>&nbsp;<span class="align-middle">/</span></span>
+            </span>
         </div>
         @memberHelper.TextBoxFor(x => x.FacebookProfile, new { @class = "form-control" })
     </div>
