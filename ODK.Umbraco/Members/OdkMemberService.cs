@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using ODK.Data.Payments;
 using ODK.Umbraco.Content;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
@@ -127,7 +126,6 @@ namespace ODK.Umbraco.Members
             if (model.UploadedPicture != null)
             {
                 picture = SaveImage(model.UploadedPicture, model);
-
             }
 
             UpdateMemberProperties(member, model, picture);

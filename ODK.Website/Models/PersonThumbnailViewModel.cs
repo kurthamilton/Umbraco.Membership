@@ -2,7 +2,7 @@
 using Umbraco.Core.Models;
 using Umbraco.Web;
 
-namespace ODK.Website.ViewModels
+namespace ODK.Website.Models
 {
     public class PersonThumbnailViewModel
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web;
 
-namespace ODK.Website.ViewModels.Payments
+namespace ODK.Website.Models.Payments
 {
     public class PaypalNotification
     {

@@ -1,4 +1,4 @@
-﻿namespace ODK.Website.ViewModels.Payments
+﻿namespace ODK.Website.Models.Payments
 {
     public enum PaymentStatus
     {

@@ -2,7 +2,7 @@
 using ODK.Umbraco.Events;
 using ODK.Umbraco.Members;
 
-namespace ODK.Website.ViewModels
+namespace ODK.Website.Models
 {
     public class EventSidebarViewModel
     {

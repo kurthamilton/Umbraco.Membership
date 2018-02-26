@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using ODK.Umbraco.Payments;
 using ODK.Umbraco.Web.Mvc;
-using ODK.Website.ViewModels.Payments;
+using ODK.Website.Models.Payments;
 
 namespace ODK.Website.Controllers
 {

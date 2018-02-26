@@ -1,6 +1,6 @@
 ﻿@using ODK.Umbraco.Events;
 @using ODK.Umbraco.Members;
-@using ODK.Website.ViewModels;
+@using ODK.Website.Models;
 @inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
     Layout = "Master.cshtml";
@@ -55,7 +55,7 @@
         return;
     }
 
-    Dictionary<int, EventResponseType> responses = EventService.GetMemberResponses(CurrentMember.Id, nextEvents.Select(x => x.Id));
+    Dictionary<int, EventResponseType> responses = member != null ? EventService.GetMemberResponses(member.Id, nextEvents.Select(x => x.Id)) : null;
 
     <div class="card">
         <div class="card-header">
@@ -66,7 +66,7 @@
             {
                 <div class="event">
                     <h5 class="card-title">
-                        @if (responses.ContainsKey(ev.Id))
+                        @if (responses != null && responses.ContainsKey(ev.Id))
                         {
                             @Html.Partial("EventResponseIcon", responses[ev.Id])
                         }

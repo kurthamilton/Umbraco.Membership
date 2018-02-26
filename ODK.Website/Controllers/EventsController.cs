@@ -4,7 +4,7 @@ using System.Web.Mvc;
 using ODK.Umbraco.Events;
 using ODK.Umbraco.Members;
 using ODK.Umbraco.Web.Mvc;
-using ODK.Website.ViewModels;
+using ODK.Website.Models;
 
 namespace ODK.Website.Controllers
 {
