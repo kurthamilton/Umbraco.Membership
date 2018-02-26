@@ -1,4 +1,5 @@
-﻿@using ODK.Umbraco.Events;
+﻿@using Newtonsoft.Json.Linq;
+@using ODK.Umbraco.Events;
 @inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
     Layout = "Master.cshtml";
@@ -17,6 +18,8 @@
 
     IPublishedContent[] paymentOptions = Model.Content.Children.ToArray();
     string paypalButtonId = HomePage.GetPropertyValue<string>("payPalEventsButtonId");
+
+    JArray form = Model.Content.GetPropertyValue<JArray>("eventForm");
 }
 <section class="section section--main">
     <div class="container">
@@ -29,38 +32,50 @@
                     <span class="d-none d-md-inline">@eventModel.Address</span>
                 </p>
 
+                @if (!string.IsNullOrEmpty(eventModel.Description))
+                {
+                    <p>
+                        @Html.Raw(eventModel.Description)
+                    </p>
+                }
+
                 @if (paymentOptions.Length > 0)
                 {
-                    <div>
+                    <h2>Buy tickets</h2>
+                    <p>
+                        <div class="row">
+                            <div class="col-8">Type</div>
+                            <div class="col-2">Price</div>
+                            <div class="col-2">Quantity</div>
+                        </div>
                         @foreach (IPublishedContent paymentOption in paymentOptions)
                         {
                             string name = paymentOption.GetPropertyValue<string>("payPalMenuOptionName");
                             string title = paymentOption.GetPropertyValue<string>("payPalOptionTitle");
                             bool allowQuantity = paymentOption.GetPropertyValue<bool>("payPalOptionAllowQuantity");
-                            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                                <input type="hidden" name="cmd" value="_s-xclick">
-                                <input type="hidden" name="hosted_button_id" value="@paypalButtonId">
-                                @*TODO - currency code variable*@
-                                <input type="hidden" name="currency_code" value="GBP">
-                                <input type="hidden" name="on0" value="Select an event">
-                                <input type="hidden" name="os0" value="@name" />
-                                <input type="hidden" name="custom" data-payment-token />
 
-                                <span>@title</span>
-                                @if (allowQuantity)
-                                {
-                                    <select>
+                            <div class="row">
+                                <div class="col-8">@title</div>
+                                <div class="col-2">£10</div>
+                                <div class="col-2">
+                                    <select class="form-control form-control-sm">
                                         <option>0</option>
                                         <option>1</option>
                                         <option>2</option>
+                                        <option>3</option>
                                     </select>
-                                }
-                            </form>
+                                </div>
+                            </div>
                         }
-                    </div>
-                }
+                    </p>
 
-                @Html.Raw(eventModel.Description)
+                    if (form != null)
+                    {
+                        <p>
+                            @Html.Partial("Form", form)
+                        </p>
+                    }
+                }
 
                 <div class="d-none d-md-block">
                     @RenderMap(mapUrl)
@@ -79,11 +94,11 @@
 </section>
 
 @helper RenderMap(string url)
-{
-    if (string.IsNullOrEmpty(url))
     {
-        return;
-    }
+        if (string.IsNullOrEmpty(url))
+        {
+            return;
+        }
 
-    <iframe width="100%" height="450" frameborder="0" style="border:0" src="@url" allowfullscreen></iframe>
+        <iframe width="100%" height="450" frameborder="0" style="border:0" src="@url" allowfullscreen></iframe>
 }

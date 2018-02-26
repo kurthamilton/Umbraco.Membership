@@ -354,6 +354,7 @@
     <Content Include="Views\Partials\EventSidebar.cshtml" />
     <Content Include="Views\Partials\EventResponseIcon.cshtml" />
     <Content Include="Views\Partials\PayPalButton.cshtml" />
+    <Content Include="Views\Partials\Form.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

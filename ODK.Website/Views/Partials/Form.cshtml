@@ -1,0 +1,41 @@
+﻿@using Newtonsoft.Json.Linq;
+@model JArray
+
+@foreach (JToken field in Model)
+{
+    <div>
+        @RenderField(field)
+    </div>
+}
+
+@helper RenderField(JToken field)
+{
+    string name = field.Value<string>("formName");
+    string label = field.Value<string>("formLabel");
+    string subLabel = field.Value<string>("formSubLabel");
+    string type = field.Value<string>("formType");
+    string options = field.Value<string>("formOptions");
+    bool required = field.Value<string>("formRequired") == "True";
+
+    <div class="form-group @(required ? "required" : null)">
+        <label for="@name" class="form-control-label">@label</label>
+        @if (!string.IsNullOrEmpty(subLabel))
+        {
+            <span class="text-muted">@subLabel</span>
+        }
+        @switch (type)
+        {
+            case "DropDownList":
+
+                <select id="@name" name="@name" @(required ? "required" : null) class="form-control">
+                    <option value="">Please select...</option>
+                    @foreach (string option in options.Split('|'))
+                    {
+                        <option>@option</option>
+                    }
+                </select>
+                break;
+        }
+    </div>
+
+}
