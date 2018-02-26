@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 
@@ -31,5 +28,10 @@ namespace ODK.Website.Models.PayPal
         public string Name { get; }
 
         public string Title { get; }
+
+        public string GetFormattedAmount()
+        {
+            return string.Format("{0}{1:0.00}", CurrencySymbol, Amount);
+        }
     }
 }

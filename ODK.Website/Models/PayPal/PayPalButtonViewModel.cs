@@ -7,7 +7,7 @@ namespace ODK.Website.Models.PayPal
 {
     public class PayPalButtonViewModel
     {
-        private static Dictionary<string, string> _currencySymbols = new Dictionary<string, string>
+        public static Dictionary<string, string> CurrencySymbols = new Dictionary<string, string>
         {
             { "AUD", "$" },
             { "EUR", "€" },
@@ -34,7 +34,7 @@ namespace ODK.Website.Models.PayPal
         {
             ButtonId = buttonId;
             CurrencyCode = chapter.GetPropertyValue<string>("payPalCurrencyCode");
-            CurrencySymbol = _currencySymbols[CurrencyCode];
+            CurrencySymbol = CurrencySymbols[CurrencyCode];
         }
 
         public string ButtonId { get; }

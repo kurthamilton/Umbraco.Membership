@@ -1,0 +1,30 @@
+﻿@using ODK.Website.Models.PayPal;
+@model PayPalButtonViewModel
+@{
+    PayPalOptionViewModel option = Model.Options.Count == 1 ? Model.Options.Single() : null;
+    if (option == null)
+    {
+        return;
+    }
+
+    string formId = "payments-form-" + (option != null ? option.Name : Model.ButtonId);
+}
+
+@using (Html.BeginUmbracoForm("Start", "Payments", FormMethod.Post, new { id = formId }))
+{
+    <input type="hidden" name="amount" value="@option.Amount" />
+    <input type="hidden" name="currencyCode" value="@Model.CurrencyCode" />
+}
+
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" data-payment-form="#@formId">
+    <input type="hidden" name="cmd" value="_s-xclick">
+    <input type="hidden" name="hosted_button_id" value="@Model.ButtonId">
+    <input type="hidden" name="currency_code" value="@Model.CurrencyCode">
+    <input type="hidden" name="on0" value="Membership Types">
+    <input type="hidden" name="os0" value="@option.Name" />
+    <input type="hidden" name="custom" data-payment-token />
+
+    <button type="submit" class="btn btn-primary">Pay now</button>
+    <span>@option.GetFormattedAmount()</span>
+    <span class="text-muted">You will be redirected to PayPal to finalise the payment</span>
+</form>
