@@ -92,22 +92,6 @@
     <PackageReference Include="UmbracoCms.Core" Version="7.8.0" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Antlr3.Runtime">
-      <HintPath>App_Plugins\Dlls\Antlr3.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="BundleTransformer.Core">
-      <HintPath>App_Plugins\Dlls\BundleTransformer.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Web.XmlTransform">
-      <HintPath>App_Plugins\Dlls\Microsoft.Web.XmlTransform.dll</HintPath>
-    </Reference>
-    <Reference Include="Optimus">
-      <HintPath>App_Plugins\Dlls\Optimus.dll</HintPath>
-    </Reference>
-    <Reference Include="Optimus.V7">
-      <HintPath>App_Plugins\Dlls\Optimus.V7.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Web.DynamicData" />
@@ -119,17 +103,11 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Optimization">
-      <HintPath>App_Plugins\Dlls\System.Web.Optimization.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="WebGrease">
-      <HintPath>App_Plugins\Dlls\WebGrease.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Plugins\ModelsBuilder\modelsbuilder.controller.js" />
