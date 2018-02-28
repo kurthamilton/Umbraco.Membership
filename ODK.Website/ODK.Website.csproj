@@ -385,10 +385,6 @@
     <Compile Include="Models\PersonThumbnailViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\ODK.Infrastructure\ODK.Infrastructure.csproj">
       <Project>{232d1f34-651d-4184-8553-ecd7ad84188a}</Project>
       <Name>ODK.Infrastructure</Name>
