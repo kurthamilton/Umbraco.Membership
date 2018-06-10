@@ -8,6 +8,8 @@ namespace ODK.Website.Models
     {
         public int EventId { get; set; }
 
+        public int MemberId { get; set; }
+
         public EventResponseType MemberResponse { get; set; }
 
         public Dictionary<EventResponseType, IReadOnlyCollection<MemberModel>> MemberResponses { get; set; }
