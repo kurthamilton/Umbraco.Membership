@@ -12,19 +12,18 @@ namespace ODK.Website.Models.Payments
 
             CurrencyCode = request["mc_currency"];
 
+            Identifier = request["custom"];
+
             Enum.TryParse(request["payment_status"], out PaymentStatus paymentStatus);
             PaymentStatus = paymentStatus;
-
-            Guid.TryParse(request["custom"], out Guid token);
-            Token = token;
         }
 
         public double Amount { get; }
 
         public string CurrencyCode { get; }
 
-        public PaymentStatus PaymentStatus { get; }
+        public string Identifier { get; }
 
-        public Guid Token { get; }
+        public PaymentStatus PaymentStatus { get; }
     }
 }

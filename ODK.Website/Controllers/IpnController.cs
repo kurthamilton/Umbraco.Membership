@@ -81,7 +81,7 @@ namespace ODK.Website.Controllers
             {
                 if (notification.PaymentStatus == PaymentStatus.Completed)
                 {
-                    _paymentService.CompletePayment(notification.Token, notification.CurrencyCode, notification.Amount);
+                    _paymentService.CompletePayment(notification.Identifier, notification.CurrencyCode, notification.Amount);
                 }
 
                 // check that Payment_status=Completed

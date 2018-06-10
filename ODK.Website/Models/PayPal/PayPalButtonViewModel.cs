@@ -15,34 +15,35 @@ namespace ODK.Website.Models.PayPal
             { "USD", "$" }
         };
 
-        public PayPalButtonViewModel(string buttonId, IPublishedContent chapter, IEnumerable<IPublishedContent> options)
-            : this(buttonId, chapter)
+        public PayPalButtonViewModel()
         {
-            Options = options.Select(x => new PayPalOptionViewModel(x, CurrencySymbol)).ToArray();
         }
 
-        public PayPalButtonViewModel(string buttonId, IPublishedContent chapter, IPublishedContent option)
-            : this(buttonId, chapter)
+        public PayPalButtonViewModel(IPublishedContent chapter, IEnumerable<IPublishedContent> options)
+            : this(chapter)
+        {
+            Options = options.Select(x => new PayPalOptionViewModel(x)).ToArray();
+        }
+
+        public PayPalButtonViewModel(IPublishedContent chapter, IPublishedContent option)
+            : this(chapter)
         {
             Options = new[]
             {
-                new PayPalOptionViewModel(option, CurrencySymbol)
+                new PayPalOptionViewModel(option)
             };
         }
 
-        private PayPalButtonViewModel(string buttonId, IPublishedContent chapter)
+        private PayPalButtonViewModel(IPublishedContent chapter)
         {
-            ButtonId = buttonId;
             CurrencyCode = chapter.GetPropertyValue<string>("payPalCurrencyCode");
             CurrencySymbol = CurrencySymbols[CurrencyCode];
         }
-
-        public string ButtonId { get; }
 
         public string CurrencyCode { get; }
 
         public string CurrencySymbol { get; }
 
-        public IReadOnlyCollection<PayPalOptionViewModel> Options { get; }
+        public PayPalOptionViewModel[] Options { get; set; }
     }
 }

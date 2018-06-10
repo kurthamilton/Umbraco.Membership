@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ODK.Data.Payments;
+using ODK.Umbraco.Members;
 
 namespace ODK.Umbraco.Payments
 {
@@ -14,15 +15,21 @@ namespace ODK.Umbraco.Payments
             _paymentsDataService = paymentsDataService;
         }
 
-        public void CreatePayment(int memberId, string memberName, string currencyCode, double amount, Guid token)
+        public void CreatePayment(Guid id, MemberModel currentMember, string currencyCode, string identifier, IEnumerable<KeyValuePair<int, double>> nodeAmounts)
         {
-            Payment payment = new Payment(memberId, memberName, currencyCode, amount, token);
+            List<PaymentDetail> paymentDetails = new List<PaymentDetail>();
+            foreach (KeyValuePair<int, double> nodeAmount in nodeAmounts)
+            {
+                paymentDetails.Add(new PaymentDetail(nodeAmount.Value, nodeAmount.Key, id));
+            }
+
+            Payment payment = new Payment(id, identifier, currentMember?.Id ?? 0, currentMember?.FullName, currencyCode, DateTime.Now, paymentDetails);
             _paymentsDataService.CreatePayment(payment);
         }
 
-        public void CompletePayment(Guid token, string currencyCode, double amount)
+        public void CompletePayment(string identifier, string currencyCode, double amount)
         {
-            Payment payment = _paymentsDataService.GetIncompletePayment(token);
+            Payment payment = _paymentsDataService.GetIncompletePayment(identifier);
             if (payment == null)
             {
                 return;
@@ -34,17 +41,29 @@ namespace ODK.Umbraco.Payments
         public MemberPayment GetLastPayment(int memberId)
         {
             IReadOnlyCollection<Payment> payments = _paymentsDataService.GetCompletePayments(memberId);
+
             Payment lastPayment = payments.OrderByDescending(x => x.Date).FirstOrDefault();
-            if (lastPayment == null)
+            return Map(lastPayment);
+        }
+
+        public MemberPayment GetIncompletePayment(string identifier)
+        {
+            Payment payment = _paymentsDataService.GetIncompletePayment(identifier);
+            return Map(payment);
+        }
+
+        private static MemberPayment Map(Payment payment)
+        {
+            if (payment == null)
             {
                 return null;
             }
 
             return new MemberPayment
             {
-                Amount = lastPayment.Amount,
-                CurrencyCode = lastPayment.CurrencyCode,
-                Date = lastPayment.Date
+                Amount = payment.Total,
+                CurrencyCode = payment.CurrencyCode,
+                Date = payment.Date
             };
         }
     }

@@ -82,6 +82,9 @@
     <PackageReference Include="MySql.Data" Version="6.9.11" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
     <PackageReference Include="Owin" Version="1.0" />
+    <PackageReference Include="PayPal">
+      <Version>1.9.1</Version>
+    </PackageReference>
     <PackageReference Include="semver" Version="1.1.2" />
     <PackageReference Include="SharpZipLib" Version="0.86.0" />
     <PackageReference Include="System.Collections.Immutable" Version="1.1.36" />
@@ -388,6 +391,10 @@
     <ProjectReference Include="..\ODK.Infrastructure\ODK.Infrastructure.csproj">
       <Project>{232d1f34-651d-4184-8553-ecd7ad84188a}</Project>
       <Name>ODK.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ODK.Payments\ODK.Payments.csproj">
+      <Project>{86549c88-f0be-4da5-a169-8d646066fc0a}</Project>
+      <Name>ODK.Payments</Name>
     </ProjectReference>
     <ProjectReference Include="..\ODK.Umbraco\ODK.Umbraco.csproj">
       <Project>{81f2dd71-46d7-4d52-a571-324cc799c8f2}</Project>

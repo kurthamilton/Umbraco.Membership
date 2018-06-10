@@ -11,9 +11,6 @@
 
     IPublishedContent[] subscriptions = Model.Content.Children.ToArray();
 
-    string currencyCode = HomePage.GetPropertyValue<string>("payPalCurrencyCode");
-    string paypalButtonId = HomePage.GetPropertyValue<string>("payPalSubscriptionsButtonId");
-
     MemberPayment lastPayment = PaymentService.GetLastPayment(CurrentMember.Id);
 }
 
@@ -70,10 +67,10 @@
         @if (subscriptions.Length == 1)
         {
             @*
-            IPublishedContent subscription = subscriptions.Single();
-            <h3>@subscription.GetPropertyValue("title")</h3>
-            @Html.Raw(subscription.GetPropertyValue("description"))
-            @PaymentButton(subscription, paypalButtonId)
+                IPublishedContent subscription = subscriptions.Single();
+                <h3>@subscription.GetPropertyValue("title")</h3>
+                @Html.Raw(subscription.GetPropertyValue("description"))
+                @PaymentButton(subscription, paypalButtonId)
             *@
         }
         else
@@ -81,33 +78,30 @@
             <div id="subscriptionTypes">
                 @for (int i = 0; i < subscriptions.Length; i++)
                 {
-                    @SubscriptionAccordionItem(subscriptions[i], paypalButtonId, i == 0)
+                    @SubscriptionAccordionItem(subscriptions[i], i == 0)
                 }
             </div>
         }
     </div>
 </div>
 
-<div id="paypal-button"></div>
-
-@helper SubscriptionAccordionItem(IPublishedContent subscription, string paypalButtonId, bool expanded)
+@helper SubscriptionAccordionItem(IPublishedContent subscription, bool expanded)
 {
-    PayPalButtonViewModel viewModel = new PayPalButtonViewModel(paypalButtonId, HomePage, subscription);
+    PayPalButtonViewModel viewModel = new PayPalButtonViewModel(HomePage, subscription);
     PayPalOptionViewModel option = viewModel.Options.Single();
-    string type = option.Name.Replace(" ", "-");
 
     <div class="card">
-        <div class="card-header" id="heading-@type">
+        <div class="card-header" id="heading-@option.Id">
             <h5 class="mb-0">
-                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-@type" aria-expanded="true" aria-controls="collapse-@type">@option.Title</button>
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-@option.Id" aria-expanded="true" aria-controls="collapse-@option.Id">@option.Title</button>
             </h5>
         </div>
 
-        <div id="collapse-@type" class="collapse @Html.Raw(expanded ? "show" : null)" aria-labelledby="heading-@type" data-parent="#subscriptionTypes">
+        <div id="collapse-@option.Id" class="collapse @Html.Raw(expanded ? "show" : null)" aria-labelledby="heading-@option.Id" data-parent="#subscriptionTypes">
             <div class="card-body">
                 @Html.Raw(option.Description)
 
-                @Html.Partial("PayPalButton", viewModel)
+                @Html.Partial("PayPalButton", option)
             </div>
         </div>
     </div>
@@ -115,5 +109,6 @@
 
 @section Scripts
 {
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
     @Scripts.Render("~/bundles/js/account")
 }

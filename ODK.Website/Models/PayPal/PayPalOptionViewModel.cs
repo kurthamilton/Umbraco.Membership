@@ -6,32 +6,34 @@ namespace ODK.Website.Models.PayPal
 {
     public class PayPalOptionViewModel
     {
-        public PayPalOptionViewModel(IPublishedContent content, string currencySymbol)
+        public PayPalOptionViewModel()
         {
-            CurrencySymbol = currencySymbol;
+        }
 
+        public PayPalOptionViewModel(IPublishedContent content)
+        {
             Amount = content.GetPropertyValue<double>("payPalOptionAmount");
             Description = content.GetPropertyValue<string>("payPalOptionDescription");
-            MaxItems = Math.Min(content.GetPropertyValue<int>("payPalOptionMaxItems"), 1);
-            Name = content.GetPropertyValue<string>("payPalOptionName");
+            Id = content.Id;
+            MaxItems = Math.Max(content.GetPropertyValue<int>("payPalOptionMaxItems"), 1);
             Title = content.GetPropertyValue<string>("payPalOptionTitle");
         }
 
         public double Amount { get; }
 
-        public string CurrencySymbol { get; }
-
         public string Description { get; }
+
+        public int Id { get; set; }
 
         public int MaxItems { get; }
 
-        public string Name { get; }
+        public int Quantity { get; set; }
 
         public string Title { get; }
 
-        public string GetFormattedAmount()
+        public string GetFormattedAmount(string currencySymbol)
         {
-            return string.Format("{0}{1:0.00}", CurrencySymbol, Amount);
+            return string.Format("{0}{1:0.00}", currencySymbol, Amount);
         }
     }
 }
