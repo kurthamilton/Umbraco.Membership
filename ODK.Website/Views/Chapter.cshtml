@@ -95,11 +95,11 @@
         maxItems = 8;
     }
 
-    string baseUrl = "https://www.instagram.com";
+    string baseUrl = "https://apinsta.herokuapp.com/u";
 
     <div class="content">
         <h3>Latest Instagram Photos</h3>
-        <div class="feed--instagram content--ajax row" data-instagram-url="@baseUrl/@username/?__a=1" data-instagram-maxitems="@maxItems">
+        <div class="feed--instagram content--ajax row" data-instagram-url="@baseUrl/@username" data-instagram-maxitems="@maxItems">
             @for (int i = 0; i < maxItems; i++)
             {
                 <div class="media-item col-3">
@@ -114,7 +114,7 @@
 
     <div class="d-none media-template--instagram">
         <div class="media-item col-3">
-            <a href="@baseUrl/p/{code}" target="_blank"><img class="media-item__image" /></a>
+            <a href="" target="_blank"><img class="media-item__image" /></a>
         </div>
     </div>
 }

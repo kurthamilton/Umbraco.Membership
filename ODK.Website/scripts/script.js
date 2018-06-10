@@ -79,12 +79,14 @@
                     onAjaxEnd(container);
                 },
                 success: function (data) {
-                    var items = data.user.media.nodes;
+                    console.log(data);
+                    var items = data.graphql.user.edge_owner_to_timeline_media.edges;
                     $('.media-item', container).each(function (i) {
+                        var item = items[i].node;
                         var mediaItem = $(this);
-                        $('img', mediaItem).attr('src', items[i].thumbnail_src);
+                        $('img', mediaItem).attr('src', item.thumbnail_src);
                         var link = $('a', mediaItem);
-                        link.attr('href', link.attr('href').replace('{code}', items[i].code));
+                        link.attr('href', item.display_url);
                     });
                 }
             });
