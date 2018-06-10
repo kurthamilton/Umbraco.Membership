@@ -86,7 +86,7 @@
                         var mediaItem = $(this);
                         $('img', mediaItem).attr('src', item.thumbnail_src);
                         var link = $('a', mediaItem);
-                        link.attr('href', item.display_url);
+                        link.attr('href', link.attr('href').replace('{code}', item.shortcode));
                     });
                 }
             });
