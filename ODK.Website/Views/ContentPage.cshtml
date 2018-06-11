@@ -18,22 +18,22 @@
         {
             string title = contentItem.GetPropertyValue<string>("accordionTitle");
             bool isAccordionItem = !string.IsNullOrEmpty(title);
-            
+
             if (isAccordionItem && !inAccordion)
             {
                 @Html.Raw("<div id=\"accordion-" + accordionId + "\">")
-                    
+
                 accordionItemId = 0;
                 inAccordion = true;
             }
             else if (!isAccordionItem && inAccordion)
             {
                 @Html.Raw("</div>")
-                
+
                 accordionId++;
                 inAccordion = false;
             }
-            
+
             if (inAccordion)
             {
                 @RenderAccordionItem(accordionId, accordionItemId++, contentItem, title, false)
@@ -67,4 +67,9 @@
     <div class="content">
         @Html.GetGridHtml(contentItem, "html", "bootstrap3-fluid")
     </div>
+}
+
+@section Header
+{
+    @Styles.Render("~/bundles/css/home")
 }

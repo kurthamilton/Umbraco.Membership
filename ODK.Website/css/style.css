@@ -346,17 +346,3 @@ footer {
 .text-muted {
     color: #bbb !important;
 }
-
-/* PAGE SPECIFIC */
-
-/* Home */
-.page--home .nav-item,
-.page--privacy .nav-item {
-    text-transform: uppercase;
-}
-
-.page--home .navbar-expand-lg .navbar-nav .nav-link,
-.page--privacy .navbar-expand-lg .navbar-nav .nav-link {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-}

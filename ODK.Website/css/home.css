@@ -66,3 +66,16 @@
   color: white;
   background-color: #8dc63f;
 }
+
+.nav-item {
+    text-transform: uppercase;
+}
+
+.navbar-expand-lg .navbar-nav .nav-link {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+footer {
+    margin-top: 0;
+}
