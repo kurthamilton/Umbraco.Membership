@@ -29,7 +29,7 @@ namespace ODK.Umbraco.Settings
         {
             IPublishedContent root = content.AncestorOrSelf(1);
 
-            foreach (IPublishedContent child in content.Children)
+            foreach (IPublishedContent child in root.Children)
             {
                 RelatedLinks footerLinks = child.GetPropertyValue<RelatedLinks>(PropertyNames.FooterLinks);
                 if (footerLinks == null)
