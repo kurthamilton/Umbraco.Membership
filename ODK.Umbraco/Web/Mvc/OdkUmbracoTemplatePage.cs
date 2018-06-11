@@ -15,6 +15,7 @@ namespace ODK.Umbraco.Web.Mvc
         private readonly Lazy<EventService> _eventService;
         private readonly Lazy<OdkMemberService> _memberService;
         private readonly Lazy<PaymentService> _paymentService;
+        private readonly Lazy<SiteSettings> _settings;
 
         private readonly RequestCacheItem<IPublishedContent> _currentMember;
         private readonly RequestCacheItem<MemberModel> _currentMemberModel;
@@ -30,6 +31,7 @@ namespace ODK.Umbraco.Web.Mvc
             _eventService = new Lazy<EventService>(() => dependencyResolver.GetService<EventService>());
             _memberService = new Lazy<OdkMemberService>(() => dependencyResolver.GetService<OdkMemberService>());
             _paymentService = new Lazy<PaymentService>(() => dependencyResolver.GetService<PaymentService>());
+            _settings = new Lazy<SiteSettings>(() => Model.Content.SiteSettings());
         }
 
         public bool IsRestricted { get; set; }
@@ -59,6 +61,8 @@ namespace ODK.Umbraco.Web.Mvc
         public OdkMemberService MemberService => _memberService.Value;
 
         public PaymentService PaymentService => _paymentService.Value;
+
+        public SiteSettings Settings => _settings.Value;
 
         public T GetInvalidModel<T>() where T : class
         {
