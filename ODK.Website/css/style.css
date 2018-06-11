@@ -171,7 +171,8 @@ img {
     justify-content: center;
 }
 
-.section--header {
+.section--header,
+.section--footer {
     padding-top: 30px;
 	padding-bottom: 30px;
 }
@@ -255,6 +256,11 @@ img {
     max-height: 150px;
     line-height: 150px;
     width: inherit;
+}
+
+/* FOOTER */
+footer {
+    margin-top: 30px;
 }
 
 /* CHAPTER */
