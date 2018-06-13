@@ -79,7 +79,6 @@
                     onAjaxEnd(container);
                 },
                 success: function (data) {
-                    console.log(data);
                     var items = data.graphql.user.edge_owner_to_timeline_media.edges;
                     $('.media-item', container).each(function (i) {
                         var item = items[i].node;

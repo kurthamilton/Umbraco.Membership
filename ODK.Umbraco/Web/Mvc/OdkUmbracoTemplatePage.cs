@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using ODK.Umbraco.Content;
 using ODK.Umbraco.Events;
 using ODK.Umbraco.Members;
 using ODK.Umbraco.Payments;
@@ -34,6 +35,8 @@ namespace ODK.Umbraco.Web.Mvc
             _settings = new Lazy<SiteSettings>(() => Model.Content.SiteSettings());
         }
 
+        public bool IsChapter { get; set; }
+
         public bool IsRestricted { get; set; }
 
         protected override void InitializePage()
@@ -44,6 +47,8 @@ namespace ODK.Umbraco.Web.Mvc
                 Response.Redirect(Model.Content.Parent.Url);
                 return;
             }
+
+            IsChapter = !HomePage.IsRoot();
 
             base.InitializePage();
         }
