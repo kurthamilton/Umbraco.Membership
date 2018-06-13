@@ -107,6 +107,7 @@
     <Compile Include="MutableLazy.cs" />
     <Compile Include="Payments\MemberPayment.cs" />
     <Compile Include="Payments\PaymentService.cs" />
+    <Compile Include="Settings\SiteSettings.cs" />
     <Compile Include="Web\Mvc\HtmlHelpers.cs" />
     <Compile Include="Web\Mvc\OdkSurfaceControllerBase.cs" />
     <Compile Include="Web\Mvc\OdkUmbracoTemplateModel.cs" />

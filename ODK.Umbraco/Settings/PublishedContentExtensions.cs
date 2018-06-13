@@ -1,5 +1,8 @@
-﻿using Umbraco.Core.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Umbraco.Core.Models;
 using Umbraco.Web;
+using Umbraco.Web.Models;
 
 namespace ODK.Umbraco.Settings
 {
@@ -17,6 +20,27 @@ namespace ODK.Umbraco.Settings
                 }
 
                 return ancestor;
+            }
+
+            return null;
+        }
+
+        public static SiteSettings SiteSettings(this IPublishedContent content)
+        {
+            IPublishedContent root = content.AncestorOrSelf(1);
+
+            foreach (IPublishedContent child in root.Children)
+            {
+                RelatedLinks footerLinks = child.GetPropertyValue<RelatedLinks>(PropertyNames.FooterLinks);
+                if (footerLinks == null)
+                {
+                    continue;
+                }
+
+                return new SiteSettings
+                {
+                    FooterLinks = footerLinks.Cast<RelatedLink>().Select(x => new KeyValuePair<string, string>(x.Link, x.Caption))
+                };
             }
 
             return null;

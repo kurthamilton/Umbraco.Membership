@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using ODK.Umbraco.Content;
 using ODK.Umbraco.Events;
 using ODK.Umbraco.Members;
 using ODK.Umbraco.Payments;
@@ -15,6 +16,7 @@ namespace ODK.Umbraco.Web.Mvc
         private readonly Lazy<EventService> _eventService;
         private readonly Lazy<OdkMemberService> _memberService;
         private readonly Lazy<PaymentService> _paymentService;
+        private readonly Lazy<SiteSettings> _settings;
 
         private readonly RequestCacheItem<IPublishedContent> _currentMember;
         private readonly RequestCacheItem<MemberModel> _currentMemberModel;
@@ -30,7 +32,10 @@ namespace ODK.Umbraco.Web.Mvc
             _eventService = new Lazy<EventService>(() => dependencyResolver.GetService<EventService>());
             _memberService = new Lazy<OdkMemberService>(() => dependencyResolver.GetService<OdkMemberService>());
             _paymentService = new Lazy<PaymentService>(() => dependencyResolver.GetService<PaymentService>());
+            _settings = new Lazy<SiteSettings>(() => Model.Content.SiteSettings());
         }
+
+        public bool IsChapter { get; set; }
 
         public bool IsRestricted { get; set; }
 
@@ -42,6 +47,8 @@ namespace ODK.Umbraco.Web.Mvc
                 Response.Redirect(Model.Content.Parent.Url);
                 return;
             }
+
+            IsChapter = !HomePage.IsRoot();
 
             base.InitializePage();
         }
@@ -59,6 +66,8 @@ namespace ODK.Umbraco.Web.Mvc
         public OdkMemberService MemberService => _memberService.Value;
 
         public PaymentService PaymentService => _paymentService.Value;
+
+        public SiteSettings Settings => _settings.Value;
 
         public T GetInvalidModel<T>() where T : class
         {

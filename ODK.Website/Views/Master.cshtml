@@ -27,6 +27,11 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
     @Styles.Render("~/bundles/css/main")
 
+    @if (!IsChapter)
+    {
+        @Styles.Render("~/bundles/css/home")
+    }
+
     @if (!string.IsNullOrEmpty(stylesheet))
     {
         @Styles.Render("~/bundles/css/" + stylesheet)

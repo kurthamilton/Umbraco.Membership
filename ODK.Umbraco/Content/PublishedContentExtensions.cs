@@ -56,6 +56,11 @@ namespace ODK.Umbraco.Content
             return content.TemplateId > 0;
         }
 
+        public static bool IsRoot(this IPublishedContent content)
+        {
+            return content.Level == 1;
+        }
+
         public static string ToPropertyValue(this IPublishedContent content)
         {
             return Udi.Create(UdiEntityType.Document, content.GetKey()).ToString();

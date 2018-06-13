@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
 using ODK.Umbraco.Events;
-using ODK.Umbraco.Members;
 using ODK.Umbraco.Web.Mvc;
 using ODK.Website.Models;
 
@@ -39,29 +37,25 @@ namespace ODK.Website.Controllers
 
         private ActionResult EventSidebarView(int eventId)
         {
-            if (CurrentMemberModel == null)
-            {
-                return RedirectToCurrentUmbracoPage();
-            }
-
-            Dictionary<EventResponseType, IReadOnlyCollection<MemberModel>> responses = _eventService.GetEventResponses(eventId, Umbraco);
-
-            EventResponseType memberResponse = EventResponseType.None;
-            foreach (EventResponseType key in responses.Keys)
-            {
-                if (responses[key].Any(x => x.Id == CurrentMember.Id))
-                {
-                    memberResponse = key;
-                    break;
-                }
-            }
-
             EventSidebarViewModel viewModel = new EventSidebarViewModel
             {
-                EventId = eventId,
-                MemberResponse = memberResponse,
-                MemberResponses = responses
+                EventId = eventId
             };
+
+            if (CurrentMember != null)
+            {
+                viewModel.MemberId = CurrentMember.Id;
+                viewModel.MemberResponses = _eventService.GetEventResponses(eventId, Umbraco);
+
+                foreach (EventResponseType key in viewModel.MemberResponses.Keys)
+                {
+                    if (viewModel.MemberResponses[key].Any(x => x.Id == CurrentMember.Id))
+                    {
+                        viewModel.MemberResponse = key;
+                        break;
+                    }
+                }
+            }
 
             return PartialView(viewModel);
         }
