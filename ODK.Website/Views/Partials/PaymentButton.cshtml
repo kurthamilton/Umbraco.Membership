@@ -13,24 +13,28 @@
 
 @if (provider == PaymentProviderType.Stripe)
 {
-    string buttonId = string.Format("payment-button-{0}", Model.Id);
-    string tokenId = string.Format("stripe-token-{0}", Model.Id);
-    string formId = string.Format("stripe-form-{0}", Model.Id);
-
-    using (Html.BeginUmbracoForm("Create", "Stripe", null, new { id = formId }, FormMethod.Post))
+    var htmlAttributes = new
     {
-        <div>
-            <input type="hidden" name="id" value="@Model.Id" />
-            <input type="hidden" class="js-payment-token" name="stripeToken" />
+        data_api_key = Model.ApiPublicKey,
+        @class = "js-stripe-form"
+    };
 
-            <span>@amount</span>
-            <button id="@buttonId" class="btn btn-primary js-payment-button--stripe"
-                    data-api-key="@Model.ApiPublicKey"
-                    data-description="@Model.Title"
-                    data-email="@Model.Email"
-                    data-currency="@Model.CurrencyCode"
-                    data-amount="@(Model.Amount * 100)"
-                    data-site-name="@Model.SiteName">Purchase</button>
+    using (Html.BeginUmbracoForm("Create", "Stripe", null, htmlAttributes, FormMethod.Post))
+    {
+        <input type="hidden" class="js-stripe-token" name="stripeToken" />
+
+        <div class="form-row">
+            <label for="card-element-@Model.Id">
+                Credit or debit card
+            </label>
+            <div id="card-element-@Model.Id" class="js-card-element">
+                <!-- A Stripe Element will be inserted here. -->
+            </div>
+
+            <!-- Used to display form errors. -->
+            <div class="js-card-errors" role="alert"></div>
         </div>
+        <span>@amount</span>
+        <button>Submit Payment</button>
     }
 }
