@@ -1,0 +1,36 @@
+﻿@using ODK.Payments;
+@using ODK.Umbraco.Payments;
+@model PaymentModel
+@{
+    PaymentProviderType provider;
+    if (!Enum.TryParse<PaymentProviderType>(Model.Provider, out provider))
+    {
+        return;
+    }
+
+    string amount = string.Format("{0}{1:0.00}", Model.CurrencySymbol, Model.Amount);
+}
+
+@if (provider == PaymentProviderType.Stripe)
+{
+    string buttonId = string.Format("payment-button-{0}", Model.Id);
+    string tokenId = string.Format("stripe-token-{0}", Model.Id);
+    string formId = string.Format("stripe-form-{0}", Model.Id);
+
+    using (Html.BeginUmbracoForm("Create", "Stripe", null, new { id = formId }, FormMethod.Post))
+    {
+        <div>
+            <input type="hidden" name="id" value="@Model.Id" />
+            <input type="hidden" class="js-payment-token" name="stripeToken" />
+
+            <span>@amount</span>
+            <button id="@buttonId" class="btn btn-primary js-payment-button--stripe"
+                    data-api-key="@Model.ApiPublicKey"
+                    data-description="@Model.Title"
+                    data-email="@Model.Email"
+                    data-currency="@Model.CurrencyCode"
+                    data-amount="@(Model.Amount * 100)"
+                    data-site-name="@Model.SiteName">Purchase</button>
+        </div>
+    }
+}

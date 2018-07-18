@@ -106,6 +106,7 @@
     <Compile Include="Members\UpdateMemberModel.cs" />
     <Compile Include="MutableLazy.cs" />
     <Compile Include="Payments\MemberPayment.cs" />
+    <Compile Include="Payments\PaymentModel.cs" />
     <Compile Include="Payments\PaymentService.cs" />
     <Compile Include="Settings\SiteSettings.cs" />
     <Compile Include="Web\Mvc\HtmlHelpers.cs" />
@@ -127,6 +128,10 @@
     <ProjectReference Include="..\ODK.Data\ODK.Data.csproj">
       <Project>{1dce0bcd-4bc3-487d-8655-0b99375b9059}</Project>
       <Name>ODK.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ODK.Payments\ODK.Payments.csproj">
+      <Project>{86549c88-f0be-4da5-a169-8d646066fc0a}</Project>
+      <Name>ODK.Payments</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

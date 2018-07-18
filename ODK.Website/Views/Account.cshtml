@@ -1,8 +1,7 @@
 ﻿@using ODK.Umbraco.Members;
 @using ODK.Umbraco.Payments;
 @using ODK.Umbraco.Web.Mvc;
-@using ODK.Website.Models.PayPal;
-@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
+@inherits OdkUmbracoTemplatePage
 @{
     Layout = "Master.cshtml";
 
@@ -64,44 +63,32 @@
         </div>
 
         <h1>@(CurrentMemberModel.Type != MemberTypes.Trial ? "Renew" : "Buy")</h1>
-        @if (subscriptions.Length == 1)
-        {
-            @*
-                IPublishedContent subscription = subscriptions.Single();
-                <h3>@subscription.GetPropertyValue("title")</h3>
-                @Html.Raw(subscription.GetPropertyValue("description"))
-                @PaymentButton(subscription, paypalButtonId)
-            *@
-        }
-        else
-        {
-            <div id="subscriptionTypes">
-                @for (int i = 0; i < subscriptions.Length; i++)
-                {
-                    @SubscriptionAccordionItem(subscriptions[i], i == 0)
-                }
-            </div>
-        }
+        <div id="subscriptionTypes">
+            @for (int i = 0; i < subscriptions.Length; i++)
+            {
+                @SubscriptionAccordionItem(subscriptions[i], i == 0, member)
+            }
+        </div>
     </div>
 </div>
 
-@helper SubscriptionAccordionItem(IPublishedContent subscription, bool expanded)
+@helper SubscriptionAccordionItem(IPublishedContent subscription, bool expanded, MemberModel member)
 {
-    PayPalButtonViewModel viewModel = new PayPalButtonViewModel(HomePage, subscription);
-    PayPalOptionViewModel option = viewModel.Options.Single();
+    PaymentModel payment = new PaymentModel(subscription, HomePage, member);
+    int id = payment.Id;
 
     <div class="card">
-        <div class="card-header" id="heading-@option.Id">
+        <div class="card-header" id="heading-@id">
             <h5 class="mb-0">
-                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-@option.Id" aria-expanded="true" aria-controls="collapse-@option.Id">@option.Title</button>
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-@id" aria-expanded="true" aria-controls="collapse-@id">@payment.Title</button>
             </h5>
         </div>
 
-        <div id="collapse-@option.Id" class="collapse @Html.Raw(expanded ? "show" : null)" aria-labelledby="heading-@option.Id" data-parent="#subscriptionTypes">
+        <div id="collapse-@id" class="collapse @Html.Raw(expanded ? "show" : null)" aria-labelledby="heading-@id" data-parent="#subscriptionTypes">
             <div class="card-body">
-                @Html.Raw(option.Description)
+                @Html.Raw(payment.Description)
 
-                @Html.Partial("PayPalButton", option)
+                @Html.Partial("PaymentButton", payment)
             </div>
         </div>
     </div>
@@ -109,6 +96,6 @@
 
 @section Scripts
 {
-    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+    <script src="https://checkout.stripe.com/checkout.js"></script>
     @Scripts.Render("~/bundles/js/account")
 }

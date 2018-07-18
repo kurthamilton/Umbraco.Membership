@@ -4,10 +4,10 @@
     {
         public double Amount { get; set; }
 
-        public string CancelUrl { get; set; }
+        public string ApiSecretKey { get; set; }
 
         public string CurrencyCode { get; set; }
 
-        public string ReturnUrl { get; set; }
+        public string EmailAddress { get; set; }
     }
 }
