@@ -5,6 +5,7 @@ using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using ODK.Data.Events;
 using ODK.Data.Payments;
+using ODK.Payments.Stripe;
 using ODK.Umbraco.Events;
 using ODK.Umbraco.Members;
 using ODK.Umbraco.Payments;
@@ -57,6 +58,7 @@ namespace ODK.Infrastructure
             _builder.RegisterType<EventService>().InstancePerRequest();
             _builder.RegisterType<OdkMemberService>().InstancePerRequest();
             _builder.RegisterType<PaymentService>().InstancePerRequest();
+            _builder.RegisterType<StripePaymentProvider>().InstancePerRequest();
         }
 
         private void RegisterDataServices()

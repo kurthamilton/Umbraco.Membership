@@ -12,7 +12,12 @@ namespace ODK.Website.Controllers
 {
     public class StripeController : OdkSurfaceControllerBase
     {
-        private readonly StripePaymentProvider _provider = new StripePaymentProvider();
+        private readonly StripePaymentProvider _provider;
+
+        public StripeController(StripePaymentProvider provider)
+        {
+            _provider = provider;
+        }
 
         [HttpPost]
         public async Task<ActionResult> Create(int id, string stripeToken)

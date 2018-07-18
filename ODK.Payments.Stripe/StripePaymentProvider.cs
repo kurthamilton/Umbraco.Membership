@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using ODK.Umbraco;
 using ODK.Umbraco.Members;
 using ODK.Umbraco.Payments;
@@ -8,6 +10,13 @@ namespace ODK.Payments.Stripe
 {
     public class StripePaymentProvider
     {
+        private readonly PaymentService _paymentService;
+
+        public StripePaymentProvider(PaymentService paymentService)
+        {
+            _paymentService = paymentService;
+        }
+
         public async Task<ServiceResult> MakePayment(MemberModel member, PaymentModel payment, string stripeToken)
         {
             var options = new StripeChargeCreateOptions
@@ -27,7 +36,10 @@ namespace ODK.Payments.Stripe
 
             bool success = charge.Paid;
 
-            // TODO - save to database
+            if (success)
+            {
+                _paymentService.CreatePayment(null, member, payment.CurrencyCode, payment.Id, payment.Amount, true);
+            }
 
             return new ServiceResult(success, charge.FailureMessage);
         }

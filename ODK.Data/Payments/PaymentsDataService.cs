@@ -8,7 +8,7 @@ namespace ODK.Data.Payments
 {
     public class PaymentsDataService : DataServiceBase
     {
-        private const string InsertColumns = "id, memberId, memberName, currencyCode, identifier";
+        private const string InsertColumns = "id, memberId, currencyCode, identifier";
         private const string ReadColumns = InsertColumns + ", date";
         private const string TableName = "dbo.odkPayments";
 
@@ -17,15 +17,14 @@ namespace ODK.Data.Payments
         {
         }
 
-        public void CompletePayment(Guid id, string currencyCode, double amount)
+        public void CompletePayment(Guid id)
         {
             using (SqlConnection connection = OpenConnection())
             {
-                string sql = $"UPDATE {TableName} SET Complete = 1, Status = 'Complete', currencyCode = @CurrencyCode WHERE id = @Id";
+                string sql = $"UPDATE {TableName} SET Complete = 1, Status = 'Complete' WHERE id = @Id";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.Parameters.Add("@Id", SqlDbType.UniqueIdentifier).Value = id;
-                    command.Parameters.Add("@CurrencyCode", SqlDbType.NVarChar).Value = currencyCode;
 
                     command.ExecuteNonQuery();
                 }
@@ -38,12 +37,11 @@ namespace ODK.Data.Payments
             {
                 using (SqlTransaction transaction = connection.BeginTransaction())
                 {
-                    string sql = $"INSERT INTO {TableName} ({InsertColumns}) VALUES (@Id, @MemberId, @MemberName, @CurrencyCode, @Identifier)";
+                    string sql = $"INSERT INTO {TableName} ({InsertColumns}) VALUES (@Id, @MemberId, @CurrencyCode, @Identifier)";
                     using (SqlCommand command = new SqlCommand(sql, connection, transaction))
                     {
                         command.Parameters.Add("@Id", SqlDbType.UniqueIdentifier).Value = payment.Id;
                         command.Parameters.Add("@MemberId", SqlDbType.Int).Value = payment.MemberId > 0 ? (object)payment.MemberId : DBNull.Value;
-                        command.Parameters.Add("@MemberName", SqlDbType.NVarChar).Value = !string.IsNullOrEmpty(payment.MemberName) ? (object)payment.MemberName : DBNull.Value;
                         command.Parameters.Add("@CurrencyCode", SqlDbType.NVarChar).Value = payment.CurrencyCode;
                         command.Parameters.Add("@Identifier", SqlDbType.NVarChar).Value = payment.Identifier;
 
@@ -113,7 +111,6 @@ namespace ODK.Data.Payments
                 paymentId,
                 reader.GetString(reader.GetOrdinal("identifier")),
                 reader.GetValue<int?>("memberId", (r, i) => r.GetInt32(i)),
-                reader.GetValue("memberName", (r, i) => r.GetString(i)),
                 reader.GetString(reader.GetOrdinal("currencyCode")),
                 reader.GetDateTime(reader.GetOrdinal("date")),
                 paymentDetails.Where(x => x.PaymentId == paymentId)

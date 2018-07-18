@@ -15,19 +15,33 @@ namespace ODK.Umbraco.Payments
             _paymentsDataService = paymentsDataService;
         }
 
-        public void CreatePayment(Guid id, MemberModel currentMember, string currencyCode, string identifier, IEnumerable<KeyValuePair<int, double>> nodeAmounts)
+        public void CreatePayment(Guid? id, MemberModel currentMember, string currencyCode, int nodeId, double amount,
+            bool complete = false)
         {
+            CreatePayment(id, currentMember, currencyCode, new Dictionary<int, double> { { nodeId, amount } }, complete);
+        }
+
+        public void CreatePayment(Guid? id, MemberModel currentMember, string currencyCode, IEnumerable<KeyValuePair<int, double>> nodeAmounts,
+            bool complete = false)
+        {
+            id = id ?? Guid.NewGuid();
+
             List<PaymentDetail> paymentDetails = new List<PaymentDetail>();
             foreach (KeyValuePair<int, double> nodeAmount in nodeAmounts)
             {
-                paymentDetails.Add(new PaymentDetail(nodeAmount.Value, nodeAmount.Key, id));
+                paymentDetails.Add(new PaymentDetail(nodeAmount.Value, nodeAmount.Key, id.Value));
             }
 
-            Payment payment = new Payment(id, identifier, currentMember?.Id ?? 0, currentMember?.FullName, currencyCode, DateTime.Now, paymentDetails);
+            Payment payment = new Payment(id.Value, id.Value.ToString(), currentMember?.Id ?? 0, currencyCode, DateTime.Now, paymentDetails);
             _paymentsDataService.CreatePayment(payment);
+
+            if (complete)
+            {
+                _paymentsDataService.CompletePayment(payment.Id);
+            }
         }
 
-        public void CompletePayment(string identifier, string currencyCode, double amount)
+        public void CompletePayment(string identifier)
         {
             Payment payment = _paymentsDataService.GetIncompletePayment(identifier);
             if (payment == null)
@@ -35,7 +49,7 @@ namespace ODK.Umbraco.Payments
                 return;
             }
 
-            _paymentsDataService.CompletePayment(payment.Id, currencyCode, amount);
+            _paymentsDataService.CompletePayment(payment.Id);
         }
 
         public MemberPayment GetLastPayment(int memberId)

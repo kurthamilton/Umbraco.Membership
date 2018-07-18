@@ -6,7 +6,7 @@ namespace ODK.Data.Payments
 {
     public class Payment
     {
-        public Payment(Guid id, string identifier, int? memberId, string memberName, string currencyCode, DateTime date, IEnumerable<PaymentDetail> details)
+        public Payment(Guid id, string identifier, int? memberId, string currencyCode, DateTime date, IEnumerable<PaymentDetail> details)
         {
             CurrencyCode = currencyCode;
             Date = date;
@@ -14,7 +14,6 @@ namespace ODK.Data.Payments
             Id = id;
             Identifier = identifier;
             MemberId = memberId;
-            MemberName = memberName;
         }
 
         public string CurrencyCode { get; }
@@ -28,8 +27,6 @@ namespace ODK.Data.Payments
         public string Identifier { get; }
 
         public int? MemberId { get; }
-
-        public string MemberName { get; }
 
         public double Total => Details.Sum(x => x.Amount);
     }
