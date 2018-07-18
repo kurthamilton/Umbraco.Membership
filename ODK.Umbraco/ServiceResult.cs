@@ -18,13 +18,16 @@ namespace ODK.Umbraco
             Errors = new ReadOnlyDictionary<string, string>(errors);
         }
 
-        public ServiceResult(bool success)
+        public ServiceResult(bool success, string errorMessage = null)
         {
+            ErrorMessage = errorMessage;
             Success = success;
         }
 
+        public string ErrorMessage { get; }
+
         public IReadOnlyDictionary<string, string> Errors { get; private set; } = new Dictionary<string, string>();
 
-        public bool Success { get; private set; }
+        public bool Success { get; }
     }
 }

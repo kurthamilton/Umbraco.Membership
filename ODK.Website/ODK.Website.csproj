@@ -273,7 +273,9 @@
     </Content>
     <Content Include="config\404handlers.config" />
     <Content Include="App_Plugins\ModelsBuilder\package.manifest" />
-    <Content Include="App_Plugins\Optimus\Config\bundles.config" />
+    <Content Include="App_Plugins\Optimus\Config\bundles.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Plugins\Optimus\Scripts\jquery-2.0.3.min.map" />
     <Content Include="App_Plugins\Optimus\Views\Dialog.cshtml" />
     <Content Include="App_Plugins\Optimus\Views\Index.cshtml" />
@@ -285,7 +287,7 @@
     <Content Include="css\theme-oxford.css" />
     <Content Include="Global.asax" />
     <Content Include="scripts\calendar.js" />
-    <Content Include="scripts\payments.js" />
+    <Content Include="scripts\Payments\stripe.js" />
     <Content Include="scripts\script.js" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Partials\Grid\Editors\Textstring.cshtml" />
@@ -331,8 +333,8 @@
     <Content Include="Views\Partials\BlogpostMeta.cshtml" />
     <Content Include="Views\Partials\EventSidebar.cshtml" />
     <Content Include="Views\Partials\EventResponseIcon.cshtml" />
-    <Content Include="Views\Partials\PayPalButton.cshtml" />
     <Content Include="Views\Partials\Form.cshtml" />
+    <Content Include="Views\Partials\PaymentButton.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -371,23 +373,27 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
-    <Compile Include="Controllers\IpnController.cs" />
-    <Compile Include="Controllers\PaymentsController.cs" />
+    <Compile Include="Controllers\StripeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\PayPal\PayPalButtonViewModel.cs" />
-    <Compile Include="Models\PayPal\PayPalOptionViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\EventSidebarViewModel.cs" />
     <Compile Include="Models\Payments\PaymentStatus.cs" />
-    <Compile Include="Models\Payments\PaypalNotification.cs" />
     <Compile Include="Models\PersonThumbnailViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ODK.Infrastructure\ODK.Infrastructure.csproj">
       <Project>{232d1f34-651d-4184-8553-ecd7ad84188a}</Project>
       <Name>ODK.Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ODK.Payments.Stripe\ODK.Payments.Stripe.csproj">
+      <Project>{818E286B-EFC7-4F3D-83B3-F721E5B774EB}</Project>
+      <Name>ODK.Payments.Stripe</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ODK.Payments\ODK.Payments.csproj">
+      <Project>{86549c88-f0be-4da5-a169-8d646066fc0a}</Project>
+      <Name>ODK.Payments</Name>
     </ProjectReference>
     <ProjectReference Include="..\ODK.Umbraco\ODK.Umbraco.csproj">
       <Project>{81f2dd71-46d7-4d52-a571-324cc799c8f2}</Project>

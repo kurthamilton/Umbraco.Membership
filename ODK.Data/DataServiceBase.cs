@@ -22,27 +22,44 @@ namespace ODK.Data
 
         protected T ReadRecord<T>(SqlCommand command, Func<SqlDataReader, T> read)
         {
-            SqlDataReader reader = command.ExecuteReader();
-            if (!reader.Read())
+            using (SqlDataReader reader = command.ExecuteReader())
             {
-                return default(T);
-            }
+                if (!reader.Read())
+                {
+                    return default(T);
+                }
 
-            return read(reader);
+                return read(reader);
+            }
         }
 
         protected IReadOnlyCollection<T> ReadRecords<T>(SqlCommand command, Func<SqlDataReader, T> read)
         {
             List<T> records = new List<T>();
 
-            SqlDataReader reader = command.ExecuteReader();
-            while (reader.Read())
+            using (SqlDataReader reader = command.ExecuteReader())
             {
-                T record = read(reader);
-                records.Add(record);
-            }
+                while (reader.Read())
+                {
+                    T record = read(reader);
+                    records.Add(record);
+                }
 
-            return records;
+                return records;
+            }
+        }
+
+        protected void TryCommitTransaction(SqlTransaction transaction)
+        {
+            try
+            {
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
     }
 }

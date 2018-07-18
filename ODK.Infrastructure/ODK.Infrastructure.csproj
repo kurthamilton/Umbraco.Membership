@@ -68,6 +68,10 @@
       <Project>{1dce0bcd-4bc3-487d-8655-0b99375b9059}</Project>
       <Name>ODK.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ODK.Payments.Stripe\ODK.Payments.Stripe.csproj">
+      <Project>{818e286b-efc7-4f3d-83b3-f721e5b774eb}</Project>
+      <Name>ODK.Payments.Stripe</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ODK.Umbraco\ODK.Umbraco.csproj">
       <Project>{81f2dd71-46d7-4d52-a571-324cc799c8f2}</Project>
       <Name>ODK.Umbraco</Name>
