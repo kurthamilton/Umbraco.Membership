@@ -35,7 +35,6 @@ namespace ODK.Payments.Stripe
             });
 
             bool success = charge.Paid;
-
             if (success)
             {
                 _paymentService.CreatePayment(null, member, payment.CurrencyCode, payment.Id, payment.Amount, true);
