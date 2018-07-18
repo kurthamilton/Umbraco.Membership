@@ -1,7 +1,5 @@
 ﻿@using Newtonsoft.Json.Linq;
 @using ODK.Umbraco.Events;
-@using ODK.Umbraco.Web.Mvc;
-@using ODK.Website.Models.PayPal;
 @inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
     Layout = "Master.cshtml";
@@ -19,9 +17,6 @@
     string mapUrl = !string.IsNullOrEmpty(eventModel.MapQuery) ? "https://www.google.com/maps/embed/v1/place?key=" + mapApiKey + "&q=" + eventModel.MapQuery : null;
 
     IEnumerable<IPublishedContent> paymentOptions = Model.Content.Children;
-
-    PayPalButtonViewModel viewModel = new PayPalButtonViewModel(HomePage, paymentOptions);
-    HtmlHelper<PayPalButtonViewModel> buttonHelper = Html.For<PayPalButtonViewModel>(viewModel);
 
     JArray form = Model.Content.GetPropertyValue<JArray>("eventForm");
 }
@@ -55,21 +50,6 @@
                     </p>
                 }
 
-                @if (viewModel.Options.Any())
-                {
-                    <h2>Buy tickets</h2>
-                    <p>
-                        @Html.Partial("PayPalButton", viewModel)
-                    </p>
-
-                    if (form != null)
-                    {
-                        <p>
-                            @Html.Partial("Form", form)
-                        </p>
-                    }
-                }
-
                 <div class="d-none d-md-block">
                     @RenderMap(mapUrl)
                 </div>
@@ -94,10 +74,4 @@
     }
 
     <iframe height="450" frameborder="0" style="border:0; width: 100%;" src="@url" allowfullscreen></iframe>
-}
-
-@section Scripts
-{
-    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
-    @Scripts.Render("~/bundles/js/account")
 }
