@@ -7,11 +7,12 @@
 
 @foreach (IPublishedContent section in Model.Content.Children().Where(x => !x.IsPage()))
 {
+    string id = section.Name.Replace(" ", "").Replace("Section-", "");
+
     string cssClass = "";
     string style = "";
 
     bool sectionHasContent = section.HasChildContent("heroContent");
-
     string overlayType = section.GetPropertyValue<string>("heroOverlayType");
     if (!string.IsNullOrEmpty(overlayType))
     {
@@ -27,7 +28,7 @@
 
     if (sectionHasContent)
     {
-        <section class="section section--hero section--content-center @cssClass" style="@style">
+        <section id="@id" class="section section--hero section--content-center @cssClass" style="@style">
             <div class="section--hero__content">
                 @Html.GetGridHtml(section, "heroContent", "bootstrap3-fluid")
             </div>

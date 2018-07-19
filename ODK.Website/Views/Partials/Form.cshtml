@@ -12,22 +12,22 @@
 {
     string name = field.Value<string>("formName");
     string label = field.Value<string>("formLabel");
-    string subLabel = field.Value<string>("formSubLabel");
+    string subLabel = field.Value<string>("formSublabel");
     string type = field.Value<string>("formType");
     string options = field.Value<string>("formOptions");
     bool required = field.Value<string>("formRequired") == "True";
 
     <div class="form-group @(required ? "required" : null)">
-        <label for="@name" class="form-control-label">@label</label>
-        @if (!string.IsNullOrEmpty(subLabel))
+        @if (type != "CheckBox")
         {
-            <span class="text-muted">@subLabel</span>
+            @Label(name, label, subLabel)
         }
+
         @switch (type)
         {
             case "DropDownList":
 
-                <select id="@name" name="@name" @(required ? "required" : null) class="form-control">
+                <select id="@name" name="@name" class="form-control" @(required ? "required" : null)>
                     <option value="">Please select...</option>
                     @foreach (string option in options.Split('|'))
                     {
@@ -35,7 +35,23 @@
                     }
                 </select>
                 break;
+
+            case "CheckBox":
+                <div class="form-check">
+                    <input id="@name" name="@name" type="checkbox" class="form-check-input" @(required ? "required" : null)>
+                    @Label(name, label, subLabel, "form-check-label")
+                </div>
+                break;
         }
     </div>
 
+}
+
+@helper Label(string name, string label, string subLabel, string cssClass = "form-control-label")
+{
+    <label for="@name" class="@cssClass">@Html.Raw(label)</label>
+    if (!string.IsNullOrEmpty(subLabel))
+    {
+        <span class="text-muted">@subLabel</span>
+    }
 }
