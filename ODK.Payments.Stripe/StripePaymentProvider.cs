@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ODK.Umbraco;
 using ODK.Umbraco.Members;
 using ODK.Umbraco.Payments;
@@ -37,7 +35,7 @@ namespace ODK.Payments.Stripe
             bool success = charge.Paid;
             if (success)
             {
-                _paymentService.CreatePayment(null, member, payment.CurrencyCode, payment.Id, payment.Amount, true);
+                _paymentService.CreatePayment(null, member, payment.CurrencyCode, payment.Id, payment.Amount, true, payment.SubscriptionType);
             }
 
             return new ServiceResult(success, charge.FailureMessage);

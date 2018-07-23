@@ -8,21 +8,23 @@ namespace ODK.Umbraco.Payments
 {
     public class PaymentService
     {
+        private readonly OdkMemberService _memberService;
         private readonly PaymentsDataService _paymentsDataService;
 
-        public PaymentService(PaymentsDataService paymentsDataService)
+        public PaymentService(PaymentsDataService paymentsDataService, OdkMemberService memberService)
         {
+            _memberService = memberService;
             _paymentsDataService = paymentsDataService;
         }
 
         public void CreatePayment(Guid? id, MemberModel currentMember, string currencyCode, int nodeId, double amount,
-            bool complete = false)
+            bool complete = false, MemberTypes? subscriptionType = null)
         {
-            CreatePayment(id, currentMember, currencyCode, new Dictionary<int, double> { { nodeId, amount } }, complete);
+            CreatePayment(id, currentMember, currencyCode, new Dictionary<int, double> { { nodeId, amount } }, complete, subscriptionType);
         }
 
         public void CreatePayment(Guid? id, MemberModel currentMember, string currencyCode, IEnumerable<KeyValuePair<int, double>> nodeAmounts,
-            bool complete = false)
+            bool complete = false, MemberTypes? subscriptionType = null)
         {
             id = id ?? Guid.NewGuid();
 
@@ -38,6 +40,12 @@ namespace ODK.Umbraco.Payments
             if (complete)
             {
                 _paymentsDataService.CompletePayment(payment.Id);
+
+                if (subscriptionType != null)
+                {
+                    double amount = nodeAmounts.Sum(x => x.Value);
+                    _memberService.UpdateSubscription(currentMember, amount, subscriptionType.Value);
+                }
             }
         }
 

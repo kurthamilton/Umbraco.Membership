@@ -10,65 +10,54 @@
 
     IPublishedContent[] subscriptions = Model.Content.Children.ToArray();
 
-    MemberPayment lastPayment = PaymentService.GetLastPayment(CurrentMember.Id);
-}
-
-@if (Request.QueryString["payment"] == "cancelled")
-{
-    <div class="container">
-        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-            Payment cancelled
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </div>
-}
-
-@if (Request.QueryString["payment"] == "complete")
-{
-    <div class="container">
-        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-            Payment complete
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    </div>
+    DateTime? subscriptionEndDate = member.SubscriptionEndDate;
 }
 
 <div class="content">
     <div class="container">
-        <div class="row">
-            @if (member.Type != MemberTypes.None)
-            {
-                <div class="col-6">
-                    <div class="form-group">
-                        @memberHelper.LabelFor(x => x.Type, "Current membership type", new { @class = "form-control-label" })
-                        <span class="form-control-plaintext">@member.Type</span>
-                    </div>
-                </div>
-            }
-            @if (lastPayment != null)
-            {
-                @*
-                    <div class="col-6">
+        @if (member.Type != MemberTypes.None)
+        {
+            string membershipType = member.Type.ToString();
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12">
                         <div class="form-group">
-                            <label class="form-control-label">Last payment</label>
-                            <span class="form-control-plaintext">@GetAmount(lastPayment.CurrencyCode, lastPayment.Amount) on @lastPayment.Date.ToString("dd MMMM yyyy")</span>
+                            @memberHelper.LabelFor(x => x.Type, new { @class = "form-control-label" })
+                            <span class="form-control-plaintext">@membershipType</span>
                         </div>
                     </div>
-                *@
-            }
-        </div>
+                </div>
 
-        <h1>@(CurrentMemberModel.Type != MemberTypes.Trial ? "Renew" : "Buy")</h1>
-        <div id="subscriptionTypes">
-            @for (int i = 0; i < subscriptions.Length; i++)
+                @if (subscriptionEndDate != null)
+                {
+                    <div class="row">
+                        <div class="form-group">
+                            @memberHelper.LabelFor(x => x.SubscriptionEndDate, new { @class = "form-control-label" })
+                            <span class="form-control-plaintext">@subscriptionEndDate.Value.ToString("dd MMMM yyyy")</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        @if (subscriptionEndDate == null || (subscriptionEndDate.Value - DateTime.Today).TotalDays <= 30)
+        {
+            <h2>@(CurrentMemberModel.Type != MemberTypes.Trial ? "Renew" : "Buy")</h2>
+            if (CurrentMemberModel.Type == MemberTypes.Trial)
             {
-                @SubscriptionAccordionItem(subscriptions[i], i == 0, member)
+                <p>
+                    You are currently on a trial membership. Purchase a membership below to join us.
+                </p>
             }
-        </div>
+
+
+            <div id="subscriptionTypes">
+                @for (int i = 0; i < subscriptions.Length; i++)
+                {
+                    @SubscriptionAccordionItem(subscriptions[i], i == 0, member)
+                }
+            </div>
+        }
     </div>
 </div>
 
@@ -87,7 +76,6 @@
         <div id="collapse-@id" class="collapse @Html.Raw(expanded ? "show" : null)" aria-labelledby="heading-@id" data-parent="#subscriptionTypes">
             <div class="card-body">
                 @Html.Raw(payment.Description)
-
                 @Html.Partial("PaymentButton", payment)
             </div>
         </div>

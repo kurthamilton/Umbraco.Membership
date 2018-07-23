@@ -1,4 +1,6 @@
-﻿using ODK.Umbraco.Members;
+﻿using System;
+using ODK.Payments;
+using ODK.Umbraco.Members;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 
@@ -12,12 +14,18 @@ namespace ODK.Umbraco.Payments
             ApiPublicKey = homePage.GetPropertyValue<string>("paymentsApiPublicKey");
             ApiSecretKey = homePage.GetPropertyValue<string>("paymentsApiSecretKey");
             CurrencyCode = homePage.GetPropertyValue<string>("paymentsCurrencyCode");
-            CurrencySymbol = GetCurrencySymbol(CurrencyCode);
+            CurrencyString = PaymentsHelper.ToCurrencyString(CurrencyCode, Amount);
             Description = content.GetPropertyValue<string>("description");
             Email = member.Email;
             Id = content.Id;
             Provider = homePage.GetPropertyValue<string>("paymentsProvider");
             SiteName = homePage.GetPropertyValue<string>(PropertyNames.SiteName);
+
+            if (content.HasProperty("subscriptionType"))
+            {
+                SubscriptionType = (MemberTypes)Enum.Parse(typeof(MemberTypes), content.GetPropertyValue<string>("subscriptionType"));
+            }
+
             Title = content.GetPropertyValue<string>("title");
         }
 
@@ -29,7 +37,7 @@ namespace ODK.Umbraco.Payments
 
         public string CurrencyCode { get; }
 
-        public string CurrencySymbol { get; }
+        public string CurrencyString { get; }
 
         public string Description { get; }
 
@@ -41,22 +49,8 @@ namespace ODK.Umbraco.Payments
 
         public string SiteName { get; }
 
+        public MemberTypes? SubscriptionType { get; }
+
         public string Title { get; }
-
-        private static string GetCurrencySymbol(string currencyCode)
-        {
-            switch (currencyCode)
-            {
-                case "AUD":
-                case "USD":
-                    return "$";
-                case "EUR":
-                    return "€";
-                case "GBP":
-                    return "£";
-            }
-
-            return null;
-        }
     }
 }

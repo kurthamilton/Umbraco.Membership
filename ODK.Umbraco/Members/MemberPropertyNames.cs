@@ -13,9 +13,12 @@
         public const string KnittingExperience = "memberKnittingExperience";
         public const string KnittingExperienceOther = "memberKnittingExperienceOther";
         public const string LastName = "memberLastName";
+        public const string LastPaymentAmount = "lastPaymentAmount";
+        public const string LastPaymentDate = "lastPaymentDate";
         public const string Neighbourhood = "memberNeighbourhood";
         public const string Picture = "memberPicture";
         public const string Reason = "memberReason";
+        public const string SubscriptionEndDate = "subscriptionEndDate";
         public const string Type = "memberType";
     }
 }

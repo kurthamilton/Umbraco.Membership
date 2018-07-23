@@ -7,8 +7,6 @@
     {
         return;
     }
-
-    string amount = string.Format("{0}{1:0.00}", Model.CurrencySymbol, Model.Amount);
 }
 
 @if (provider == PaymentProviderType.Stripe)
@@ -23,7 +21,6 @@
             <input type="hidden" name="id" value="@Model.Id" />
             <input type="hidden" class="js-payment-token" name="stripeToken" />
 
-            <span>@amount</span>
             <button id="@buttonId" class="btn btn-primary js-payment-button--stripe"
                     data-api-key="@Model.ApiPublicKey"
                     data-description="@Model.Title"
@@ -31,6 +28,7 @@
                     data-currency="@Model.CurrencyCode"
                     data-amount="@(Model.Amount * 100)"
                     data-site-name="@Model.SiteName">Purchase</button>
+            <span>@Model.CurrencyString</span>
         </div>
     }
 }

@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="PaymentDetails.cs" />
     <Compile Include="PaymentProviderType.cs" />
+    <Compile Include="PaymentsHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

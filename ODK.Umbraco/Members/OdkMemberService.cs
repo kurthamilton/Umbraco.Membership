@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using ODK.Umbraco.Content;
@@ -135,6 +136,30 @@ namespace ODK.Umbraco.Members
             return new ServiceResult(true);
         }
 
+        public ServiceResult UpdateSubscription(MemberModel memberModel, double amount, MemberTypes type)
+        {
+            IMember member = _umbracoMemberService.GetById(memberModel.Id);
+            if (member == null)
+            {
+                return new ServiceResult("", "Member not found");
+            }
+
+            DateTime subscriptionEndDate = DateTime.Today.AddYears(1);
+            if (memberModel.SubscriptionEndDate != null)
+            {
+                subscriptionEndDate = memberModel.SubscriptionEndDate.Value.AddYears(1);
+            }
+
+            member.SetValue(MemberPropertyNames.LastPaymentAmount, amount);
+            member.SetValue(MemberPropertyNames.LastPaymentDate, DateTime.Today.ToString("yyyy-MM-dd"));
+            member.SetValue(MemberPropertyNames.SubscriptionEndDate, subscriptionEndDate);
+            member.SetValue(MemberPropertyNames.Type, type.ToString());
+
+            _umbracoMemberService.Save(member);
+
+            return new ServiceResult(true);
+        }
+
         private static bool IsAllowed(UmbracoHelper helper)
         {
             return !string.IsNullOrEmpty(helper.MembershipHelper.CurrentUserName);
@@ -202,6 +227,11 @@ namespace ODK.Umbraco.Members
         private IDictionary<string, string> ValidateModel<T>(T model, HttpPostedFileBase image, UmbracoHelper helper) where T : MemberModel, IMemberPictureUpload
         {
             Dictionary<string, string> messages = new Dictionary<string, string>();
+
+            if (helper == null)
+            {
+                return messages;
+            }
 
             IEnumerable<string> knittingExperienceOptions = helper.GetKnittingExperienceOptions();
             if (!knittingExperienceOptions.Contains(model.KnittingExperience))

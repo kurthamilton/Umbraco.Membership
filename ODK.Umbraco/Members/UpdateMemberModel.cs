@@ -7,8 +7,14 @@ namespace ODK.Umbraco.Members
     public class UpdateMemberModel : MemberModel, IMemberPictureUpload
     {
         public UpdateMemberModel()
-            : this(null)
+            : this((IPublishedContent)null)
         {
+        }
+
+        public UpdateMemberModel(MemberModel other)
+            : base(other.Content)
+        {
+            CopyFrom(other);
         }
 
         public UpdateMemberModel(IPublishedContent member)
