@@ -44,7 +44,7 @@ namespace ODK.Umbraco.Payments
                 if (subscriptionType != null)
                 {
                     double amount = nodeAmounts.Sum(x => x.Value);
-                    _memberService.UpdateSubscription(currentMember, amount, subscriptionType.Value);
+                    _memberService.UpdateSubscription(currentMember, subscriptionType.Value, DateTime.Today.AddYears(1) - DateTime.Today, amount);
                 }
             }
         }

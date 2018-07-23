@@ -4,8 +4,8 @@
 @{
     IEnumerable<SelectListItem> knittingExperienceOptions = Model.Helper.GetKnittingExperienceOptions().Select(x => new SelectListItem
     {
-        Value = x,
-        Text = x
+        Value = x.Value,
+        Text = x.Value
     });
 
     RegisterMemberModel registerMember = Model.Value as RegisterMemberModel;
@@ -111,7 +111,7 @@ else if (updateHelper != null)
     @memberHelper.ValidationMessageFor(x => x.KnittingExperience)
 </div>
 
-<div class="form-group required" data-other-for="@Html.IdFor(x => x.Value.KnittingExperience)" data-other-key="@knittingExperienceOptions.Last().Value">
+<div class="form-group required" data-other-for="@memberHelper.IdFor(x => x.KnittingExperience)" data-other-key="@knittingExperienceOptions.Last().Value">
     @memberHelper.LabelFor(x => x.KnittingExperienceOther, new { @class = "form-control-label", required = "" })
     @memberHelper.TextBoxFor(x => x.KnittingExperienceOther, new { @class = "form-control" })
     @memberHelper.ValidationMessageFor(x => x.KnittingExperienceOther)

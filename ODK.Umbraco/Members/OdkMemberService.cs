@@ -101,7 +101,10 @@ namespace ODK.Umbraco.Members
 
             IMedia picture = SaveImage(model.UploadedPicture, model);
 
-            UpdateMemberProperties(member, model, picture);
+            UpdateMemberProperties(member, model, helper, picture);
+
+            int trialPeriodMonths = model.Chapter.GetPropertyValue<int>("trialPeriodMonths");
+            UpdateMemberSubscriptionProperties(member, model, MemberTypes.Trial, DateTime.Today.AddMonths(trialPeriodMonths) - DateTime.Today);
 
             _umbracoMemberService.Save(member);
             _umbracoMemberService.SavePassword(member, model.Password);
@@ -129,31 +132,22 @@ namespace ODK.Umbraco.Members
                 picture = SaveImage(model.UploadedPicture, model);
             }
 
-            UpdateMemberProperties(member, model, picture);
+            UpdateMemberProperties(member, model, helper, picture);
 
             _umbracoMemberService.Save(member);
 
             return new ServiceResult(true);
         }
 
-        public ServiceResult UpdateSubscription(MemberModel memberModel, double amount, MemberTypes type)
+        public ServiceResult UpdateSubscription(MemberModel model, MemberTypes type, TimeSpan length, double amount)
         {
-            IMember member = _umbracoMemberService.GetById(memberModel.Id);
+            IMember member = _umbracoMemberService.GetById(model.Id);
             if (member == null)
             {
                 return new ServiceResult("", "Member not found");
             }
 
-            DateTime subscriptionEndDate = DateTime.Today.AddYears(1);
-            if (memberModel.SubscriptionEndDate != null)
-            {
-                subscriptionEndDate = memberModel.SubscriptionEndDate.Value.AddYears(1);
-            }
-
-            member.SetValue(MemberPropertyNames.LastPaymentAmount, amount);
-            member.SetValue(MemberPropertyNames.LastPaymentDate, DateTime.Today.ToString("yyyy-MM-dd"));
-            member.SetValue(MemberPropertyNames.SubscriptionEndDate, subscriptionEndDate);
-            member.SetValue(MemberPropertyNames.Type, type.ToString());
+            UpdateMemberSubscriptionProperties(member, model, type, length, amount);
 
             _umbracoMemberService.Save(member);
 
@@ -165,13 +159,15 @@ namespace ODK.Umbraco.Members
             return !string.IsNullOrEmpty(helper.MembershipHelper.CurrentUserName);
         }
 
-        private static void UpdateMemberProperties(IMember member, MemberModel model, IMedia picture)
+        private static void UpdateMemberProperties(IMember member, MemberModel model, UmbracoHelper helper, IMedia picture)
         {
+            IEnumerable<KeyValuePair<int, string>> knittingExperienceOptions = helper.GetKnittingExperienceOptions();
+
             member.SetValue(MemberPropertyNames.FacebookProfile, model.FacebookProfile);
             member.SetValue(MemberPropertyNames.FavouriteBeverage, model.FavouriteBeverage);
             member.SetValue(MemberPropertyNames.FirstName, model.FirstName);
             member.SetValue(MemberPropertyNames.Hometown, model.Hometown);
-            member.SetValue(MemberPropertyNames.KnittingExperience, model.KnittingExperience);
+            member.SetValue(MemberPropertyNames.KnittingExperience, knittingExperienceOptions.First(x => x.Value == model.KnittingExperience).Key);
             member.SetValue(MemberPropertyNames.KnittingExperienceOther, model.KnittingExperienceOther);
             member.SetValue(MemberPropertyNames.LastName, model.LastName);
             member.SetValue(MemberPropertyNames.Neighbourhood, model.Neighbourhood);
@@ -181,6 +177,24 @@ namespace ODK.Umbraco.Members
             {
                 member.SetValue(MemberPropertyNames.Picture, picture.ToPropertyValue());
             }
+        }
+
+        private static void UpdateMemberSubscriptionProperties(IMember member, MemberModel model, MemberTypes type, TimeSpan length, double amount = 0)
+        {
+            DateTime subscriptionEndDate = DateTime.Today.Add(length);
+            if (model.SubscriptionEndDate != null)
+            {
+                subscriptionEndDate = model.SubscriptionEndDate.Value.Add(length);
+            }
+
+            if (amount > 0)
+            {
+                member.SetValue(MemberPropertyNames.LastPaymentAmount, amount);
+                member.SetValue(MemberPropertyNames.LastPaymentDate, DateTime.Today.ToString("yyyy-MM-dd"));
+            }
+
+            member.SetValue(MemberPropertyNames.SubscriptionEndDate, subscriptionEndDate);
+            member.SetValue(MemberPropertyNames.Type, (int)type);
         }
 
         private MemberModel GetMember(IPublishedContent member)
@@ -233,18 +247,18 @@ namespace ODK.Umbraco.Members
                 return messages;
             }
 
-            IEnumerable<string> knittingExperienceOptions = helper.GetKnittingExperienceOptions();
-            if (!knittingExperienceOptions.Contains(model.KnittingExperience))
+            IEnumerable<KeyValuePair<int, string>> knittingExperienceOptions = helper.GetKnittingExperienceOptions();
+            if (!knittingExperienceOptions.Any(x => x.Value == model.KnittingExperience))
             {
                 messages.Add(nameof(model.KnittingExperience), "Knitting know-how required");
             }
 
-            if (model.KnittingExperience == knittingExperienceOptions.Last() && string.IsNullOrWhiteSpace(model.KnittingExperienceOther))
+            if (model.KnittingExperience == knittingExperienceOptions.Last().Value && string.IsNullOrWhiteSpace(model.KnittingExperienceOther))
             {
                 messages.Add(nameof(model.KnittingExperienceOther), "Knitting know-how 'other' required");
             }
 
-            if (!image.ContentType.StartsWith("image/"))
+            if (image != null && !image.ContentType.StartsWith("image/"))
             {
                 messages.Add(nameof(model.UploadedPicture), "File type not allowed. Please upload an image.");
             }

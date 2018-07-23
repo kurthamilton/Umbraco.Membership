@@ -8,11 +8,11 @@ namespace ODK.Umbraco.Members
     {
         private const int KnittingExperienceOptionsDataTypeId = 1256;
 
-        public static IEnumerable<string> GetKnittingExperienceOptions(this UmbracoHelper helper)
+        public static IEnumerable<KeyValuePair<int, string>> GetKnittingExperienceOptions(this UmbracoHelper helper)
         {
             return helper.DataTypeService.GetPreValuesCollectionByDataTypeId(KnittingExperienceOptionsDataTypeId)
                                          .PreValuesAsDictionary
-                                         .Select(x => x.Value.Value);
+                                         .Select(x => new KeyValuePair<int, string>(x.Value.Id, x.Value.Value));
         }
     }
 }

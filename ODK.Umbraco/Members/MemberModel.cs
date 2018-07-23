@@ -58,7 +58,9 @@ namespace ODK.Umbraco.Members
             _picture = new Lazy<IPublishedContent>(() => member?.GetPropertyValue<IPublishedContent>(MemberPropertyNames.Picture));
             _reason = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.Reason));
             _subscriptionEndDate = new MutableLazy<DateTime?>(() => member?.GetPropertyValue<DateTime?>(MemberPropertyNames.SubscriptionEndDate));
-            _type = new Lazy<MemberTypes>(() => member != null ? (MemberTypes)Enum.Parse(typeof(MemberTypes), member.GetPropertyValue<string>(MemberPropertyNames.Type)) : MemberTypes.Trial);
+            _type = new Lazy<MemberTypes>(() => member != null
+                ? (MemberTypes)Enum.Parse(typeof(MemberTypes), member.GetPropertyValue<string>(MemberPropertyNames.Type))
+                : MemberTypes.Trial);
         }
 
         public int? AdminUserId => _adminUserId.Value;

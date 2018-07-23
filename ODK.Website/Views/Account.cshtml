@@ -40,7 +40,8 @@
                 }
             </div>
         }
-        @if (subscriptionEndDate == null || (subscriptionEndDate.Value - DateTime.Today).TotalDays <= 30)
+
+        @if (CurrentMemberModel.Type == MemberTypes.Trial || subscriptionEndDate == null || (subscriptionEndDate.Value - DateTime.Today).TotalDays <= 30)
         {
             <h2>@(CurrentMemberModel.Type != MemberTypes.Trial ? "Renew" : "Buy")</h2>
             if (CurrentMemberModel.Type == MemberTypes.Trial)
