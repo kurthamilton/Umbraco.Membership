@@ -111,9 +111,13 @@ img {
 	position: relative;
 }
 
+.navbar-toggler {
+    margin-left: 15px;
+}
+
 .navbar .navbar-nav {
-	justify-content: center;
-	width: 100%;
+    justify-content: center;
+    width: 100%;
 }
 
 .nav-item:first-child {
@@ -173,11 +177,11 @@ img {
 
 .section--header,
 .section--footer {
-    padding-top: 30px;
-	padding-bottom: 30px;
+    padding: 1rem 0;
 }
 
 .section--header h1 {
+    font-size: 2rem;
 	margin-bottom: 0;
 }
 
@@ -212,6 +216,12 @@ img {
     line-height: 1.5;
     margin-bottom: 60px;
 }
+
+/* CARDS */
+.card-header .btn {
+    white-space: inherit;
+}
+
 
 /* SIDEBAR */
 .sidebar .card:not(:first-child) {
