@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using ODK.Umbraco.Content;
+using ODK.Umbraco.Emails;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
 using Umbraco.Web;
@@ -11,6 +12,7 @@ namespace ODK.Umbraco.Members
 {
     public class OdkMemberService
     {
+        private readonly OdkEmailService _emailService = new OdkEmailService();
         private readonly IMediaService _umbracoMediaService;
         private readonly IMemberService _umbracoMemberService;
 
@@ -109,6 +111,10 @@ namespace ODK.Umbraco.Members
             _umbracoMemberService.Save(member);
             _umbracoMemberService.SavePassword(member, model.Password);
 
+            // Send emails
+            SendNewMemberAdminEmail(model);
+            SendNewMemberEmail(model);
+
             return new ServiceResult(true);
         }
 
@@ -152,6 +158,20 @@ namespace ODK.Umbraco.Members
             _umbracoMemberService.Save(member);
 
             return new ServiceResult(true);
+        }
+
+        private static string ReplaceMemberProperties(string text, MemberModel model)
+        {
+            return text
+                .Replace($"{{{{{MemberPropertyNames.Email}}}}}", model.Email)
+                .Replace($"{{{{{MemberPropertyNames.FavouriteBeverage}}}}}", model.FavouriteBeverage)
+                .Replace($"{{{{{MemberPropertyNames.FirstName}}}}}", model.FirstName)
+                .Replace($"{{{{{MemberPropertyNames.Hometown}}}}}", model.Hometown)
+                .Replace($"{{{{{MemberPropertyNames.KnittingExperience}}}}}", model.KnittingExperience)
+                .Replace($"{{{{{MemberPropertyNames.KnittingExperienceOther}}}}}", model.KnittingExperienceOther)
+                .Replace($"{{{{{MemberPropertyNames.LastName}}}}}", model.LastName)
+                .Replace($"{{{{{MemberPropertyNames.Neighbourhood}}}}}", model.Neighbourhood)
+                .Replace($"{{{{{MemberPropertyNames.Reason}}}}}", model.Reason);
         }
 
         private static bool IsAllowed(UmbracoHelper helper)
@@ -236,6 +256,22 @@ namespace ODK.Umbraco.Members
             }
 
             return memberImage;
+        }
+
+        private void SendNewMemberAdminEmail(MemberModel model)
+        {
+            string subject = model.Chapter.GetPropertyValue<string>("newMemberEmailSubjectAdmin");
+            string bodyText = model.Chapter.GetPropertyValue<string>("newMemberEmailBodyAdmin");
+            bodyText = ReplaceMemberProperties(bodyText, model);
+            _emailService.SendAdminEmail(model.Chapter, subject, bodyText);
+        }
+
+        private void SendNewMemberEmail(MemberModel model)
+        {
+            string subject = model.Chapter.GetPropertyValue<string>("newMemberEmailSubject");
+            string bodyText = model.Chapter.GetPropertyValue<string>("newMemberEmailBody");
+            bodyText = ReplaceMemberProperties(bodyText, model);
+            _emailService.SendEmail(model.Chapter, subject, bodyText, new string[] { model.Email });
         }
 
         private IDictionary<string, string> ValidateModel<T>(T model, HttpPostedFileBase image, UmbracoHelper helper) where T : MemberModel, IMemberPictureUpload

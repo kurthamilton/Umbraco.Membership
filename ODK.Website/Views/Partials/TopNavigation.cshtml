@@ -19,6 +19,9 @@
     IPublishedContent profilePage = member != null ? memberModel.Chapter.GetPropertyValue<IPublishedContent>("profilePage") : null;
     string profileUrl = profilePage != null ? profilePage.Url : null;
 
+    IPublishedContent adminPage = memberModel != null && memberModel.AdminUserId != null ? memberModel.Chapter.GetPropertyValue<IPublishedContent>("adminPage") : null;
+    string adminUrl = adminPage != null ? adminPage.Url : null;
+
     string logoutButtonText = member != null ? homePage.GetHomePageValue<string>("logoutButtonText") : null;
     string logoutUrl = "/umbraco/surface/account/logout";
 }
@@ -76,6 +79,10 @@
                             <a class="dropdown-item" href="@profileUrl">My profile</a>
                         }
                         <a class="dropdown-item" href="@memberModel.Chapter.Url">@memberModel.Chapter.Name</a>
+                        @if (!string.IsNullOrEmpty(adminUrl))
+                        {
+                            <a class="dropdown-item" href="@adminUrl">Admin</a>
+                        }
                         <a class="dropdown-item" href="@logoutUrl">@logoutButtonText</a>
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 ﻿@using ODK.Umbraco.Content;
-@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@using ODK.Umbraco.Web.Mvc;
+@inherits OdkUmbracoTemplatePage
 @{
     if (!Model.Content.HasChildContent("bodyText"))
     {

@@ -370,6 +370,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\EventsController.cs" />

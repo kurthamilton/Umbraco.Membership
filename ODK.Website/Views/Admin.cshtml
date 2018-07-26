@@ -1,27 +1,57 @@
 ﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
 @{
-	Layout = "Master.cshtml";
+    Layout = "Master.cshtml";
 }
+
+<div class="container">
+    @Html.Partial("Content")
+</div>
 
 <section class="section section--main">
     <div class="container">
+        <h2>Import member pictures</h2>
         @using (Html.BeginUmbracoForm("ImportMemberPictures", "Account", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
-    
+
             <div class="form-group">
                 <label class="form-control-label">Import member pictures</label>
                 <div class="input-group mb-3">
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" accept="image/*" 
+                        <input type="file" class="custom-file-input" accept="image/*"
                                name="files" id="files" multiple>
                         <label class="custom-file-label" for="files">Choose files</label>
                     </div>
                 </div>
             </div>
-            
+
             <div>
                 <button type="submit" class="btn btn-primary">Import</button>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="section section--main">
+    <div class="container">
+        <h2>Send test email</h2>
+        @using (Html.BeginUmbracoForm("SendTestEmail", "Admin", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label class="form-control-label">Subject</label>
+                <input class="form-control" type="text" name="subject" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-control-label">Body</label>
+                <textarea class="form-control" name="body">
+                </textarea>
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-primary">Send</button>
             </div>
         }
     </div>
