@@ -6,6 +6,9 @@
         public const string Date = "eventDate";
         public const string Description = "eventDescription";
         public const string Image = "eventImage";
+        public const string InviteEmailBody = "eventInviteEmailBody";
+        public const string InviteEmailSubject = "eventInviteEmailSubject";
+        public const string InviteSentDate = "eventInviteSentDate";
         public const string Location = "eventLocation";
         public const string MapQuery = "eventMapQuery";
         public const string Public = "eventPublic";

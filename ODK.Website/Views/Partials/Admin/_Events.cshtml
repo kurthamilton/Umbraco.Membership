@@ -1,0 +1,63 @@
+﻿@using ODK.Umbraco.Events;
+@using ODK.Umbraco.Members;
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
+@{
+    IEnumerable<MemberTypes> memberTypes = Enum.GetValues(typeof(MemberTypes)).Cast<MemberTypes>();
+    IEnumerable<SelectListItem> memberTypeOptions = memberTypes
+        .Where(x => x != MemberTypes.None)
+        .Select(x => new SelectListItem { Value = ((int)x).ToString(), Text = x.ToString(), Selected = x == MemberTypes.Trial || x == MemberTypes.Partial || x == MemberTypes.Full });
+
+    IPublishedContent eventsPage = Model.Content.GetPropertyValue<IPublishedContent>("eventsPage", true);
+    EventModel[] nextEvents = EventService.GetNextEvents(eventsPage, CurrentMember).ToArray();
+    IEnumerable<SelectListItem> nextEventOptions = nextEvents
+        .Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Location + string.Format(" ({0:dd MMMM})", x.Date) });
+}
+
+<h2>Events</h2>
+
+@using (Html.BeginUmbracoForm("SendEventInvite", "Admin", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <h3>Send Invite</h3>
+
+    <div class="form-group">
+        <label for="eventId">Event</label>
+        @Html.DropDownList("eventId", nextEventOptions, "--Select--", new { id = "eventId", @class = "form-control js-events" })
+    </div>
+
+    foreach (var eventModel in nextEvents)
+    {
+        <input type="hidden" class="js-event-invite-subject" data-event-id="@eventModel.Id" value="@eventModel.InviteEmailSubject" />
+        <input type="hidden" class="js-event-invite-body" data-event-id="@eventModel.Id" value="@eventModel.InviteEmailBody" />
+
+        <div class="js-event-details d-none" data-event-id="@eventModel.Id">
+            @if (eventModel.InviteSentDate != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    Invite sent: @eventModel.InviteSentDate.Value.ToString("dd MMMM yyyy")
+                </div>
+            }
+        </div>
+    }
+
+    <div class="form-group">
+        <label for="memberTypes">Member types</label>
+        @Html.ListBox("memberTypes", memberTypeOptions, new { id = "memberTypes", @class = "js-chosen form-control" })
+    </div>
+
+    <div class="form-group">
+        <label for="js-event-invite-subject">Subject</label>
+        <input type="text" id="js-event-invite-subject" name="subject" class="form-control" value="" />
+    </div>
+
+    <div class="form-group">
+        <label for="js-event-invite-body">Body</label>
+        <textarea id="js-event-invite-body" name="body" class="form-control" rows="5">
+                                </textarea>
+    </div>
+
+    <div>
+        <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to send this invite?');">Send</button>
+    </div>
+}

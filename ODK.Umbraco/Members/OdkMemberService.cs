@@ -118,6 +118,14 @@ namespace ODK.Umbraco.Members
             return new ServiceResult(true);
         }
 
+        public void SendMemberEmails(IEnumerable<MemberModel> members, string subject, string body)
+        {
+            foreach (MemberModel member in members)
+            {
+                SendMemberEmail(member, subject, body);
+            }
+        }
+
         public ServiceResult Update(int id, UpdateMemberModel model, UmbracoHelper helper)
         {
             IMember member = _umbracoMemberService.GetById(id);
@@ -258,20 +266,26 @@ namespace ODK.Umbraco.Members
             return memberImage;
         }
 
+        private void SendMemberEmail(MemberModel model, string subject, string body)
+        {
+            body = ReplaceMemberProperties(body, model);
+            _emailService.SendEmail(model.Chapter, subject, body, new string[] { model.Email });
+        }
+
         private void SendNewMemberAdminEmail(MemberModel model)
         {
             string subject = model.Chapter.GetPropertyValue<string>("newMemberEmailSubjectAdmin");
-            string bodyText = model.Chapter.GetPropertyValue<string>("newMemberEmailBodyAdmin");
-            bodyText = ReplaceMemberProperties(bodyText, model);
-            _emailService.SendAdminEmail(model.Chapter, subject, bodyText);
+            string body = model.Chapter.GetPropertyValue<string>("newMemberEmailBodyAdmin");
+            body = ReplaceMemberProperties(body, model);
+            _emailService.SendAdminEmail(model.Chapter, subject, body);
         }
 
         private void SendNewMemberEmail(MemberModel model)
         {
             string subject = model.Chapter.GetPropertyValue<string>("newMemberEmailSubject");
-            string bodyText = model.Chapter.GetPropertyValue<string>("newMemberEmailBody");
-            bodyText = ReplaceMemberProperties(bodyText, model);
-            _emailService.SendEmail(model.Chapter, subject, bodyText, new string[] { model.Email });
+            string body = model.Chapter.GetPropertyValue<string>("newMemberEmailBody");
+
+            SendMemberEmail(model, subject, body);
         }
 
         private IDictionary<string, string> ValidateModel<T>(T model, HttpPostedFileBase image, UmbracoHelper helper) where T : MemberModel, IMemberPictureUpload

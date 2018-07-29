@@ -281,11 +281,13 @@
     <Content Include="App_Plugins\Optimus\Views\Index.cshtml" />
     <Content Include="App_Plugins\Optimus\Views\Web.config" />
     <Content Include="css\calendar.css" />
+    <Content Include="css\chosen.bootstrap.css" />
     <Content Include="css\home.css" />
     <Content Include="css\style.css" />
     <Content Include="css\theme-base.css" />
     <Content Include="css\theme-oxford.css" />
     <Content Include="Global.asax" />
+    <Content Include="scripts\admin.js" />
     <Content Include="scripts\calendar.js" />
     <Content Include="scripts\Payments\stripe.js" />
     <Content Include="scripts\script.js" />
@@ -335,6 +337,8 @@
     <Content Include="Views\Partials\EventResponseIcon.cshtml" />
     <Content Include="Views\Partials\Form.cshtml" />
     <Content Include="Views\Partials\PaymentButton.cshtml" />
+    <Content Include="Views\Partials\Admin\_Events.cshtml" />
+    <Content Include="Views\Partials\Admin\_ImportMemberPictures.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -378,6 +382,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\EmailViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\EventSidebarViewModel.cs" />
     <Compile Include="Models\Payments\PaymentStatus.cs" />

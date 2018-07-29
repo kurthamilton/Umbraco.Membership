@@ -4,16 +4,19 @@ using System.Linq;
 using ODK.Data.Events;
 using ODK.Umbraco.Members;
 using Umbraco.Core.Models;
+using Umbraco.Core.Services;
 using Umbraco.Web;
 
 namespace ODK.Umbraco.Events
 {
     public class EventService
     {
+        private readonly IContentService _contentService;
         private readonly EventsDataService _eventDataService;
 
-        public EventService(EventsDataService eventsDataService)
+        public EventService(EventsDataService eventsDataService, IContentService contentService)
         {
+            _contentService = contentService;
             _eventDataService = eventsDataService;
         }
 
@@ -47,10 +50,29 @@ namespace ODK.Umbraco.Events
             return responses.ToDictionary(x => x.EventId, x => (EventResponseType)x.ResponseTypeId);
         }
 
+        public IEnumerable<EventModel> GetNextEvents(IPublishedContent eventsPage, IPublishedContent currentMember, int maxItems = 0)
+        {
+            EventSearchCriteria criteria = new EventSearchCriteria
+            {
+                FutureOnly = true,
+                MaxItems = maxItems
+            };
+
+            IEnumerable<EventModel> nextEvents = SearchEvents(eventsPage, currentMember, criteria).OrderBy(x => x.Date);
+            return nextEvents;
+        }
+
+        public void LogSentEventInvite(int eventId, UmbracoHelper helper)
+        {
+            IContent @event = _contentService.GetById(eventId);
+            @event.SetValue(EventPropertyNames.InviteSentDate, DateTime.Now);
+            _contentService.SaveAndPublishWithStatus(@event);
+        }
+
         public IEnumerable<EventModel> SearchEvents(IPublishedContent eventsPage, IPublishedContent member, EventSearchCriteria criteria)
         {
             IEnumerable<EventModel> events = eventsPage.Children
-                                                       .Select(x => new EventModel(x))
+                                                       .Select(x => new EventModel(x, ReplaceEventProperties))
                                                        .Where(x => member != null || x.Public);
 
             if (criteria.FutureOnly == true)
@@ -83,7 +105,7 @@ namespace ODK.Umbraco.Events
                 return;
             }
 
-            EventModel eventModel = new EventModel(@event);
+            EventModel eventModel = new EventModel(@event, ReplaceEventProperties);
             if (eventModel.Date == DateTime.MinValue)
             {
                 return;
@@ -95,6 +117,19 @@ namespace ODK.Umbraco.Events
                 MemberId = member.Id,
                 ResponseTypeId = (int)responseType
             });
+        }
+
+        private static string ReplaceEventProperties(string text, EventModel eventModel)
+        {
+            return text
+                .Replace("{{Name}}", eventModel.Name)
+                .Replace("{{eventUrl}}", eventModel.Url)
+                .Replace($"{{{{{EventPropertyNames.Address}}}}}", eventModel.Address)
+                .Replace($"{{{{{EventPropertyNames.Date}}}}}", eventModel.Date.ToString("dddd dd MMMM, yyyy"))
+                .Replace($"{{{{{EventPropertyNames.Description}}}}}", eventModel.Description)
+                .Replace($"{{{{{EventPropertyNames.Location}}}}}", eventModel.Location)
+                .Replace($"{{{{{EventPropertyNames.Time}}}}}", eventModel.Time);
+
         }
     }
 }

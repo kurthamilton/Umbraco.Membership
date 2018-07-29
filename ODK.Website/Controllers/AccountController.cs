@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using ODK.Umbraco;
 using ODK.Umbraco.Members;
 using ODK.Umbraco.Settings;
@@ -51,7 +52,7 @@ namespace ODK.Website.Controllers
 
             if (ModelState.IsValid)
             {
-                if (Umbraco.MembershipHelper.Login(model.Email, model.Password))
+                if (LogUserIn(model.Email, model.Password))
                 {
                     return RedirectToCurrentUmbracoPage();
                 }
@@ -89,7 +90,10 @@ namespace ODK.Website.Controllers
                 return OnError(model, result);
             }
 
-            Umbraco.MembershipHelper.Login(model.Email, model.Password);
+            if (!LogUserIn(model.Email, model.Password))
+            {
+                return OnError(model, new ServiceResult(false, "An error has occurred"));
+            }
 
             AddFeedback("Welcome!", true);
 
@@ -193,6 +197,17 @@ namespace ODK.Website.Controllers
             {
                 RedirectToChapter(CurrentMemberModel?.ChapterId);
             }
+        }
+
+        private bool LogUserIn(string email, string password, bool createPersistentCookie = true)
+        {
+            if (!Umbraco.MembershipHelper.Login(email, password))
+            {
+                return false;
+            }
+
+            FormsAuthentication.SetAuthCookie(email, createPersistentCookie);
+            return true;
         }
 
         private ActionResult RedirectToChapter(int? chapterId)

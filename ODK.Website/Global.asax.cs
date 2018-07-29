@@ -16,12 +16,18 @@ namespace ODK.Website
 
             OdkDependencyResolver dependencyResolver = new OdkDependencyResolver(typeof(OdkApplication).Assembly, typeof(UmbracoApplication).Assembly);
 
-            ServiceContext umbracoServices = ApplicationContext.Current.Services;
-            dependencyResolver.Register(umbracoServices.MediaService);
-            dependencyResolver.Register(umbracoServices.MemberService);
+            RegisterUmbracoServices(dependencyResolver);
 
             DependencyResolver.SetResolver(dependencyResolver.GetMvcDependencyResolver());
             GlobalConfiguration.Configuration.DependencyResolver = dependencyResolver.GetWebApiDependencyResolver();
+        }
+
+        private void RegisterUmbracoServices(OdkDependencyResolver dependencyResolver)
+        {
+            ServiceContext umbracoServices = ApplicationContext.Current.Services;
+            dependencyResolver.Register(umbracoServices.ContentService);
+            dependencyResolver.Register(umbracoServices.MediaService);
+            dependencyResolver.Register(umbracoServices.MemberService);
         }
     }
 }
