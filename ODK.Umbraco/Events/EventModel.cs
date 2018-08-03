@@ -17,7 +17,7 @@ namespace ODK.Umbraco.Events
         private readonly Lazy<string> _mapQuery;
         private readonly Lazy<string> _time;
 
-        public EventModel(IPublishedContent content, Func<string, EventModel, string> replaceMemberProperties)
+        public EventModel(IPublishedContent content, Func<string, EventModel, string> replaceMemberProperties = null)
         {
             Name = content.Name;
             Id = content.Id;
@@ -28,8 +28,8 @@ namespace ODK.Umbraco.Events
             _date = new Lazy<DateTime>(() => content.GetPropertyValue<DateTime>(EventPropertyNames.Date));
             _description = new Lazy<string>(() => content.GetPropertyValue<string>(EventPropertyNames.Description));
             _image = new Lazy<IPublishedContent>(() => content.GetPropertyValue<IPublishedContent>(EventPropertyNames.Image));
-            _inviteEmailBody = new Lazy<string>(() => replaceMemberProperties(content.Parent.GetPropertyValue<string>(EventPropertyNames.InviteEmailBody), this));
-            _inviteEmailSubject = new Lazy<string>(() => replaceMemberProperties(content.Parent.GetPropertyValue<string>(EventPropertyNames.InviteEmailSubject), this));
+            _inviteEmailBody = new Lazy<string>(() => replaceMemberProperties?.Invoke(content.Parent.GetPropertyValue<string>(EventPropertyNames.InviteEmailBody), this));
+            _inviteEmailSubject = new Lazy<string>(() => replaceMemberProperties?.Invoke(content.Parent.GetPropertyValue<string>(EventPropertyNames.InviteEmailSubject), this));
             _inviteSentDate = new Lazy<DateTime?>(() => content.GetPropertyValue<DateTime?>(EventPropertyNames.InviteSentDate));
             _location = new Lazy<string>(() => content.GetPropertyValue<string>(EventPropertyNames.Location));
             _mapQuery = new Lazy<string>(() => content.GetPropertyValue<string>(EventPropertyNames.MapQuery));

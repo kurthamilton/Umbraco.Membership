@@ -34,21 +34,21 @@
 
 @helper RenderUpcomingEvents()
 {
-    IPublishedContent eventsPage = Model.Content.GetPropertyValue<IPublishedContent>("eventsPage");
+IPublishedContent eventsPage = Model.Content.GetPropertyValue<IPublishedContent>("eventsPage");
 
-    int maxItems = Model.Content.GetPropertyValue<int>("numberOfNextEvents");
-    if (maxItems <= 0)
-    {
-        maxItems = 3;
-    }
+int maxItems = Model.Content.GetPropertyValue<int>("numberOfNextEvents");
+if (maxItems <= 0)
+{
+    maxItems = 3;
+}
 
-    EventModel[] nextEvents = EventService.GetNextEvents(eventsPage, CurrentMember, maxItems).ToArray();
-    if (nextEvents.Length == 0)
-    {
-        return;
-    }
+EventModel[] nextEvents = EventService.GetNextEvents(eventsPage, CurrentMember, maxItems).ToArray();
+if (nextEvents.Length == 0)
+{
+    return;
+}
 
-    Dictionary<int, EventResponseType> responses = CurrentMember != null ? EventService.GetMemberResponses(CurrentMember.Id, nextEvents.Select(x => x.Id)) : null;
+Dictionary<int, EventResponseType> responses = CurrentMember != null ? EventService.GetMemberResponses(CurrentMember.Id, nextEvents.Select(x => x.Id)) : null;
 
     <div class="card">
         <div class="card-header">
