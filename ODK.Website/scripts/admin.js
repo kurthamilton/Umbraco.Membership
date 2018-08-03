@@ -2,6 +2,7 @@
     $(function () {
         bindChosen();
         bindEventDropDown();
+        bindHtmlEditor();
     });
 
     function bindChosen() {
@@ -20,7 +21,9 @@
         var selectEvent = function () {
             var eventId = events.val();
             subject.val($('.js-event-invite-subject[data-event-id="' + eventId + '"]').val());
-            body.val($('.js-event-invite-body[data-event-id="' + eventId + '"]').val());
+
+            var html = $('.js-event-invite-body[data-event-id="' + eventId + '"]').val();
+            updateHtml(body, html);
 
             details.addClass('d-none');
             details.filter('[data-event-id="' + eventId + '"]').removeClass('d-none');
@@ -31,5 +34,16 @@
         });
 
         selectEvent();
+    }
+
+    function bindHtmlEditor() {
+        $('.js-html-editor').trumbowyg({
+            semantic: false,
+            svgPath: '/css/lib/trumbowyg.icons.svg'
+        });
+    }
+
+    function updateHtml(el, html) {
+        el.trumbowyg('html', html || '');
     }
 })(jQuery);
