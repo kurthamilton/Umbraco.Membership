@@ -1,0 +1,45 @@
+﻿@using ODK.Umbraco.Members;
+@inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
+@{
+    IEnumerable<MemberTypes> memberTypes = Enum.GetValues(typeof(MemberTypes)).Cast<MemberTypes>();
+    IEnumerable<SelectListItem> memberTypeOptions = memberTypes
+        .Where(x => x != MemberTypes.None)
+        .Select(x => new SelectListItem { Value = ((int)x).ToString(), Text = x.ToString(), Selected = x == MemberTypes.Trial || x == MemberTypes.Partial || x == MemberTypes.Full });
+
+    IReadOnlyCollection<MemberModel> members = MemberService.GetMembers(new MemberSearchCriteria(HomePage.Id), Umbraco);
+
+    string memberUrl = HomePage.GetPropertyValue<IPublishedContent>("personPage").Url + "?id={0}";
+}
+
+<div class="form-group">
+    <label for="member-list-memberTypes">Member types</label>
+    @Html.ListBox("memberTypes", memberTypeOptions,
+        new { id = "member-list-memberTypes", @class = "js-chosen form-control",
+              data_target ="#member-list", data_toggle="table-filter", data_field="member-type" })
+</div>
+
+<table id="member-list" class="table table-sm js-table-sortable tablesorter">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Subscription</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (MemberModel member in members)
+        {
+            bool subscriptionExpired = member.SubscriptionEndDate != null && member.SubscriptionEndDate.Value < DateTime.Today;
+            bool subscriptionExpiring = member.SubscriptionEndDate != null && (member.SubscriptionEndDate.Value - DateTime.Today).Days < 30;
+            string subscriptionCssClass = subscriptionExpired ? "bg-danger" : subscriptionExpiring ? "bg-warning" : null;
+
+            <tr data-member-type="@((int)member.Type)">
+                <td><a href="@string.Format(memberUrl, member.Id)" target="_blank">@member.FullName</a></td>
+                <td>@member.Type.ToString()</td>
+                <td class="@subscriptionCssClass">
+                    @(member.SubscriptionEndDate != null ? member.SubscriptionEndDate.Value.ToString("yyyy-MM-dd") : null)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

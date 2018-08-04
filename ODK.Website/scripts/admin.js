@@ -3,6 +3,8 @@
         bindChosen();
         bindEventDropDown();
         bindHtmlEditor();
+        bindTableFilters();
+        bindTableSort();
     });
 
     function bindChosen() {
@@ -39,7 +41,50 @@
     function bindHtmlEditor() {
         $('.js-html-editor').trumbowyg({
             semantic: false,
-            svgPath: '/css/lib/trumbowyg.icons.svg'
+            svgPath: '/css/lib/trumbowyg/trumbowyg.icons.svg'
+        });
+    }
+
+    function bindTableFilters() {
+        var filters = $('[data-toggle="table-filter"]');
+        filters.each(function () {
+            var filter = $(this);
+            var target = filter.data('target');
+            var rows = $('tbody tr', target);
+            filter.on('change', function () {
+                applyFilter(rows, filters, target);
+            });
+
+            applyFilter(rows, filters, target);
+        });
+
+        function applyFilter(rows, filters, target) {
+            rows.removeClass('d-none');
+
+            filters.filter('[data-target="' + target + '"]').each(function () {
+                var tableFilter = $(this);
+                var filterValue = tableFilter.val();
+                if (!Array.isArray(filterValue) && filterValue) {
+                    filterValue = [filterValue];
+                }
+
+                if (filterValue.length) {
+                    rows.each(function () {
+                        var row = $(this);
+                        var rowValue = row.data(tableFilter.data('field')).toString();
+                        if (filterValue.indexOf(rowValue) === -1) {
+                            row.addClass('d-none');
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    function bindTableSort() {
+        $(".js-table-sortable").tablesorter({
+            // sort on the first column
+            sortList: [[0, 0]]
         });
     }
 

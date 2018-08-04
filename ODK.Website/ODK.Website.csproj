@@ -280,17 +280,23 @@
     <Content Include="App_Plugins\Optimus\Views\Dialog.cshtml" />
     <Content Include="App_Plugins\Optimus\Views\Index.cshtml" />
     <Content Include="App_Plugins\Optimus\Views\Web.config" />
+    <Content Include="css\admin.css" />
     <Content Include="css\calendar.css" />
     <Content Include="css\home.css" />
-    <Content Include="css\lib\chosen.bootstrap.css" />
-    <Content Include="css\lib\trumbowyg.icons.svg" />
-    <Content Include="css\lib\trumbowyg.min.css" />
+    <Content Include="css\lib\chosen.bootstrap\chosen.bootstrap.css" />
+    <Content Include="css\lib\jquery.tablesorter\asc.gif" />
+    <Content Include="css\lib\jquery.tablesorter\bg.gif" />
+    <Content Include="css\lib\jquery.tablesorter\desc.gif" />
+    <Content Include="css\lib\jquery.tablesorter\tablesorter.css" />
+    <Content Include="css\lib\trumbowyg\trumbowyg.icons.svg" />
+    <Content Include="css\lib\trumbowyg\trumbowyg.min.css" />
     <Content Include="css\style.css" />
     <Content Include="css\theme-base.css" />
     <Content Include="css\theme-oxford.css" />
     <Content Include="Global.asax" />
     <Content Include="scripts\admin.js" />
     <Content Include="scripts\calendar.js" />
+    <Content Include="scripts\lib\jquery.tablesorter.min.js" />
     <Content Include="scripts\lib\trumbowyg.min.js" />
     <Content Include="scripts\Payments\stripe.js" />
     <Content Include="scripts\script.js" />
@@ -342,6 +348,7 @@
     <Content Include="Views\Partials\PaymentButton.cshtml" />
     <Content Include="Views\Partials\Admin\_Events.cshtml" />
     <Content Include="Views\Partials\Admin\_ImportMemberPictures.cshtml" />
+    <Content Include="Views\Partials\Admin\_Members.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

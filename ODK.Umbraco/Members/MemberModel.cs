@@ -176,7 +176,7 @@ namespace ODK.Umbraco.Members
         [DisplayName("End date")]
         public DateTime? SubscriptionEndDate
         {
-            get => _subscriptionEndDate.Value;
+            get => _subscriptionEndDate.Value != null && _subscriptionEndDate.Value > DateTime.MinValue ? _subscriptionEndDate.Value : null;
             set => _subscriptionEndDate.Value = value;
         }
 
