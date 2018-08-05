@@ -96,6 +96,7 @@
     <Compile Include="Members\LoginModel.cs" />
     <Compile Include="Members\MediaExtensions.cs" />
     <Compile Include="Members\MemberExtensions.cs" />
+    <Compile Include="Members\MemberGroupModel.cs" />
     <Compile Include="Members\MemberModelTemplate.cs" />
     <Compile Include="Members\MemberSearchCriteria.cs" />
     <Compile Include="Members\MemberTypes.cs" />

@@ -15,6 +15,9 @@
                     <a class="nav-link" data-toggle="pill" href="#members" role="tab" aria-controls="members" aria-selected="true">
                         Members
                     </a>
+                    <a class="nav-link" data-toggle="pill" href="#member-groups" role="tab" aria-controls="member-groups" aria-selected="true">
+                        Member Groups
+                    </a>
                     <a class="nav-link" data-toggle="pill" href="#import-pictures" role="tab" aria-controls="import-pictures" aria-selected="true">
                         Import pictures
                     </a>
@@ -38,6 +41,11 @@
                     @* Members *@
                     <div class="tab-pane fade" id="members" role="tabpanel">
                         @Html.Partial("Admin/_Members")
+                    </div>
+
+                    @* Member Groups *@
+                    <div class="tab-pane fade" id="member-groups" role="tabpanel">
+                        @Html.Partial("Admin/_MemberGroups")
                     </div>
 
                     @* Import member pictures *@

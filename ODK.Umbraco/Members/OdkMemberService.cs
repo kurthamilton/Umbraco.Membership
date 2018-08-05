@@ -2,24 +2,46 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using ODK.Data.Members;
 using ODK.Umbraco.Content;
 using ODK.Umbraco.Emails;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
 using Umbraco.Web;
+using MemberGroup = ODK.Data.Members.MemberGroup;
 
 namespace ODK.Umbraco.Members
 {
     public class OdkMemberService
     {
         private readonly OdkEmailService _emailService = new OdkEmailService();
+        private readonly MembersDataService _membersDataService;
         private readonly IMediaService _umbracoMediaService;
         private readonly IMemberService _umbracoMemberService;
 
-        public OdkMemberService(IMediaService umbracoMediaService, IMemberService umbracoMemberService)
+        public OdkMemberService(IMediaService umbracoMediaService, IMemberService umbracoMemberService, MembersDataService membersDataService)
         {
+            _membersDataService = membersDataService;
             _umbracoMediaService = umbracoMediaService;
             _umbracoMemberService = umbracoMemberService;
+        }
+
+        public ServiceResult AddMemberGroup(int chapterId, string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return new ServiceResult(nameof(name), "Group cannot be empty");
+            }
+
+            IReadOnlyCollection<MemberGroup> memberGroups = _membersDataService.GetMemberGroups(chapterId);
+            if (memberGroups.Any(x => x.Name.Equals(name)))
+            {
+                return new ServiceResult(nameof(name), $"Group {name} already exists");
+            }
+
+            _membersDataService.AddMemberGroup(chapterId, name);
+
+            return new ServiceResult(true);
         }
 
         public ServiceResult ChangePassword(int id, ChangePasswordModel model)
@@ -35,6 +57,13 @@ namespace ODK.Umbraco.Members
             return new ServiceResult(true);
         }
 
+        public ServiceResult DeleteMemberGroup(int groupId)
+        {
+            _membersDataService.DeleteMemberGroup(groupId);
+
+            return new ServiceResult(true);
+        }
+
         public MemberModel GetMember(int id, UmbracoHelper helper)
         {
             if (!IsAllowed(helper))
@@ -44,6 +73,18 @@ namespace ODK.Umbraco.Members
 
             IPublishedContent member = helper.TypedMember(id);
             return GetMember(member);
+        }
+
+        public IDictionary<int, IReadOnlyCollection<MemberGroupModel>> GetMemberGroupMembers(int chapterId)
+        {
+            return _membersDataService.GetMemberGroupMembers(chapterId).ToDictionary(
+                x => x.Key,
+                x => (IReadOnlyCollection<MemberGroupModel>)(x.Value.Select(v => new MemberGroupModel(v.GroupId, v.Name)).ToArray()));
+        }
+
+        public IReadOnlyCollection<MemberGroupModel> GetMemberGroups(int chapterId)
+        {
+            return _membersDataService.GetMemberGroups(chapterId).Select(x => new MemberGroupModel(x.GroupId, x.Name)).ToArray();
         }
 
         public IReadOnlyCollection<MemberModel> GetMembers(MemberSearchCriteria criteria, UmbracoHelper helper)
@@ -149,6 +190,27 @@ namespace ODK.Umbraco.Members
             UpdateMemberProperties(member, model, helper, picture);
 
             _umbracoMemberService.Save(member);
+
+            return new ServiceResult(true);
+        }
+
+        public ServiceResult UpdateMemberGroups(int memberId, IReadOnlyCollection<int> groupIds)
+        {
+            IReadOnlyCollection<MemberGroup> existing = _membersDataService.GetMemberGroupsForMember(memberId);
+
+            groupIds = groupIds ?? new int[] { };
+
+            // add new
+            foreach (int groupId in groupIds.Where(x => !existing.Any(g => g.GroupId == x)))
+            {
+                _membersDataService.AddMemberToGroup(memberId, groupId);
+            }
+
+            // remove old
+            foreach (MemberGroup group in existing.Where(x => !groupIds.Any(g => g == x.GroupId)))
+            {
+                _membersDataService.RemoveMemberFromGroup(memberId, group.GroupId);
+            }
 
             return new ServiceResult(true);
         }

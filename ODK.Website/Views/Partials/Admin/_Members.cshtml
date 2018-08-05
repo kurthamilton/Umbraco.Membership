@@ -6,16 +6,30 @@
         .Where(x => x != MemberTypes.None)
         .Select(x => new SelectListItem { Value = ((int)x).ToString(), Text = x.ToString(), Selected = x == MemberTypes.Trial || x == MemberTypes.Partial || x == MemberTypes.Full });
 
+    IReadOnlyCollection<MemberGroupModel> memberGroups = MemberService.GetMemberGroups(HomePage.Id);
+    IEnumerable<SelectListItem> memberGroupOptions = memberGroups.Select(x => new SelectListItem { Value = x.GroupId.ToString(), Text = x.Name }).OrderBy(x => x.Text);
+
+    IDictionary<int, IReadOnlyCollection<MemberGroupModel>> memberGroupMembers = MemberService.GetMemberGroupMembers(HomePage.Id);
+
     IReadOnlyCollection<MemberModel> members = MemberService.GetMembers(new MemberSearchCriteria(HomePage.Id), Umbraco);
 
     string memberUrl = HomePage.GetPropertyValue<IPublishedContent>("personPage").Url + "?id={0}";
 }
 
+<h2>Members</h2>
+
 <div class="form-group">
-    <label for="member-list-memberTypes">Member types</label>
+    <label for="member-list-member-types">Type</label>
     @Html.ListBox("memberTypes", memberTypeOptions,
-        new { id = "member-list-memberTypes", @class = "js-chosen form-control",
+        new { id = "member-list-member-types", @class = "js-chosen form-control",
               data_target ="#member-list", data_toggle="table-filter", data_field="member-type" })
+</div>
+
+<div class="form-group">
+    <label for="member-list-member-groups">Group</label>
+    @Html.ListBox("memberGroups", memberGroupOptions,
+        new { id = "member-list-member-groups", @class = "js-chosen form-control",
+              data_target ="#member-list", data_toggle="table-filter", data_field="member-groups" })
 </div>
 
 <table id="member-list" class="table table-sm js-table-sortable tablesorter">
@@ -24,6 +38,7 @@
             <th>Name</th>
             <th>Type</th>
             <th>Subscription</th>
+            <th>Groups</th>
         </tr>
     </thead>
     <tbody>
@@ -32,12 +47,21 @@
             bool subscriptionExpired = member.SubscriptionEndDate != null && member.SubscriptionEndDate.Value < DateTime.Today;
             bool subscriptionExpiring = member.SubscriptionEndDate != null && (member.SubscriptionEndDate.Value - DateTime.Today).Days < 30;
             string subscriptionCssClass = subscriptionExpired ? "bg-danger" : subscriptionExpiring ? "bg-warning" : null;
+            var groups = memberGroupMembers.ContainsKey(member.Id) ? memberGroupMembers[member.Id] : new MemberGroupModel[] { };
+            var memberOptions = memberGroups.Select(x => new SelectListItem { Value = x.GroupId.ToString(), Text = x.Name, Selected = groups.Any(g => g.GroupId == x.GroupId) });
 
-            <tr data-member-type="@((int)member.Type)">
+            <tr data-member-type="@((int)member.Type)" data-member-groups="@string.Join(",", groups.Select(x => x.GroupId))">
                 <td><a href="@string.Format(memberUrl, member.Id)" target="_blank">@member.FullName</a></td>
                 <td>@member.Type.ToString()</td>
                 <td class="@subscriptionCssClass">
                     @(member.SubscriptionEndDate != null ? member.SubscriptionEndDate.Value.ToString("yyyy-MM-dd") : null)
+                </td>
+                <td>
+                    @using (Html.BeginUmbracoForm("UpdateMemberGroups", "Admin", FormMethod.Post))
+                    {
+                        <input type="hidden" name="memberId" value="@member.Id"/>
+                        @Html.ListBox("groupIds", memberOptions, new { @class = "js-chosen form-control js-submit-on-change" })
+                    }
                 </td>
             </tr>
         }

@@ -2,7 +2,9 @@
     $(function () {
         bindChosen();
         bindEventDropDown();
+        bindFormSubmit();
         bindHtmlEditor();
+        bindNav();
         bindTableFilters();
         bindTableSort();
     });
@@ -29,7 +31,7 @@
 
             details.addClass('d-none');
             details.filter('[data-event-id="' + eventId + '"]').removeClass('d-none');
-        }
+        };
 
         events.on('change', function () {
             selectEvent();
@@ -38,11 +40,39 @@
         selectEvent();
     }
 
+    function bindFormSubmit() {
+        $('.js-submit-on-change').on('change', function () {
+            var form = $(this).closest('form');
+            $.ajax({
+                data: form.serialize(),
+                method: 'POST',
+                url: form.attr('action'),
+                success: function () {
+                }
+            });
+        });
+    }
+
     function bindHtmlEditor() {
         $('.js-html-editor').trumbowyg({
             semantic: false,
             svgPath: '/css/lib/trumbowyg/trumbowyg.icons.svg'
         });
+    }
+
+    function bindNav() {
+        // add current nav item to url
+        $('.nav-link[data-toggle="pill"]').on('click', function () {
+            window.location.hash = $(this).attr('href');
+        });
+
+        // set active nav item from url
+        var link = $('.nav-link[data-toggle="pill"][href="' + window.location.hash + '"]');
+        if (link.length === 0) {
+            return;
+        }
+
+        link.tab('show');
     }
 
     function bindTableFilters() {
@@ -59,23 +89,33 @@
         });
 
         function applyFilter(rows, filters, target) {
+            filters = filters.filter('[data-target="' + target + '"]');
+
             rows.removeClass('d-none');
+            rows.each(function () {
+                var row = $(this);
+                var show = true;
 
-            filters.filter('[data-target="' + target + '"]').each(function () {
-                var tableFilter = $(this);
-                var filterValue = tableFilter.val();
-                if (!Array.isArray(filterValue) && filterValue) {
-                    filterValue = [filterValue];
-                }
+                filters.each(function () {
+                    var tableFilter = $(this);
+                    var filterValues = tableFilter.val();
+                    if (!Array.isArray(filterValues) && filterValues) {
+                        filterValues = [filterValues];
+                    }
 
-                if (filterValue.length) {
-                    rows.each(function () {
-                        var row = $(this);
-                        var rowValue = row.data(tableFilter.data('field')).toString();
-                        if (filterValue.indexOf(rowValue) === -1) {
-                            row.addClass('d-none');
+                    if (filterValues.length) {
+                        var rowValues = row.data(tableFilter.data('field')).toString().split(',');
+                        if (show) {
+                            var intersect = filterValues.filter(function (value) {
+                                return rowValues.indexOf(value.toString()) !== -1;
+                            });
+                            show = !!intersect.length;
                         }
-                    });
+                    }
+                });
+
+                if (show === false) {
+                    row.addClass('d-none');
                 }
             });
         }

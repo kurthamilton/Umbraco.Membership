@@ -4,6 +4,7 @@ using Autofac;
 using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using ODK.Data.Events;
+using ODK.Data.Members;
 using ODK.Data.Payments;
 using ODK.Payments.Stripe;
 using ODK.Umbraco.Emails;
@@ -67,6 +68,7 @@ namespace ODK.Infrastructure
         {
             string connectionString = ConfigurationManager.ConnectionStrings["umbracoDbDSN"].ConnectionString;
             _builder.RegisterInstance(new EventsDataService(connectionString)).SingleInstance();
+            _builder.RegisterInstance(new MembersDataService(connectionString)).SingleInstance();
             _builder.RegisterInstance(new PaymentsDataService(connectionString)).SingleInstance();
         }
     }

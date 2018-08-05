@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using ODK.Umbraco.Emails;
 using ODK.Umbraco.Events;
@@ -21,6 +22,45 @@ namespace ODK.Website.Controllers
             _emailService = emailService;
             _eventService = eventService;
             _memberService = memberService;
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddMemberGroup(string name)
+        {
+            if (CurrentMemberModel.AdminUserId == null)
+            {
+                return RedirectToHome();
+            }
+
+            int chapterId = Umbraco.AssignedContentItem.HomePage().Id;
+            _memberService.AddMemberGroup(chapterId, name);
+
+            return RedirectToCurrentUmbracoPage();
+        }
+
+        [HttpPost]
+        public void UpdateMemberGroups(int memberId, IEnumerable<int> groupIds)
+        {
+            if (CurrentMemberModel.AdminUserId == null)
+            {
+                return;
+            }
+
+            _memberService.UpdateMemberGroups(memberId, groupIds?.ToArray());
+        }
+
+        [HttpPost]
+        public ActionResult DeleteMemberGroup(int groupId)
+        {
+            if (CurrentMemberModel.AdminUserId == null)
+            {
+                return RedirectToHome();
+            }
+
+            _memberService.DeleteMemberGroup(groupId);
+
+            return RedirectToCurrentUmbracoPage();
         }
 
         [HttpPost]
