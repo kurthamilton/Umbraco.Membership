@@ -350,6 +350,8 @@
     <Content Include="Views\Partials\Admin\_ImportMemberPictures.cshtml" />
     <Content Include="Views\Partials\Admin\_Members.cshtml" />
     <Content Include="Views\Partials\Admin\_MemberGroups.cshtml" />
+    <Content Include="Views\Partials\Admin\_TestEmail.cshtml" />
+    <Content Include="Views\Partials\Admin\_Email.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

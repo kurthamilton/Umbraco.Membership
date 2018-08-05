@@ -1,5 +1,6 @@
 ﻿@using ODK.Umbraco.Events;
 @using ODK.Umbraco.Members;
+@using ODK.Website.Models;
 @inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
     IEnumerable<MemberTypes> memberTypes = Enum.GetValues(typeof(MemberTypes)).Cast<MemberTypes>();
@@ -46,16 +47,7 @@
         @Html.ListBox("memberTypes", memberTypeOptions, new { id = "event-invite-memberTypes", @class = "js-chosen form-control" })
     </div>
 
-    <div class="form-group">
-        <label for="js-event-invite-subject">Subject</label>
-        <input type="text" id="js-event-invite-subject" name="subject" class="form-control" value="" />
-    </div>
-
-    <div class="form-group">
-        <label for="js-event-invite-body">Body</label>
-        <textarea id="js-event-invite-body" name="body" class="form-control js-html-editor" rows="5">
-        </textarea>
-    </div>
+    @Html.Partial("Admin/_Email", new EmailViewModel())
 
     <div>
         <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to send this invite?');">Send</button>

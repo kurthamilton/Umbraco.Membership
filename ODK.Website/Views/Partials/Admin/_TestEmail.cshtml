@@ -1,0 +1,14 @@
+﻿@using ODK.Website.Models;
+
+<h2>Send test email</h2>
+@using (Html.BeginUmbracoForm("SendTestEmail", "Admin", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label class="form-control-label" for="test-email-to">To</label>
+        <input type="text" class="form-control" id="test-email-to" name="to" />
+    </div>
+
+    @Html.Partial("Admin/_Email", new EmailViewModel())
+}

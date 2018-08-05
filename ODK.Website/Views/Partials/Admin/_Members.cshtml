@@ -1,4 +1,5 @@
 ﻿@using ODK.Umbraco.Members;
+@using ODK.Website.Models;
 @inherits ODK.Umbraco.Web.Mvc.OdkUmbracoTemplatePage
 @{
     IEnumerable<MemberTypes> memberTypes = Enum.GetValues(typeof(MemberTypes)).Cast<MemberTypes>();
@@ -32,7 +33,7 @@
               data_target ="#member-list", data_toggle="table-filter", data_field="member-groups" })
 </div>
 
-<table id="member-list" class="table table-sm js-table-sortable tablesorter">
+<table id="member-list" class="table table-sm js-table-sortable tablesorter js-members-table">
     <thead>
         <tr>
             <th>Name</th>
@@ -50,7 +51,7 @@
             var groups = memberGroupMembers.ContainsKey(member.Id) ? memberGroupMembers[member.Id] : new MemberGroupModel[] { };
             var memberOptions = memberGroups.Select(x => new SelectListItem { Value = x.GroupId.ToString(), Text = x.Name, Selected = groups.Any(g => g.GroupId == x.GroupId) });
 
-            <tr data-member-type="@((int)member.Type)" data-member-groups="@string.Join(",", groups.Select(x => x.GroupId))">
+            <tr data-member-id="@member.Id" data-member-type="@((int)member.Type)" data-member-groups="@string.Join(",", groups.Select(x => x.GroupId))">
                 <td><a href="@string.Format(memberUrl, member.Id)" target="_blank">@member.FullName</a></td>
                 <td>@member.Type.ToString()</td>
                 <td class="@subscriptionCssClass">
@@ -59,7 +60,7 @@
                 <td>
                     @using (Html.BeginUmbracoForm("UpdateMemberGroups", "Admin", FormMethod.Post))
                     {
-                        <input type="hidden" name="memberId" value="@member.Id"/>
+                        <input type="hidden" name="memberId" value="@member.Id" />
                         @Html.ListBox("groupIds", memberOptions, new { @class = "js-chosen form-control js-submit-on-change" })
                     }
                 </td>
@@ -67,3 +68,14 @@
         }
     </tbody>
 </table>
+
+<h3>Send Email</h3>
+<p>Send an email to the members visible in the table above</p>
+@using (Html.BeginUmbracoForm("SendMemberEmail", "Admin", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" name="memberIdString" class="js-member-ids" />
+
+    @Html.Partial("Admin/_Email", new EmailViewModel())
+}

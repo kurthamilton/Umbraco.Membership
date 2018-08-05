@@ -40,17 +40,6 @@ namespace ODK.Website.Controllers
         }
 
         [HttpPost]
-        public void UpdateMemberGroups(int memberId, IEnumerable<int> groupIds)
-        {
-            if (CurrentMemberModel.AdminUserId == null)
-            {
-                return;
-            }
-
-            _memberService.UpdateMemberGroups(memberId, groupIds?.ToArray());
-        }
-
-        [HttpPost]
         public ActionResult DeleteMemberGroup(int groupId)
         {
             if (CurrentMemberModel.AdminUserId == null)
@@ -87,6 +76,28 @@ namespace ODK.Website.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public ActionResult SendMemberEmail(string memberIdString, EmailViewModel email)
+        {
+            if (CurrentMemberModel.AdminUserId == null)
+            {
+                return RedirectToHome();
+            }
+
+            IPublishedContent chapter = Umbraco.AssignedContentItem.HomePage();
+
+            int[] memberIds = memberIdString.Split(',').Select(x => int.Parse(x)).ToArray();
+            IReadOnlyCollection<MemberModel> members = _memberService.GetMembers(new MemberSearchCriteria(chapter.Id), Umbraco);
+            members = members.Where(x => memberIds.Contains(x.Id)).ToArray();
+
+            _memberService.SendMemberEmails(members, email.Subject, email.Body);
+
+            AddFeedback($"{members.Count} emails sent", true);
+
+            return RedirectToCurrentUmbracoPage();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult SendTestEmail(string to, EmailViewModel email)
         {
             if (CurrentMemberModel.AdminUserId == null)
@@ -99,6 +110,17 @@ namespace ODK.Website.Controllers
             _emailService.SendEmail(chapter, email.Subject, email.Body, new[] { to });
 
             return RedirectToCurrentUmbracoPage();
+        }
+
+        [HttpPost]
+        public void UpdateMemberGroups(int memberId, IEnumerable<int> groupIds)
+        {
+            if (CurrentMemberModel.AdminUserId == null)
+            {
+                return;
+            }
+
+            _memberService.UpdateMemberGroups(memberId, groupIds?.ToArray());
         }
 
         private ActionResult RedirectToHome()

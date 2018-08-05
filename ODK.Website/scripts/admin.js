@@ -4,6 +4,7 @@
         bindEventDropDown();
         bindFormSubmit();
         bindHtmlEditor();
+        bindMembersTable();
         bindNav();
         bindTableFilters();
         bindTableSort();
@@ -60,6 +61,19 @@
         });
     }
 
+    function bindMembersTable() {
+        var memberIdInputs = $('.js-member-ids');
+        var table = $('.js-members-table');
+        table.on('filtered', function (e) {
+            var rows = e.rows;
+            var memberIdString = rows.map(function (row) {
+                return row.data('member-id');
+            }).join();
+
+            memberIdInputs.val(memberIdString);
+        });
+    }
+
     function bindNav() {
         // add current nav item to url
         $('.nav-link[data-toggle="pill"]').on('click', function () {
@@ -92,6 +106,9 @@
             filters = filters.filter('[data-target="' + target + '"]');
 
             rows.removeClass('d-none');
+
+            var visibleRows = [];
+
             rows.each(function () {
                 var row = $(this);
                 var show = true;
@@ -116,7 +133,14 @@
 
                 if (show === false) {
                     row.addClass('d-none');
+                } else {
+                    visibleRows.push(row);
                 }
+            });
+
+            rows.closest('table').trigger({
+                rows: visibleRows,
+                type: 'filtered'
             });
         }
     }
