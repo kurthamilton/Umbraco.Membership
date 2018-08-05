@@ -10,7 +10,7 @@
 
     IPublishedContent logo = HomePage.GetHomePageValue<IPublishedContent>("siteLogo");
 
-    IPublishedContent loginPage = member == null ? homePage.GetHomePageValue<IPublishedContent>("loginPage") : null;
+    IPublishedContent loginPage = member == null ? LoginPage : null;
     string loginUrl = loginPage != null ? loginPage.Url : null;
     string loginButtonText = member == null ? homePage.GetHomePageValue<string>("loginButtonText") : null;
 

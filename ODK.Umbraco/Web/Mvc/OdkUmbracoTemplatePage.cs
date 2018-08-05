@@ -21,12 +21,14 @@ namespace ODK.Umbraco.Web.Mvc
         private readonly RequestCacheItem<IPublishedContent> _currentMember;
         private readonly RequestCacheItem<MemberModel> _currentMemberModel;
         private readonly RequestCacheItem<IPublishedContent> _homePage;
+        private readonly RequestCacheItem<IPublishedContent> _loginPage;
 
         protected OdkUmbracoTemplatePage()
         {
             _currentMember = new RequestCacheItem<IPublishedContent>(nameof(_currentMember), () => Umbraco.MembershipHelper.GetCurrentMember());
             _currentMemberModel = new RequestCacheItem<MemberModel>(nameof(_currentMemberModel), () => new MemberModel(CurrentMember));
             _homePage = new RequestCacheItem<IPublishedContent>(nameof(_homePage), () => Model.Content.HomePage());
+            _loginPage = new RequestCacheItem<IPublishedContent>(nameof(_loginPage), () => Model.Content.GetHomePageValue<IPublishedContent>("loginPage"));
 
             IDependencyResolver dependencyResolver = DependencyResolver.Current;
             _eventService = new Lazy<EventService>(() => dependencyResolver.GetService<EventService>());
@@ -44,7 +46,7 @@ namespace ODK.Umbraco.Web.Mvc
             if (Model.Content.IsRestricted(CurrentMember))
             {
                 IsRestricted = true;
-                Response.Redirect(Model.Content.Parent.Url);
+                Response.Redirect($"{_loginPage.Value.Url}?returnUrl={Model.Content.Url}");
                 return;
             }
 
@@ -62,6 +64,8 @@ namespace ODK.Umbraco.Web.Mvc
         public EventService EventService => _eventService.Value;
 
         public IPublishedContent HomePage => _homePage.Value;
+
+        public IPublishedContent LoginPage => _loginPage.Value;
 
         public OdkMemberService MemberService => _memberService.Value;
 
