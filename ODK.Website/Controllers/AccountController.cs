@@ -46,7 +46,7 @@ namespace ODK.Website.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginModel model)
+        public ActionResult Login(LoginModel model, string returnUrl)
         {
             HandleLoggedOnUser();
 
@@ -54,7 +54,15 @@ namespace ODK.Website.Controllers
             {
                 if (LogUserIn(model.Email, model.Password))
                 {
-                    return RedirectToCurrentUmbracoPage();
+                    if (!string.IsNullOrEmpty(returnUrl))
+                    {
+                        return Redirect(returnUrl);
+                    }
+
+                    IPublishedContent memberContent = Umbraco.MembershipHelper.GetByEmail(model.Email);
+                    MemberModel member = new MemberModel(memberContent);
+
+                    return RedirectToChapter(member.Chapter.Id);
                 }
             }
 

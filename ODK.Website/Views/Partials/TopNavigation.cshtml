@@ -10,11 +10,13 @@
 
     IPublishedContent logo = HomePage.GetHomePageValue<IPublishedContent>("siteLogo");
 
+    IPublishedContent loginPage = member == null ? homePage.GetHomePageValue<IPublishedContent>("loginPage") : null;
+    string loginUrl = loginPage != null ? loginPage.Url : null;
     string loginButtonText = member == null ? homePage.GetHomePageValue<string>("loginButtonText") : null;
-    string registerButtonText = member == null ? homePage.GetHomePageValue<string>("registerButtonText") : null;
 
     IPublishedContent registerPage = member == null ? homePage.GetHomePageValue<IPublishedContent>("registerPage") : null;
     string registerUrl = registerPage != null ? registerPage.Url : null;
+    string registerButtonText = member == null ? homePage.GetHomePageValue<string>("registerButtonText") : null;
 
     IPublishedContent profilePage = member != null ? memberModel.Chapter.GetPropertyValue<IPublishedContent>("profilePage") : null;
     string profileUrl = profilePage != null ? profilePage.Url : null;
@@ -60,7 +62,7 @@
         <div class="account-links align-middle-x">
             @if (member == null)
             {
-                <button class="btn btn-primary" data-toggle="modal" data-target="#login-modal">@loginButtonText</button>
+                <a class="btn btn-primary" href="@loginUrl">@loginButtonText</a>
 
                 if (!string.IsNullOrEmpty(registerUrl))
                 {

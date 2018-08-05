@@ -331,7 +331,6 @@
     <Content Include="Views\Partials\Footer.cshtml" />
     <Content Include="Views\Event.cshtml" />
     <Content Include="Views\Events.cshtml" />
-    <Content Include="Views\Partials\Login.cshtml" />
     <Content Include="Views\Chapter.cshtml" />
     <Content Include="Views\Partials\MemberForm.cshtml" />
     <Content Include="Views\Partials\Tooltip.cshtml" />
@@ -352,6 +351,7 @@
     <Content Include="Views\Partials\Admin\_MemberGroups.cshtml" />
     <Content Include="Views\Partials\Admin\_TestEmail.cshtml" />
     <Content Include="Views\Partials\Admin\_Email.cshtml" />
+    <Content Include="Views\Login.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
