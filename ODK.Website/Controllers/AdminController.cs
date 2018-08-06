@@ -33,7 +33,7 @@ namespace ODK.Website.Controllers
                 return RedirectToHome();
             }
 
-            int chapterId = Umbraco.AssignedContentItem.HomePage().Id;
+            int chapterId = HomePage.Id;
             _memberService.AddMemberGroup(chapterId, name);
 
             return RedirectToCurrentUmbracoPage();
@@ -60,10 +60,8 @@ namespace ODK.Website.Controllers
             {
                 return RedirectToHome();
             }
-
-            IPublishedContent chapter = Umbraco.AssignedContentItem.HomePage();
-
-            MemberSearchCriteria memberSearchCriteria = new MemberSearchCriteria(chapter.Id) { Types = memberTypes };
+            
+            MemberSearchCriteria memberSearchCriteria = new MemberSearchCriteria(HomePage.Id) { Types = memberTypes };
             IReadOnlyCollection<MemberModel> members = _memberService.GetMembers(memberSearchCriteria, Umbraco);
 
             _memberService.SendMemberEmails(members, email.Subject, email.Body);
@@ -83,7 +81,7 @@ namespace ODK.Website.Controllers
                 return RedirectToHome();
             }
 
-            IPublishedContent chapter = Umbraco.AssignedContentItem.HomePage();
+            IPublishedContent chapter = HomePage;
 
             int[] memberIds = memberIdString.Split(',').Select(x => int.Parse(x)).ToArray();
             IReadOnlyCollection<MemberModel> members = _memberService.GetMembers(new MemberSearchCriteria(chapter.Id), Umbraco);
@@ -104,10 +102,8 @@ namespace ODK.Website.Controllers
             {
                 return RedirectToHome();
             }
-
-            IPublishedContent chapter = Umbraco.AssignedContentItem.HomePage();
-
-            _emailService.SendEmail(chapter, email.Subject, email.Body, new[] { to });
+            
+            _emailService.SendEmail(HomePage, email.Subject, email.Body, new[] { to });
 
             return RedirectToCurrentUmbracoPage();
         }

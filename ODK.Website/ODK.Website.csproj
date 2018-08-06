@@ -352,6 +352,7 @@
     <Content Include="Views\Partials\Admin\_TestEmail.cshtml" />
     <Content Include="Views\Partials\Admin\_Email.cshtml" />
     <Content Include="Views\Login.cshtml" />
+    <Content Include="Views\ResetPassword.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -396,6 +397,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\EmailViewModel.cs" />
+    <Compile Include="Models\PasswordResetViewModel.cs" />
+    <Compile Include="Models\RequestPasswordResetViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\EventSidebarViewModel.cs" />
     <Compile Include="Models\Payments\PaymentStatus.cs" />

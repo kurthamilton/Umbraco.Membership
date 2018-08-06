@@ -9,7 +9,9 @@ using ODK.Umbraco;
 using ODK.Umbraco.Members;
 using ODK.Umbraco.Settings;
 using ODK.Umbraco.Web.Mvc;
+using ODK.Website.Models;
 using Umbraco.Core.Models;
+using Umbraco.Web;
 
 namespace ODK.Website.Controllers
 {
@@ -89,7 +91,7 @@ namespace ODK.Website.Controllers
                 return OnError(model, null);
             }
 
-            IPublishedContent chapter = Umbraco.AssignedContentItem.HomePage();
+            IPublishedContent chapter = HomePage;
             model.SetChapter(chapter);
 
             ServiceResult result = _memberService.Register(model, Umbraco);
@@ -110,12 +112,47 @@ namespace ODK.Website.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public ActionResult RequestPasswordReset(RequestPasswordResetViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToCurrentUmbracoPage();
+            }
+
+            IPublishedContent homePage = HomePage;
+            string url = homePage.GetPropertyValue<IPublishedContent>("resetPasswordPage").Url;
+
+            _memberService.CreatePasswordRequest(viewModel.Email, $"{url}?token={{token}}", Umbraco);
+
+            AddFeedback("An email containing password reset instructions has been sent", true);
+
+            return RedirectToCurrentUmbracoPage();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ResetPassword(PasswordResetViewModel viewModel, string token)
+        {
+            if (!ModelState.IsValid)
+            {
+                return CurrentUmbracoPage();
+            }
+
+            ServiceResult result = _memberService.ResetPassword(viewModel.Password, token);
+
+            AddFeedback(result.Success ? "Your password has been reset" : result.ErrorMessage, result.Success);
+
+            IPublishedContent loginPage = HomePage.GetPropertyValue<IPublishedContent>("loginPage");
+            return Redirect(loginPage.Url);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Update(UpdateMemberModel model)
         {
             HandleLoggedOffUser();
 
-            IPublishedContent chapter = Umbraco.AssignedContentItem.HomePage();
-            model.SetChapter(chapter);
+            model.SetChapter(HomePage);
 
             ServiceResult result = _memberService.Update(CurrentMember.Id, model, Umbraco);
             if (!result.Success)
@@ -140,7 +177,7 @@ namespace ODK.Website.Controllers
             List<string> notFound = new List<string>();
             List<string> updated = new List<string>();
 
-            IPublishedContent chapter = Umbraco.AssignedContentItem.HomePage();
+            IPublishedContent chapter = HomePage;
 
             IReadOnlyCollection<MemberModel> memberModels = _memberService.GetMembers(new MemberSearchCriteria(chapter.Id), Umbraco);
             foreach (HttpPostedFileBase file in files)

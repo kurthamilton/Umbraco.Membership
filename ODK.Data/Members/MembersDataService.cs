@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace ODK.Data.Members
     {
         private const string MemberGroupsTableName = "dbo.odkMemberGroups";
         private const string MemberGroupMembersTableName = "dbo.odkMemberGroupMembers";
+        private const string PasswordResetRequestsTableName = "dbo.odkPasswordResetRequests";
 
         public MembersDataService(string connectionString)
             : base(connectionString)
@@ -45,6 +47,23 @@ namespace ODK.Data.Members
             }
         }
 
+        public void AddPasswordResetRequest(int memberId, DateTime created, DateTime expires, string token)
+        {
+            using (SqlConnection connection = OpenConnection())
+            {
+                string sql = $" INSERT INTO {PasswordResetRequestsTableName} (memberId, created, expires, token) " +
+                             $" VALUES (@memberId, @created, @expires, @token)";
+                using (SqlCommand cmd = new SqlCommand(sql, connection))
+                {
+                    cmd.Parameters.Add("@memberId", SqlDbType.Int).Value = memberId;
+                    cmd.Parameters.Add("@created", SqlDbType.DateTime).Value = created;
+                    cmd.Parameters.Add("@expires", SqlDbType.DateTime).Value = expires;
+                    cmd.Parameters.Add("@token", SqlDbType.NVarChar).Value = token;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         public void DeleteMemberGroup(int groupId)
         {
             using (SqlConnection connection = OpenConnection())
@@ -53,6 +72,19 @@ namespace ODK.Data.Members
                 using (SqlCommand cmd = new SqlCommand(sql, connection))
                 {
                     cmd.Parameters.Add("@groupId", SqlDbType.Int).Value = groupId;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeletePasswordResetRequest(int passwordResetRequestId)
+        {
+            using (SqlConnection connection = OpenConnection())
+            {
+                string sql = $"DELETE {PasswordResetRequestsTableName} WHERE passwordResetRequestId = @passwordResetRequestId";
+                using (SqlCommand cmd = new SqlCommand(sql, connection))
+                {
+                    cmd.Parameters.Add("@passwordResetRequestId", SqlDbType.Int).Value = passwordResetRequestId;
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -123,6 +155,22 @@ namespace ODK.Data.Members
             }
         }
 
+        public PasswordResetRequest GetPasswordResetRequest(string token)
+        {
+            using (SqlConnection connection = OpenConnection())
+            {
+                string sql = $"SELECT passwordResetRequestId, memberId, created, expires, token " +
+                             $" FROM {PasswordResetRequestsTableName} " +
+                             $" WHERE token = @token";
+                using (SqlCommand cmd = new SqlCommand(sql, connection))
+                {
+                    cmd.Parameters.Add("@token", SqlDbType.NVarChar).Value = token;
+
+                    return ReadRecord(cmd, ReadPasswordResetRequest);
+                }
+            }
+        }
+
         public void RemoveMemberFromGroup(int memberId, int groupId)
         {
             using (SqlConnection connection = OpenConnection())
@@ -158,6 +206,18 @@ namespace ODK.Data.Members
             {
                 GroupId = reader.GetInt32(reader.GetOrdinal("groupId")),
                 Name = reader.GetString(reader.GetOrdinal("name"))
+            };
+        }
+
+        private static PasswordResetRequest ReadPasswordResetRequest(SqlDataReader reader)
+        {
+            return new PasswordResetRequest
+            {
+                Created = reader.GetDateTime(reader.GetOrdinal("created")),
+                Expires = reader.GetDateTime(reader.GetOrdinal("expires")),
+                MemberId = reader.GetInt32(reader.GetOrdinal("memberId")),
+                PasswordResetRequestId = reader.GetInt32(reader.GetOrdinal("passwordResetRequestId")),
+                Token = reader.GetString(reader.GetOrdinal("token"))
             };
         }
     }

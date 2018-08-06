@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
 using ODK.Data.Members;
 using ODK.Umbraco.Content;
@@ -55,6 +56,25 @@ namespace ODK.Umbraco.Members
             _umbracoMemberService.SavePassword(member, model.NewPassword);
 
             return new ServiceResult(true);
+        }
+
+        public void CreatePasswordRequest(string email, string url, UmbracoHelper helper)
+        {
+            IPublishedContent memberContent = helper.MembershipHelper.GetByEmail(email);
+            if (memberContent == null)
+            {
+                return;
+            }
+
+            MemberModel model = new MemberModel(memberContent);
+
+            Guid token = CreateCryptographicallySecureGuid();
+            _membersDataService.AddPasswordResetRequest(model.Id, DateTime.Now, DateTime.Now.AddMinutes(30), token.ToString());
+
+            url = url.Replace("{token}", token.ToString());
+            string body = model.Chapter.GetPropertyValue<string>("resetPasswordEmailBody");
+            body = body.Replace("{{resetPasswordUrl}}", url);
+            SendMemberEmail(model, "Password reset", body);
         }
 
         public ServiceResult DeleteMemberGroup(int groupId)
@@ -123,6 +143,11 @@ namespace ODK.Umbraco.Members
             return models.ToArray();
         }
 
+        public bool IsValidPasswordResetRequestToken(string token)
+        {
+            return _membersDataService.GetPasswordResetRequest(token)?.Expires > DateTime.Now;
+        }
+
         public ServiceResult Register(RegisterMemberModel model, UmbracoHelper helper)
         {
             if (_umbracoMemberService.GetByUsername(model.Email) != null)
@@ -157,6 +182,36 @@ namespace ODK.Umbraco.Members
             SendNewMemberEmail(model);
 
             return new ServiceResult(true);
+        }
+
+        public ServiceResult ResetPassword(string password, string token)
+        {
+            PasswordResetRequest request = _membersDataService.GetPasswordResetRequest(token);
+            if (request == null)
+            {
+                return new ServiceResult(false, "Request not found");
+            }
+
+            IMember member = _umbracoMemberService.GetById(request.MemberId);
+
+            string message = null;
+            if (request.Expires < DateTime.Now)
+            {
+                message = "Request expired";
+            }
+            else if (member == null)
+            {
+                message = "User not found";
+            }
+
+            if (message == null)
+            {
+                _umbracoMemberService.SavePassword(member, password);
+            }
+
+            _membersDataService.DeletePasswordResetRequest(request.PasswordResetRequestId);
+
+            return new ServiceResult(message == null, message);
         }
 
         public void SendMemberEmails(IEnumerable<MemberModel> members, string subject, string body)
@@ -228,6 +283,17 @@ namespace ODK.Umbraco.Members
             _umbracoMemberService.Save(member);
 
             return new ServiceResult(true);
+        }
+
+        private static Guid CreateCryptographicallySecureGuid()
+        {
+            using (var provider = new RNGCryptoServiceProvider())
+            {
+                var bytes = new byte[16];
+                provider.GetBytes(bytes);
+
+                return new Guid(bytes);
+            }
         }
 
         private static string ReplaceMemberProperties(string text, MemberModel model)

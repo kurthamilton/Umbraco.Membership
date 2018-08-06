@@ -12,7 +12,7 @@ namespace ODK.Website.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(string email, string message)
         {
-            IPublishedContent content = Umbraco.AssignedContentItem;
+            IPublishedContent content = CurrentPage;
 
             try
             {

@@ -45,6 +45,7 @@
     <Compile Include="Events\EventsDataService.cs" />
     <Compile Include="Members\MemberGroup.cs" />
     <Compile Include="Members\MembersDataService.cs" />
+    <Compile Include="Members\PasswordResetRequest.cs" />
     <Compile Include="Payments\Payment.cs" />
     <Compile Include="Payments\PaymentDetail.cs" />
     <Compile Include="Payments\PaymentsDataService.cs" />

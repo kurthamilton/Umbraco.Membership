@@ -16,6 +16,10 @@ namespace ODK.Umbraco.Emails
 
         public void SendEmail(IPublishedContent chapter, string subject, string body, IEnumerable<string> toAddresses)
         {
+#if DEBUG
+            return;
+#endif
+
             string fromAddress = chapter.GetPropertyValue<string>("emailFromAddress");
             using (SmtpClient client = new SmtpClient())
             {
