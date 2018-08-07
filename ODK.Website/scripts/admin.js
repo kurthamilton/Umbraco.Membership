@@ -18,8 +18,8 @@
     }
 
     function bindEventDropDown() {
-        var subject = $('#js-event-invite-subject');
-        var body = $('#js-event-invite-body');
+        var subject = $('#event-invite-email-subject');
+        var body = $('#event-invite-email-body');
         var details = $('.js-event-details');
         var events = $('.js-events');
 

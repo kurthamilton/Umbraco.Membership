@@ -2,12 +2,12 @@
 
 <div class="form-group">
     @Html.LabelFor(x => x.Subject, new { @class = "form-control-label" })
-    @Html.TextBoxFor(x => x.Subject, new { @class = "form-control" })
+    @Html.TextBoxFor(x => x.Subject, new { @class = "form-control", id = Model.Id + "-email-subject" })
 </div>
 
 <div class="form-group">
     @Html.LabelFor(x => x.Subject, new { @class = "form-control-label" })
-    @Html.TextAreaFor(x => x.Body, new { @class = "form-control js-html-editor" })
+    @Html.TextAreaFor(x => x.Body, new { @class = "form-control js-html-editor", id = Model.Id + "-email-body" })
 </div>
 
 <div>
