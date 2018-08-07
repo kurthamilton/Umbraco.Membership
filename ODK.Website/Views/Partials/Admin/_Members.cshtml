@@ -33,6 +33,10 @@
               data_target ="#member-list", data_toggle="table-filter", data_field="member-groups" })
 </div>
 
+<p>
+    <a href="#send-members-email">Send email</a>
+</p>
+
 <table id="member-list" class="table table-sm js-table-sortable tablesorter js-members-table">
     <thead>
         <tr>
@@ -69,7 +73,7 @@
     </tbody>
 </table>
 
-<h3>Send Email</h3>
+<h3 id="send-members-email">Send Email</h3>
 <p>Send an email to the members visible in the table above</p>
 @using (Html.BeginUmbracoForm("SendMemberEmail", "Admin", FormMethod.Post))
 {
