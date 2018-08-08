@@ -10,6 +10,11 @@
     IReadOnlyCollection<MemberGroupModel> memberGroups = MemberService.GetMemberGroups(HomePage.Id);
     IEnumerable<SelectListItem> memberGroupOptions = memberGroups.Select(x => new SelectListItem { Value = x.GroupId.ToString(), Text = x.Name }).OrderBy(x => x.Text);
 
+    IEnumerable<SubscriptionStatus> subscriptionStatuses = Enum.GetValues(typeof(SubscriptionStatus)).Cast<SubscriptionStatus>();
+    IEnumerable<SelectListItem> subscriptionStatusOptions = subscriptionStatuses
+        .Where(x => x != SubscriptionStatus.None)
+        .Select(x => new SelectListItem { Text = x.ToString() });
+
     IDictionary<int, IReadOnlyCollection<MemberGroupModel>> memberGroupMembers = MemberService.GetMemberGroupMembers(HomePage.Id);
 
     IReadOnlyCollection<MemberModel> members = MemberService.GetMembers(new MemberSearchCriteria(HomePage.Id), Umbraco);
@@ -33,6 +38,13 @@
               data_target ="#member-list", data_toggle="table-filter", data_field="member-groups" })
 </div>
 
+<div class="form-group">
+    <label for="member-list-subscription-statuses">Subscription status</label>
+    @Html.ListBox("memberSubscriptionStatuses", subscriptionStatusOptions,
+        new { id = "member-list-subscription-statuses", @class = "js-chosen form-control",
+              data_target ="#member-list", data_toggle="table-filter", data_field="subscription-statuses" })
+</div>
+
 <p>
     <a href="#send-members-email">Send email</a>
 </p>
@@ -50,13 +62,15 @@
     <tbody>
         @foreach (MemberModel member in members)
         {
-            bool subscriptionExpired = member.SubscriptionEndDate != null && member.SubscriptionEndDate.Value < DateTime.Today;
-            bool subscriptionExpiring = member.SubscriptionEndDate != null && (member.SubscriptionEndDate.Value - DateTime.Today).Days < 30;
-            string subscriptionCssClass = subscriptionExpired ? "bg-danger" : subscriptionExpiring ? "bg-warning" : null;
+            string subscriptionCssClass =
+                member.SubscriptionStatus.HasFlag(SubscriptionStatus.Expired) ? "bg-danger"
+                : member.SubscriptionStatus.HasFlag(SubscriptionStatus.Expiring) ? "bg-warning" : null;
             var groups = memberGroupMembers.ContainsKey(member.Id) ? memberGroupMembers[member.Id] : new MemberGroupModel[] { };
             var memberOptions = memberGroups.Select(x => new SelectListItem { Value = x.GroupId.ToString(), Text = x.Name, Selected = groups.Any(g => g.GroupId == x.GroupId) });
 
-            <tr data-member-id="@member.Id" data-member-type="@((int)member.Type)" data-member-groups="@string.Join(",", groups.Select(x => x.GroupId))">
+            <tr data-member-id="@member.Id"
+                data-member-type="@((int)member.Type)" data-member-groups="@string.Join(",", groups.Select(x => x.GroupId))"
+                data-subscription-statuses="@string.Join(",", member.SubscriptionStatus.ToString().Split(',').Select(x => x.Trim()))">
                 <td><a href="@string.Format(memberUrl, member.Id)" target="_blank">@member.FullName</a></td>
                 <td>@member.Type.ToString()</td>
                 <td class="@subscriptionCssClass">
@@ -87,8 +101,8 @@
 
     <div class="form-group">
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="member-email-overrideOptIn" name="overrideOptIn" />
-            <label class="form-check-label">Override opt in?</label>
+            <input type="checkbox" class="form-check-input" id="member-email-override-opt-in" name="overrideOptIn" />
+            <label class="form-check-label" for="member-email-override-opt-in">Override opt in?</label>
             <span class="text-muted">Will ignore the members' email preferences if selected</span>
         </div>
 

@@ -104,6 +104,7 @@
     <Compile Include="Members\MemberModel.cs" />
     <Compile Include="Members\MemberPropertyNames.cs" />
     <Compile Include="Members\OdkMemberService.cs" />
+    <Compile Include="Members\SubscriptionStatus.cs" />
     <Compile Include="Members\UmbracoHelperExtensions.cs" />
     <Compile Include="Members\UpdateMemberModel.cs" />
     <Compile Include="MutableLazy.cs" />

@@ -189,6 +189,13 @@ namespace ODK.Umbraco.Members
             set => _subscriptionEndDate.Value = value;
         }
 
+        public SubscriptionStatus SubscriptionStatus =>
+            SubscriptionEndDate != null && SubscriptionEndDate.Value < DateTime.Today
+            ? SubscriptionStatus.Expired
+            : SubscriptionEndDate != null && (SubscriptionEndDate.Value - DateTime.Today).Days <= 30
+            ? SubscriptionStatus.Expiring | SubscriptionStatus.Current
+            : SubscriptionStatus.Current;
+
         [DisplayName("Membership type")]
         public MemberTypes Type => _type.Value;
 
