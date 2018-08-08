@@ -74,7 +74,7 @@ namespace ODK.Umbraco.Members
             url = url.Replace("{token}", token.ToString());
             string body = model.Chapter.GetPropertyValue<string>("resetPasswordEmailBody");
             body = body.Replace("{{resetPasswordUrl}}", url);
-            SendMemberEmail(model, "Password reset", body);
+            SendMemberEmail(model, "Password reset", body, true);
         }
 
         public ServiceResult DeleteMemberGroup(int groupId)
@@ -214,11 +214,11 @@ namespace ODK.Umbraco.Members
             return new ServiceResult(message == null, message);
         }
 
-        public void SendMemberEmails(IEnumerable<MemberModel> members, string subject, string body)
+        public void SendMemberEmails(IEnumerable<MemberModel> members, string subject, string body, bool overrideOptIn)
         {
             foreach (MemberModel member in members)
             {
-                SendMemberEmail(member, subject, body);
+                SendMemberEmail(member, subject, body, overrideOptIn);
             }
         }
 
@@ -319,6 +319,7 @@ namespace ODK.Umbraco.Members
         {
             IEnumerable<KeyValuePair<int, string>> knittingExperienceOptions = helper.GetKnittingExperienceOptions();
 
+            member.SetValue(MemberPropertyNames.EmailOptIn, model.EmailOptIn);
             member.SetValue(MemberPropertyNames.FacebookProfile, model.FacebookProfile);
             member.SetValue(MemberPropertyNames.FavouriteBeverage, model.FavouriteBeverage);
             member.SetValue(MemberPropertyNames.FirstName, model.FirstName);
@@ -394,8 +395,13 @@ namespace ODK.Umbraco.Members
             return memberImage;
         }
 
-        private void SendMemberEmail(MemberModel model, string subject, string body)
+        private void SendMemberEmail(MemberModel model, string subject, string body, bool overrideOptIn)
         {
+            if (!overrideOptIn && !model.EmailOptIn)
+            {
+                return;
+            }
+
             body = ReplaceMemberProperties(body, model);
             _emailService.SendEmail(model.Chapter, subject, body, new string[] { model.Email });
         }
@@ -413,7 +419,7 @@ namespace ODK.Umbraco.Members
             string subject = model.Chapter.GetPropertyValue<string>("newMemberEmailSubject");
             string body = model.Chapter.GetPropertyValue<string>("newMemberEmailBody");
 
-            SendMemberEmail(model, subject, body);
+            SendMemberEmail(model, subject, body, false);
         }
 
         private IDictionary<string, string> ValidateModel<T>(T model, HttpPostedFileBase image, UmbracoHelper helper) where T : MemberModel, IMemberPictureUpload

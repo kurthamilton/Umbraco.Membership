@@ -22,6 +22,14 @@
     @memberHelper.ValidationMessageFor(x => x.Email)
 </div>
 
+<div class="form-group">
+    <div class="form-check">
+        @memberHelper.CheckBoxFor(x => x.EmailOptIn, new { @class = "form-check-input" })
+        @memberHelper.LabelFor(x => x.EmailOptIn, new { @class = "form-control-label form-check-label" })
+        <span class="text-muted">Opt in to emails informing you of upcoming events</span>
+    </div>
+</div>
+
 @if (registerHelper != null)
 {
     <div class="form-group required">

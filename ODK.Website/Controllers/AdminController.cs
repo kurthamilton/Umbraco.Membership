@@ -60,11 +60,11 @@ namespace ODK.Website.Controllers
             {
                 return RedirectToHome();
             }
-            
+
             MemberSearchCriteria memberSearchCriteria = new MemberSearchCriteria(HomePage.Id) { Types = memberTypes };
             IReadOnlyCollection<MemberModel> members = _memberService.GetMembers(memberSearchCriteria, Umbraco);
 
-            _memberService.SendMemberEmails(members, email.Subject, email.Body);
+            _memberService.SendMemberEmails(members, email.Subject, email.Body, false);
             _eventService.LogSentEventInvite(eventId, Umbraco);
 
             AddFeedback($"{members.Count} invites sent", true);
@@ -74,7 +74,7 @@ namespace ODK.Website.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SendMemberEmail(string memberIdString, EmailViewModel email)
+        public ActionResult SendMemberEmail(string memberIdString, EmailViewModel email, bool overrideOptIn = false)
         {
             if (CurrentMemberModel.AdminUserId == null)
             {
@@ -87,7 +87,7 @@ namespace ODK.Website.Controllers
             IReadOnlyCollection<MemberModel> members = _memberService.GetMembers(new MemberSearchCriteria(chapter.Id), Umbraco);
             members = members.Where(x => memberIds.Contains(x.Id)).ToArray();
 
-            _memberService.SendMemberEmails(members, email.Subject, email.Body);
+            _memberService.SendMemberEmails(members, email.Subject, email.Body, overrideOptIn);
 
             AddFeedback($"{members.Count} emails sent", true);
 
@@ -102,7 +102,7 @@ namespace ODK.Website.Controllers
             {
                 return RedirectToHome();
             }
-            
+
             _emailService.SendEmail(HomePage, email.Subject, email.Body, new[] { to });
 
             return RedirectToCurrentUmbracoPage();

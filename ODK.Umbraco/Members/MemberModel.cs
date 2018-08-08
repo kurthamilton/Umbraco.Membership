@@ -12,6 +12,7 @@ namespace ODK.Umbraco.Members
 
         private readonly Lazy<int?> _adminUserId;
         private readonly Lazy<bool> _disabled;
+        private readonly MutableLazy<bool> _emailOptIn;
         private readonly MutableLazy<string> _favouriteBeverage;
         private readonly MutableLazy<string> _facebookProfile;
         private readonly MutableLazy<string> _firstName;
@@ -45,6 +46,7 @@ namespace ODK.Umbraco.Members
 
             _adminUserId = new Lazy<int?>(() => member?.GetPropertyValue<int?>(MemberPropertyNames.AdminUserId));
             _disabled = new Lazy<bool>(() => member != null ? !member.GetPropertyValue<bool>(MemberPropertyNames.Approved) : false);
+            _emailOptIn = new MutableLazy<bool>(() => member != null ? member.GetPropertyValue<bool>(MemberPropertyNames.EmailOptIn) : false);
             _facebookProfile = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.FacebookProfile));
             _favouriteBeverage = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.FavouriteBeverage));
             _firstName = new MutableLazy<string>(() => member?.GetPropertyValue<string>(MemberPropertyNames.FirstName));
@@ -77,6 +79,13 @@ namespace ODK.Umbraco.Members
         [EmailAddress]
         [MaxLength(500, ErrorMessage = "Must not exceed 500 characters in length")]
         public string Email { get; set; }
+
+        [DisplayName("Receive emails")]
+        public bool EmailOptIn
+        {
+            get => _emailOptIn.Value;
+            set => _emailOptIn.Value = value;
+        }
 
         [DisplayName("Facebook profile")]
         [MaxLength(500, ErrorMessage = "Must not exceed 500 characters in length")]

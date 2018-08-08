@@ -146,10 +146,27 @@
     }
 
     function bindTableSort() {
-        $(".js-table-sortable").tablesorter({
-            // sort on the first column
-            sortList: [[0, 0]]
-        });
+        var tables = $('.js-table-sortable');
+        tables.each(function () {
+            var table = $(this);
+            var headers = {};
+
+            // disable sort on specified columns
+            $('thead th', table).each(function (index) {
+                var cell = $(this);
+                if (cell.data('sort') == false) {
+                    headers[index] = {
+                        sorter: false
+                    };
+                }
+            });
+
+            table.tablesorter({
+                headers: headers,
+                // sort on the first column
+                sortList: [[0, 0]]
+            });
+        })
     }
 
     function updateHtml(el, html) {

@@ -6,6 +6,7 @@
         public const string Approved = "umbracoMemberApproved";
         public const string ChapterId = "memberChapterId";
         public const string Email = "Email";
+        public const string EmailOptIn = "memberEmailOptIn";
         public const string FacebookProfile = "memberFacebookProfile";
         public const string FavouriteBeverage = "memberFavouriteBeverage";
         public const string FirstName = "memberFirstName";
