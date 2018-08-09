@@ -22,27 +22,31 @@
     string memberUrl = HomePage.GetPropertyValue<IPublishedContent>("personPage").Url + "?id={0}";
 }
 
-<h2>Members</h2>
-
-<div class="form-group">
-    <label for="member-list-member-types">Type</label>
-    @Html.ListBox("memberTypes", memberTypeOptions,
-        new { id = "member-list-member-types", @class = "js-chosen form-control",
-              data_target ="#member-list", data_toggle="table-filter", data_field="member-type" })
+<div class="form-group row">
+    <label for="member-list-member-types" class="form-control-label col-3 col-md-2 text-right">Type</label>
+    <div class="col-9 col-md-10">
+        @Html.ListBox("memberTypes", memberTypeOptions,
+            new { id = "member-list-member-types", @class = "js-chosen form-control",
+                  data_target ="#member-list", data_toggle="table-filter", data_field="member-type" })
+    </div>
 </div>
 
-<div class="form-group">
-    <label for="member-list-member-groups">Group</label>
-    @Html.ListBox("memberGroups", memberGroupOptions,
-        new { id = "member-list-member-groups", @class = "js-chosen form-control",
-              data_target ="#member-list", data_toggle="table-filter", data_field="member-groups" })
+<div class="form-group row">
+    <label for="member-list-member-groups" class="form-control-label col-3 col-md-2 text-right">Group</label>
+    <div class="col-9 col-md-10">
+        @Html.ListBox("memberGroups", memberGroupOptions,
+            new { id = "member-list-member-groups", @class = "js-chosen form-control",
+                  data_target ="#member-list", data_toggle="table-filter", data_field="member-groups" })
+    </div>
 </div>
 
-<div class="form-group">
-    <label for="member-list-subscription-statuses">Subscription status</label>
-    @Html.ListBox("memberSubscriptionStatuses", subscriptionStatusOptions,
-        new { id = "member-list-subscription-statuses", @class = "js-chosen form-control",
-              data_target ="#member-list", data_toggle="table-filter", data_field="subscription-statuses" })
+<div class="form-group row">
+    <label for="member-list-subscription-statuses" class="form-control-label col-3 col-md-2 text-right">Subscription</label>
+    <div class="col-9 col-md-10">
+        @Html.ListBox("memberSubscriptionStatuses", subscriptionStatusOptions,
+            new { id = "member-list-subscription-statuses", @class = "js-chosen form-control",
+                  data_target ="#member-list", data_toggle="table-filter", data_field="subscription-statuses" })
+    </div>
 </div>
 
 <p>
@@ -56,7 +60,7 @@
             <th>Type</th>
             <th>Subscription</th>
             <th>Groups</th>
-            <th data-sort="false">Emails</th>
+            <th data-sort="false" class="d-none d-md-block">Emails</th>
         </tr>
     </thead>
     <tbody>
@@ -83,7 +87,7 @@
                         @Html.ListBox("groupIds", memberOptions, new { @class = "js-chosen form-control js-submit-on-change" })
                     }
                 </td>
-                <td>
+                <td class="d-none d-md-block">
                     <input type="checkbox" disabled @(member.EmailOptIn ? "checked" : null) />
                 </td>
             </tr>

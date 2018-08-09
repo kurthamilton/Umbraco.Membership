@@ -14,8 +14,6 @@
         .Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Location + string.Format(" ({0:dd MMMM})", x.Date) });
 }
 
-<h2>Events</h2>
-
 @using (Html.BeginUmbracoForm("SendEventInvite", "Admin", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
@@ -23,7 +21,7 @@
     <h3>Send Invite</h3>
 
     <div class="form-group">
-        <label for="eventId">Event</label>
+        <label for="eventId" class="form-control-label">Event</label>
         @Html.DropDownList("eventId", nextEventOptions, "--Select--", new { id = "eventId", @class = "form-control js-events" })
     </div>
 
@@ -43,7 +41,7 @@
     }
 
     <div class="form-group">
-        <label for="event-invite-memberTypes">Member types</label>
+        <label for="event-invite-memberTypes" class="form-control-label">Member types</label>
         @Html.ListBox("memberTypes", memberTypeOptions, new { id = "event-invite-memberTypes", @class = "js-chosen form-control" })
     </div>
 
