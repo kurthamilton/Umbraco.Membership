@@ -1,5 +1,6 @@
 ﻿using ODK.Umbraco.Content;
 using System.Collections.Generic;
+using System.Linq;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 
@@ -29,8 +30,26 @@ namespace ODK.Umbraco.Members
             }
         }
 
+        public static IEnumerable<IEnumerable<IPublishedContent>> MenuItemGroups(this IPublishedContent content, IPublishedContent member, int groupSize = 5)
+        {
+            List<IEnumerable<IPublishedContent>> groups = new List<IEnumerable<IPublishedContent>>();
+
+            IPublishedContent[] menuItems = content.MenuItems(member).ToArray();
+            for (int i = 0; i < menuItems.Length; i += groupSize)
+            {
+                groups.Add(menuItems.Skip(i).Take(groupSize));
+            }
+
+            return groups;
+        }
+
         private static bool ShowInMenu(IPublishedContent content, IPublishedContent member)
         {
+            if (content.TemplateId <= 0)
+            {
+                return false;
+            }
+
             if (!content.IsPage())
             {
                 return false;

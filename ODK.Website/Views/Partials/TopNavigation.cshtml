@@ -6,7 +6,7 @@
     IPublishedContent member = CurrentMember;
     MemberModel memberModel = CurrentMemberModel;
 
-    IEnumerable<IPublishedContent> menuItems = homePage.MenuItems(member);
+    IEnumerable<IEnumerable<IPublishedContent>> menuItemGroups = homePage.MenuItemGroups(member, 5);
 
     IPublishedContent logo = HomePage.GetHomePageValue<IPublishedContent>("siteLogo");
 
@@ -48,15 +48,18 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                @foreach (var item in menuItems.Where(x => x.TemplateId > 0))
-                {
-                    <li class="nav-item">
-                        <a class="nav-link @(item.IsAncestorOrSelf(Model.Content) ? "active" : null)" href="@item.Url">@item.Name</a>
-                    </li>
-                }
-            </ul>
+        <div class="collapse navbar-collapse flex-column" id="navbarSupportedContent">
+            @foreach (IEnumerable<IPublishedContent> menuItemGroup in menuItemGroups)
+            {
+                <ul class="navbar-nav mr-auto">
+                    @foreach (var item in menuItemGroup)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link @(item.IsAncestorOrSelf(Model.Content) ? "active" : null)" href="@item.Url">@item.Name</a>
+                        </li>
+                    }
+                </ul>
+            }
         </div>
 
         <div class="account-links align-middle-x">
