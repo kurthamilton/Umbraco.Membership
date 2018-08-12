@@ -107,21 +107,17 @@ img {
 	max-width: 100%;
 }
 
-.navbar .container {
-	position: relative;
+.navbar.navbar--top .container {
+    position: relative;
 }
 
-.navbar-toggler {
-    margin-left: 15px;
-}
-
-.navbar .navbar-nav {
+.navbar.navbar--top .navbar-nav {
     justify-content: center;
     width: 100%;
 }
 
-.nav-item:first-child {
-	border-left: none;
+.navbar--top .nav-item:first-child {
+    border-left: none;
 }
 
 /* lg */

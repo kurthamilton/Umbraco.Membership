@@ -5,27 +5,31 @@
 
 <div class="container">
     @*Nav*@
-    <div class="nav nav-pills mt-2" role="tablist" aria-orientation="vertical">
-        <a class="nav-link active" data-toggle="pill" href="#events" role="tab" aria-controls="events" aria-selected="true">
-            Events
-        </a>
-        <a class="nav-link" data-toggle="pill" href="#members" role="tab" aria-controls="members" aria-selected="true">
-            Members
-        </a>
-        <a class="nav-link" data-toggle="pill" href="#member-groups" role="tab" aria-controls="member-groups" aria-selected="true">
-            Member Groups
-        </a>
-        <a class="nav-link" data-toggle="pill" href="#import-pictures" role="tab" aria-controls="import-pictures" aria-selected="true">
-            Import pictures
-        </a>
-        <a class="nav-link" data-toggle="pill" href="#test-email" role="tab" aria-controls="test-email" aria-selected="false">
-            Test email
-        </a>
-        <a class="nav-link" role="tab" href="/wiki" target="_blank">
-            Wiki
-        </a>
-    </div>
-
+    <nav class="navbar--admin">
+        <div class="nav nav-tabs mt-2" role="tablist" aria-orientation="vertical">
+            <a class="nav-item nav-link active" data-toggle="tab" href="#events" role="tab" aria-controls="events" aria-selected="true">
+                Events
+            </a>
+            <a class="nav-item nav-link" data-toggle="tab" href="#members" role="tab" aria-controls="members">
+                Members
+            </a>
+            <a class="nav-item nav-link" data-toggle="tab" href="#member-groups" role="tab" aria-controls="member-groups">
+                Member Groups
+            </a>
+            <a class="nav-item nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Other</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" data-toggle="tab" href="#import-pictures" role="tab" aria-controls="import-pictures">
+                    Import pictures
+                </a>
+                <a class="dropdown-item" data-toggle="tab" href="#test-email" role="tab" aria-controls="test-email">
+                    Test email
+                </a>
+                <a class="dropdown-item" role="tab" href="/wiki" target="_blank">
+                    Wiki
+                </a>
+            </div>
+        </div>
+    </nav>
     <section class="section--main">
         @*Content*@
         <div class="tab-content">

@@ -76,17 +76,24 @@
 
     function bindNav() {
         // add current nav item to url
-        $('.nav-link[data-toggle="pill"]').on('click', function () {
+        $('.navbar--admin .nav-link').on('click', function () {
             window.location.hash = $(this).attr('href');
         });
 
         // set active nav item from url
-        var link = $('.nav-link[data-toggle="pill"][href="' + window.location.hash + '"]');
+        var link = $('.navbar--admin .nav-link[href="' + window.location.hash + '"]');
         if (link.length === 0) {
             return;
         }
 
         link.tab('show');
+
+        // fix bootstrap 4 bug - remove active class after selection changed
+        $('.navbar--admin').on('shown.bs.tab', 'a', function (e) {
+            if (e.relatedTarget) {
+                $(e.relatedTarget).removeClass('active');
+            }
+        });
     }
 
     function bindTableFilters() {
