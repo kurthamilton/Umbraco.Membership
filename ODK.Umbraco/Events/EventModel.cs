@@ -50,7 +50,7 @@ namespace ODK.Umbraco.Events
 
         public string InviteEmailSubject => _inviteEmailSubject.Value;
 
-        public DateTime? InviteSentDate => _inviteSentDate.Value;
+        public DateTime? InviteSentDate => _inviteSentDate.Value > DateTime.MinValue ? _inviteSentDate.Value : null;
 
         public string Location => _location.Value;
 

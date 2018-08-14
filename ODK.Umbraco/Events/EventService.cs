@@ -20,6 +20,43 @@ namespace ODK.Umbraco.Events
             _eventDataService = eventsDataService;
         }
 
+        public ServiceResult CreateEvent(IPublishedContent chapter, int userId, string name, string location, DateTime date, string time, string address,
+            string mapQuery, string description)
+        {
+            IPublishedContent eventsPage = chapter.GetPropertyValue<IPublishedContent>("eventsPage");
+
+            IContent @event = _contentService.CreateContent(name, eventsPage.Id, "event", userId);
+
+            @event.SetValue(EventPropertyNames.Location, location);
+            @event.SetValue(EventPropertyNames.Date, date);
+
+            if (!string.IsNullOrEmpty(time))
+            {
+                @event.SetValue(EventPropertyNames.Time, time);
+            }
+
+            if (!string.IsNullOrEmpty(address))
+            {
+                @event.SetValue(EventPropertyNames.Address, address);
+            }
+
+            if (!string.IsNullOrEmpty(mapQuery))
+            {
+                @event.SetValue(EventPropertyNames.MapQuery, mapQuery);
+            }
+
+            if (!string.IsNullOrEmpty(description))
+            {
+                @event.SetValue(EventPropertyNames.Description, description);
+            }
+
+            @event.SetValue(EventPropertyNames.Public, false);
+
+            _contentService.Publish(@event, userId);
+
+            return new ServiceResult(true);
+        }
+
         public Dictionary<EventResponseType, IReadOnlyCollection<MemberModel>> GetEventResponses(int eventId, UmbracoHelper helper)
         {
             IReadOnlyCollection<EventResponse> responses = _eventDataService.GetEventResponses(eventId);
@@ -58,7 +95,7 @@ namespace ODK.Umbraco.Events
                 MaxItems = maxItems
             };
 
-            IEnumerable<EventModel> nextEvents = SearchEvents(eventsPage, currentMember, criteria).OrderBy(x => x.Date);
+            IEnumerable<EventModel> nextEvents = SearchEvents(eventsPage, currentMember, criteria);
             return nextEvents;
         }
 
@@ -73,7 +110,8 @@ namespace ODK.Umbraco.Events
         {
             IEnumerable<EventModel> events = eventsPage.Children
                                                        .Select(x => new EventModel(x, ReplaceEventProperties))
-                                                       .Where(x => member != null || x.Public);
+                                                       .Where(x => member != null || x.Public)
+                                                       .OrderBy(x => x.Date);
 
             if (criteria.FutureOnly == true)
             {

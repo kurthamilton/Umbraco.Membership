@@ -49,7 +49,8 @@ img {
     z-index: 1000;
 }
 
-.form-group.required .form-control-label:after {
+.form-group.required .form-control-label:after,
+.form-group.required .col-form-label:after {
     content: " *";
     color: #dc3545;
 }

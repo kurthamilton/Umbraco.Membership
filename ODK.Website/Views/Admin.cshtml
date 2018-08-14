@@ -6,36 +6,60 @@
 <div class="container">
     @*Nav*@
     <nav class="navbar--admin">
-        <div class="nav nav-tabs mt-2" role="tablist" aria-orientation="vertical">
-            <a class="nav-item nav-link active" data-toggle="tab" href="#events" role="tab" aria-controls="events" aria-selected="true">
-                Events
-            </a>
-            <a class="nav-item nav-link" data-toggle="tab" href="#members" role="tab" aria-controls="members">
-                Members
-            </a>
-            <a class="nav-item nav-link" data-toggle="tab" href="#member-groups" role="tab" aria-controls="member-groups">
-                Member Groups
-            </a>
-            <a class="nav-item nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Other</a>
-            <div class="dropdown-menu">
-                <a class="dropdown-item" data-toggle="tab" href="#import-pictures" role="tab" aria-controls="import-pictures">
-                    Import pictures
+        <ul class="nav nav-tabs mt-2" role="tablist" aria-orientation="vertical">
+            <li class="nav-item">
+                <a class="nav-link active dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Events</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item active" data-toggle="tab" href="#create-event" role="tab" aria-controls="create-event" aria-selected="true">
+                        Create event
+                    </a>
+                    <a class="dropdown-item" data-toggle="tab" href="#send-event-invite" role="tab" aria-controls="send-event-invite" aria-selected="true">
+                        Send invite
+                    </a>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#members" role="tab" aria-controls="members">
+                    Members
                 </a>
-                <a class="dropdown-item" data-toggle="tab" href="#test-email" role="tab" aria-controls="test-email">
-                    Test email
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#member-groups" role="tab" aria-controls="member-groups">
+                    Member Groups
                 </a>
-                <a class="dropdown-item" role="tab" href="/wiki" target="_blank">
-                    Wiki
-                </a>
-            </div>
-        </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Other</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" data-toggle="tab" href="#import-pictures" role="tab" aria-controls="import-pictures">
+                        Import pictures
+                    </a>
+                    <a class="dropdown-item" data-toggle="tab" href="#test-email" role="tab" aria-controls="test-email">
+                        Test email
+                    </a>
+                    <a class="dropdown-item" role="tab" href="/wiki" target="_blank">
+                        Wiki
+                    </a>
+                </div>
+            </li>
+        </ul>
     </nav>
     <section class="section--main">
         @*Content*@
         <div class="tab-content">
+            @* Create Event *@
+            <div class="tab-pane fade show active" id="create-event" role="tabpanel">
+                <h3>Create Event</h3>
+                @Html.Partial("Admin/_CreateEvent")
+            </div>
+
             @* Events *@
-            <div class="tab-pane fade show active" id="events" role="tabpanel">
-                @Html.Partial("Admin/_Events")
+            <div class="tab-pane fade" id="send-event-invite" role="tabpanel">
+                <h3>Send Invite</h3>
+                @Html.Partial("Admin/_EventInvite")
             </div>
 
             @* Members *@

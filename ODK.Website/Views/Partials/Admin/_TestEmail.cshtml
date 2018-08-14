@@ -5,9 +5,11 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-group">
-        <label class="form-control-label" for="test-email-to">To</label>
-        <input type="text" class="form-control" id="test-email-to" name="to" />
+    <div class="form-group row">
+        <label class="col-form-label col-3 col-md-2 text-right" for="test-email-to">To</label>
+        <div class="col-9 col-md-10">
+            <input type="text" class="form-control" id="test-email-to" name="to" />
+        </div>
     </div>
 
     @Html.Partial("Admin/_Email", new EmailViewModel("test"))

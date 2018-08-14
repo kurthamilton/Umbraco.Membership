@@ -75,25 +75,33 @@
     }
 
     function bindNav() {
+        var navbar = $('.navbar--admin');
+        var navLinks = $('.nav-link,.dropdown-item', navbar);
+
+        // fix bootstrap 4 bug - remove active class after selection changed
+        navbar.on('shown.bs.tab', 'a', function (e) {
+            var navLink = $(this);
+
+            navLinks.removeClass('active');
+            navLink.addClass('active');
+
+            if (navLink.hasClass('dropdown-item')) {
+                // add class to dropdown if drop down
+                var navItem = navLink.closest('.nav-item');
+                $('.nav-link', navItem).addClass('active');
+            }
+        });
+
         // add current nav item to url
-        $('.navbar--admin .nav-link').on('click', function () {
+        navLinks.on('click', function () {
             window.location.hash = $(this).attr('href');
         });
 
         // set active nav item from url
-        var link = $('.navbar--admin .nav-link[href="' + window.location.hash + '"]');
-        if (link.length === 0) {
-            return;
+        var link = $('.nav-link[href="' + window.location.hash + '"],.dropdown-item[href="' + window.location.hash + '"]', navbar);
+        if (link.length) {
+            link.tab('show');
         }
-
-        link.tab('show');
-
-        // fix bootstrap 4 bug - remove active class after selection changed
-        $('.navbar--admin').on('shown.bs.tab', 'a', function (e) {
-            if (e.relatedTarget) {
-                $(e.relatedTarget).removeClass('active');
-            }
-        });
     }
 
     function bindTableFilters() {

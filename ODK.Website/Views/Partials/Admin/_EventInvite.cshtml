@@ -18,11 +18,11 @@
 {
     @Html.AntiForgeryToken()
 
-    <h3>Send Invite</h3>
-
-    <div class="form-group">
-        <label for="eventId" class="form-control-label">Event</label>
-        @Html.DropDownList("eventId", nextEventOptions, "--Select--", new { id = "eventId", @class = "form-control js-events" })
+    <div class="form-group row">
+        <label for="eventId" class="col-form-label col-3 col-md-2 text-right">Event</label>
+        <div class="col-9 col-md-10">
+            @Html.DropDownList("eventId", nextEventOptions, "--Select--", new { id = "eventId", @class = "form-control js-events" })
+        </div>
     </div>
 
     foreach (var eventModel in nextEvents)
@@ -33,16 +33,18 @@
         <div class="js-event-details d-none" data-event-id="@eventModel.Id">
             @if (eventModel.InviteSentDate != null)
             {
-                <div class="alert alert-danger" role="alert">
+                <div class="alert alert-danger col-9 col-md-10 offset-3 offset-md-2" role="alert">
                     Invite sent: @eventModel.InviteSentDate.Value.ToString("dd MMMM yyyy")
                 </div>
             }
         </div>
     }
 
-    <div class="form-group">
-        <label for="event-invite-memberTypes" class="form-control-label">Member types</label>
-        @Html.ListBox("memberTypes", memberTypeOptions, new { id = "event-invite-memberTypes", @class = "js-chosen form-control" })
+    <div class="form-group row">
+        <label for="event-invite-memberTypes" class="col-form-label col-3 col-md-2  text-right">Member types</label>
+        <div class="col-9 col-md-10">
+            @Html.ListBox("memberTypes", memberTypeOptions, new { id = "event-invite-memberTypes", @class = "js-chosen form-control" })
+        </div>
     </div>
 
     @Html.Partial("Admin/_Email", new EmailViewModel("event-invite"))

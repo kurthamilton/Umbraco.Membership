@@ -40,6 +40,29 @@ namespace ODK.Website.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateEvent(CreateEventViewModel viewModel)
+        {
+            if (CurrentMemberModel.AdminUserId == null)
+            {
+                return RedirectToHome();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return CurrentUmbracoPage();
+            }
+
+            _eventService.CreateEvent(HomePage, CurrentMemberModel.AdminUserId.Value,
+                viewModel.Name, viewModel.Location, viewModel.Date, viewModel.Time, viewModel.Address,
+                viewModel.MapQuery, viewModel.Description);
+
+            AddFeedback($"Event {viewModel.Name} created", true);
+
+            return RedirectToCurrentUmbracoPage();
+        }
+
+        [HttpPost]
         public ActionResult DeleteMemberGroup(int groupId)
         {
             if (CurrentMemberModel.AdminUserId == null)

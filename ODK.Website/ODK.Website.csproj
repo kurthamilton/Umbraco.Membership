@@ -345,7 +345,6 @@
     <Content Include="Views\Partials\EventResponseIcon.cshtml" />
     <Content Include="Views\Partials\Form.cshtml" />
     <Content Include="Views\Partials\PaymentButton.cshtml" />
-    <Content Include="Views\Partials\Admin\_Events.cshtml" />
     <Content Include="Views\Partials\Admin\_ImportMemberPictures.cshtml" />
     <Content Include="Views\Partials\Admin\_Members.cshtml" />
     <Content Include="Views\Partials\Admin\_MemberGroups.cshtml" />
@@ -353,6 +352,8 @@
     <Content Include="Views\Partials\Admin\_Email.cshtml" />
     <Content Include="Views\Login.cshtml" />
     <Content Include="Views\ResetPassword.cshtml" />
+    <Content Include="Views\Partials\Admin\_CreateEvent.cshtml" />
+    <Content Include="Views\Partials\Admin\_EventInvite.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -396,6 +397,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\CreateEventViewModel.cs" />
     <Compile Include="Models\EmailViewModel.cs" />
     <Compile Include="Models\PasswordResetViewModel.cs" />
     <Compile Include="Models\RequestPasswordResetViewModel.cs" />
