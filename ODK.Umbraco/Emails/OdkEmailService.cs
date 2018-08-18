@@ -7,20 +7,23 @@ namespace ODK.Umbraco.Emails
 {
     public class OdkEmailService
     {
-        public void SendAdminEmail(IPublishedContent chapter, string subject, string body)
+        public ServiceResult SendAdminEmail(string siteUrl, IPublishedContent chapter, string subject, string body)
         {
             string[] toAddresses = chapter.GetPropertyValue<string>("adminEmailAddresses").Split(',');
 
-            SendEmail(chapter, subject, body, toAddresses);
+            return SendEmail(siteUrl, chapter, subject, body, toAddresses);
         }
 
-        public void SendEmail(IPublishedContent chapter, string subject, string body, IEnumerable<string> toAddresses)
+        public ServiceResult SendEmail(string siteUrl, IPublishedContent chapter, string subject, string body, IEnumerable<string> toAddresses)
         {
-#if DEBUG
-            return;
-#endif
+            body = ReplaceBodyProperties(body, siteUrl);
 
             string fromAddress = chapter.GetPropertyValue<string>("emailFromAddress");
+
+#if DEBUG
+            return new ServiceResult(true, $"The following email would have been sent to {string.Join(", ", toAddresses)}: {body}");
+#endif
+
             using (SmtpClient client = new SmtpClient())
             {
                 MailMessage message = new MailMessage
@@ -37,7 +40,14 @@ namespace ODK.Umbraco.Emails
                 }
 
                 client.Send(message);
+
+                return new ServiceResult(true);
             }
+        }
+
+        private string ReplaceBodyProperties(string body, string siteUrl)
+        {
+            return body.Replace("http://{{siteUrl}}", siteUrl);
         }
     }
 }

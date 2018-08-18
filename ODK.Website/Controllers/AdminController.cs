@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using ODK.Umbraco;
 using ODK.Umbraco.Emails;
 using ODK.Umbraco.Events;
 using ODK.Umbraco.Members;
@@ -87,7 +88,7 @@ namespace ODK.Website.Controllers
             MemberSearchCriteria memberSearchCriteria = new MemberSearchCriteria(HomePage.Id) { Types = memberTypes };
             IReadOnlyCollection<MemberModel> members = _memberService.GetMembers(memberSearchCriteria, Umbraco);
 
-            _memberService.SendMemberEmails(members, email.Subject, email.Body, false);
+            _memberService.SendMemberEmails(SiteSettings, members, email.Subject, email.Body, false);
             _eventService.LogSentEventInvite(eventId, Umbraco);
 
             AddFeedback($"{members.Count} invites sent", true);
@@ -110,7 +111,7 @@ namespace ODK.Website.Controllers
             IReadOnlyCollection<MemberModel> members = _memberService.GetMembers(new MemberSearchCriteria(chapter.Id), Umbraco);
             members = members.Where(x => memberIds.Contains(x.Id)).ToArray();
 
-            _memberService.SendMemberEmails(members, email.Subject, email.Body, overrideOptIn);
+            _memberService.SendMemberEmails(SiteSettings, members, email.Subject, email.Body, overrideOptIn);
 
             AddFeedback($"{members.Count} emails sent", true);
 
@@ -126,7 +127,9 @@ namespace ODK.Website.Controllers
                 return RedirectToHome();
             }
 
-            _emailService.SendEmail(HomePage, email.Subject, email.Body, new[] { to });
+            ServiceResult result = _emailService.SendEmail(SiteSettings.SiteUrl, HomePage, email.Subject, email.Body, new[] { to });
+
+            AddFeedback(result.ErrorMessage, result.Success);
 
             return RedirectToCurrentUmbracoPage();
         }

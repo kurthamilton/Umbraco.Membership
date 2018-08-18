@@ -39,7 +39,8 @@ namespace ODK.Umbraco.Settings
 
                 return new SiteSettings
                 {
-                    FooterLinks = footerLinks.Cast<RelatedLink>().Select(x => new KeyValuePair<string, string>(x.Link, x.Caption))
+                    FooterLinks = footerLinks.Cast<RelatedLink>().Select(x => new KeyValuePair<string, string>(x.Link, x.Caption)),
+                    SiteUrl = child.GetPropertyValue<string>(PropertyNames.SiteUrl)
                 };
             }
 

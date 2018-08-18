@@ -1,5 +1,7 @@
 ﻿@model ODK.Website.Models.EmailViewModel
 
+@Html.HiddenFor(x => x.Id)
+
 <div class="form-group row">
     @Html.LabelFor(x => x.Subject, new { @class = "col-form-label col-3 col-md-2  text-right", @for = Model.Id + "-email-subject" })
     <div class="col-9 col-md-10">

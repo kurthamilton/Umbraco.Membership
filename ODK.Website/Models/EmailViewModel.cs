@@ -4,6 +4,10 @@ namespace ODK.Website.Models
 {
     public class EmailViewModel
     {
+        public EmailViewModel()
+        {
+        }
+
         public EmailViewModel(string id)
         {
             Id = id;
@@ -12,7 +16,7 @@ namespace ODK.Website.Models
         [AllowHtml]
         public string Body { get; set; }
 
-        public string Id { get; }
+        public string Id { get; set; }
 
         public string Subject { get; set; }
     }

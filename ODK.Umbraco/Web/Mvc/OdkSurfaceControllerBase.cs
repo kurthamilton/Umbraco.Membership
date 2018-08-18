@@ -15,12 +15,14 @@ namespace ODK.Umbraco.Web.Mvc
         private readonly List<string> _feedbackMessages = new List<string>();
         private readonly List<bool> _feedbackSuccesses = new List<bool>();
         private readonly Lazy<IPublishedContent> _homePage;
+        private readonly Lazy<SiteSettings> _siteSettings;
 
         protected OdkSurfaceControllerBase()
         {
             _currentMember = new Lazy<IPublishedContent>(() => Umbraco.MembershipHelper.GetCurrentMember());
             _currentMemberModel = new Lazy<MemberModel>(() => CurrentMember != null ? new MemberModel(CurrentMember) : null);
             _homePage = new Lazy<IPublishedContent>(() => CurrentPage.HomePage());
+            _siteSettings = new Lazy<SiteSettings>(() => CurrentPage.SiteSettings());
         }
 
         protected IPublishedContent CurrentMember => _currentMember.Value;
@@ -28,6 +30,8 @@ namespace ODK.Umbraco.Web.Mvc
         protected MemberModel CurrentMemberModel => _currentMemberModel.Value;
 
         protected IPublishedContent HomePage => _homePage.Value;
+
+        protected SiteSettings SiteSettings => _siteSettings.Value;
 
         protected void AddFeedback(string message, bool success)
         {

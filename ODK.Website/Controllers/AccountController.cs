@@ -94,7 +94,7 @@ namespace ODK.Website.Controllers
             IPublishedContent chapter = HomePage;
             model.SetChapter(chapter);
 
-            ServiceResult result = _memberService.Register(model, Umbraco);
+            ServiceResult result = _memberService.Register(SiteSettings, model, Umbraco);
             if (!result.Success)
             {
                 return OnError(model, result);
@@ -122,7 +122,7 @@ namespace ODK.Website.Controllers
             IPublishedContent homePage = HomePage;
             string url = homePage.GetPropertyValue<IPublishedContent>("resetPasswordPage").Url;
 
-            _memberService.CreatePasswordRequest(viewModel.Email, $"{url}?token={{token}}", Umbraco);
+            _memberService.CreatePasswordRequest(SiteSettings, viewModel.Email, $"{url}?token={{token}}", Umbraco);
 
             AddFeedback("An email containing password reset instructions has been sent", true);
 

@@ -6,6 +6,7 @@
         public const string FooterLinks = "footerLinks";
         public const string Restricted = "restricted";
         public const string SiteName = "siteName";
+        public const string SiteUrl = "siteUrl";
         public const string UmbracoNaviHide = "umbracoNaviHide";
     }
 }
