@@ -38,7 +38,8 @@
 
             case "CheckBox":
                 <div class="form-check">
-                    <input id="@name" name="@name" type="checkbox" class="form-check-input" @(required ? "required" : null)>
+                    <input id="@name" name="@name" type="checkbox" class="form-check-input" @(required ? "required" : null) value="true">
+                    <input type="hidden" value="false" name="@name" />
                     @Label(name, label, subLabel, "form-check-label")
                 </div>
                 break;

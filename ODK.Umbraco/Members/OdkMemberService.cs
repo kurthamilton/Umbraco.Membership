@@ -75,7 +75,7 @@ namespace ODK.Umbraco.Members
             url = url.Replace("{token}", token.ToString());
             string body = model.Chapter.GetPropertyValue<string>("resetPasswordEmailBody");
             body = body.Replace("{{resetPasswordUrl}}", url);
-            SendMemberEmail(siteSettings, model, "Password reset", body, true);
+            SendMemberEmail(siteSettings, model, "Password reset", body, true, null);
         }
 
         public ServiceResult DeleteMemberGroup(int groupId)
@@ -215,11 +215,11 @@ namespace ODK.Umbraco.Members
             return new ServiceResult(message == null, message);
         }
 
-        public void SendMemberEmails(SiteSettings siteSettings, IEnumerable<MemberModel> members, string subject, string body, bool overrideOptIn)
+        public void SendMemberEmails(SiteSettings siteSettings, IEnumerable<MemberModel> members, string subject, string body, bool overrideOptIn, string from)
         {
             foreach (MemberModel member in members)
             {
-                SendMemberEmail(siteSettings, member, subject, body, overrideOptIn);
+                SendMemberEmail(siteSettings, member, subject, body, overrideOptIn, from);
             }
         }
 
@@ -396,7 +396,7 @@ namespace ODK.Umbraco.Members
             return memberImage;
         }
 
-        private void SendMemberEmail(SiteSettings siteSettings, MemberModel model, string subject, string body, bool overrideOptIn)
+        private void SendMemberEmail(SiteSettings siteSettings, MemberModel model, string subject, string body, bool overrideOptIn, string from)
         {
             if (!overrideOptIn && !model.EmailOptIn)
             {
@@ -404,7 +404,7 @@ namespace ODK.Umbraco.Members
             }
 
             body = ReplaceMemberProperties(body, model);
-            _emailService.SendEmail(siteSettings.SiteUrl, model.Chapter, subject, body, new string[] { model.Email });
+            _emailService.SendEmail(siteSettings.SiteUrl, model.Chapter, subject, body, new string[] { model.Email }, from);
         }
 
         private void SendNewMemberAdminEmail(SiteSettings siteSettings, MemberModel model)
@@ -420,7 +420,7 @@ namespace ODK.Umbraco.Members
             string subject = model.Chapter.GetPropertyValue<string>("newMemberEmailSubject");
             string body = model.Chapter.GetPropertyValue<string>("newMemberEmailBody");
 
-            SendMemberEmail(siteSettings, model, subject, body, false);
+            SendMemberEmail(siteSettings, model, subject, body, false, null);
         }
 
         private IDictionary<string, string> ValidateModel<T>(T model, HttpPostedFileBase image, UmbracoHelper helper) where T : MemberModel, IMemberPictureUpload

@@ -78,7 +78,7 @@ namespace ODK.Website.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SendEventInvite(int eventId, MemberTypes[] memberTypes, EmailViewModel email)
+        public ActionResult SendEventInvite(int eventId, MemberTypes[] memberTypes, EmailViewModel email, bool fromUser)
         {
             if (CurrentMemberModel.AdminUserId == null)
             {
@@ -88,7 +88,8 @@ namespace ODK.Website.Controllers
             MemberSearchCriteria memberSearchCriteria = new MemberSearchCriteria(HomePage.Id) { Types = memberTypes };
             IReadOnlyCollection<MemberModel> members = _memberService.GetMembers(memberSearchCriteria, Umbraco);
 
-            _memberService.SendMemberEmails(SiteSettings, members, email.Subject, email.Body, false);
+            _memberService.SendMemberEmails(SiteSettings, members, email.Subject, email.Body, false,
+                fromUser ? CurrentMemberModel.Email : null);
             _eventService.LogSentEventInvite(eventId, Umbraco);
 
             AddFeedback($"{members.Count} invites sent", true);
@@ -98,7 +99,7 @@ namespace ODK.Website.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SendMemberEmail(string memberIdString, EmailViewModel email, bool overrideOptIn = false)
+        public ActionResult SendMemberEmail(string memberIdString, EmailViewModel email, bool fromUser, bool overrideOptIn = false)
         {
             if (CurrentMemberModel.AdminUserId == null)
             {
@@ -111,7 +112,8 @@ namespace ODK.Website.Controllers
             IReadOnlyCollection<MemberModel> members = _memberService.GetMembers(new MemberSearchCriteria(chapter.Id), Umbraco);
             members = members.Where(x => memberIds.Contains(x.Id)).ToArray();
 
-            _memberService.SendMemberEmails(SiteSettings, members, email.Subject, email.Body, overrideOptIn);
+            _memberService.SendMemberEmails(SiteSettings, members, email.Subject, email.Body, overrideOptIn,
+                fromUser ? CurrentMemberModel.Email : null);
 
             AddFeedback($"{members.Count} emails sent", true);
 
@@ -120,14 +122,15 @@ namespace ODK.Website.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SendTestEmail(string to, EmailViewModel email)
+        public ActionResult SendTestEmail(string to, EmailViewModel email, bool fromUser)
         {
             if (CurrentMemberModel.AdminUserId == null)
             {
                 return RedirectToHome();
             }
 
-            ServiceResult result = _emailService.SendEmail(SiteSettings.SiteUrl, HomePage, email.Subject, email.Body, new[] { to });
+            ServiceResult result = _emailService.SendEmail(SiteSettings.SiteUrl, HomePage, email.Subject, email.Body, new[] { to },
+                fromUser ? CurrentMemberModel.Email : null);
 
             AddFeedback(result.ErrorMessage, result.Success);
 

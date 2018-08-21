@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net.Mail;
+using ODK.Umbraco.Settings;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 
@@ -14,22 +15,30 @@ namespace ODK.Umbraco.Emails
             return SendEmail(siteUrl, chapter, subject, body, toAddresses);
         }
 
-        public ServiceResult SendEmail(string siteUrl, IPublishedContent chapter, string subject, string body, IEnumerable<string> toAddresses)
+        public ServiceResult SendEmail(string siteUrl, IPublishedContent chapter, string subject, string body, IEnumerable<string> toAddresses, string from = null)
         {
             body = ReplaceBodyProperties(body, siteUrl);
 
-            string fromAddress = chapter.GetPropertyValue<string>("emailFromAddress");
+            if (string.IsNullOrEmpty(from))
+            {
+                from = chapter.GetPropertyValue<string>("emailFromAddress");
+            }
 
-#if DEBUG
-            return new ServiceResult(true, $"The following email would have been sent to {string.Join(", ", toAddresses)}: {body}");
-#endif
+            if (AppSettings.SuppressEmails)
+            {
+                return new ServiceResult(true, $"The following email would have been sent: " +
+                                               $"[From]: {from} | " +
+                                               $"[To]: {string.Join(", ", toAddresses)} | " +
+                                               $"[Subject]: {subject} | " +
+                                               $"[Body]: {body}");
+            }
 
             using (SmtpClient client = new SmtpClient())
             {
                 MailMessage message = new MailMessage
                 {
                     Body = body,
-                    From = new MailAddress(fromAddress),
+                    From = new MailAddress(from),
                     IsBodyHtml = true,
                     Subject = subject
                 };
