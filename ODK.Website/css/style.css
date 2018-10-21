@@ -353,10 +353,3 @@ footer {
 .text-muted {
     color: #bbb !important;
 }
-
-@media screen and (max-width: 991px) {
-    /* only use sticky top >= lg */
-    .sticky-top {
-        position: inherit;
-    }
-}
