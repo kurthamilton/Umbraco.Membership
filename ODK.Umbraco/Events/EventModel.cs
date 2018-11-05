@@ -9,7 +9,7 @@ namespace ODK.Umbraco.Events
         private readonly Lazy<string> _address;
         private readonly Lazy<DateTime> _date;
         private readonly Lazy<string> _description;
-        private readonly Lazy<IPublishedContent> _image;
+        private readonly Lazy<string> _imageUrl;
         private readonly Lazy<string> _inviteEmailBody;
         private readonly Lazy<string> _inviteEmailSubject;
         private readonly Lazy<DateTime?> _inviteSentDate;
@@ -27,7 +27,7 @@ namespace ODK.Umbraco.Events
             _address = new Lazy<string>(() => content.GetPropertyValue<string>(EventPropertyNames.Address));
             _date = new Lazy<DateTime>(() => content.GetPropertyValue<DateTime>(EventPropertyNames.Date));
             _description = new Lazy<string>(() => content.GetPropertyValue<string>(EventPropertyNames.Description));
-            _image = new Lazy<IPublishedContent>(() => content.GetPropertyValue<IPublishedContent>(EventPropertyNames.Image));
+            _imageUrl = new Lazy<string>(() => content.GetPropertyValue<string>(EventPropertyNames.ImageUrl));
             _inviteEmailBody = new Lazy<string>(() => replaceMemberProperties?.Invoke(content.Parent.GetPropertyValue<string>(EventPropertyNames.InviteEmailBody), this));
             _inviteEmailSubject = new Lazy<string>(() => replaceMemberProperties?.Invoke(content.Parent.GetPropertyValue<string>(EventPropertyNames.InviteEmailSubject), this));
             _inviteSentDate = new Lazy<DateTime?>(() => content.GetPropertyValue<DateTime?>(EventPropertyNames.InviteSentDate));
@@ -44,7 +44,7 @@ namespace ODK.Umbraco.Events
 
         public int Id { get; }
 
-        public IPublishedContent Image => _image.Value;
+        public string ImageUrl => _imageUrl.Value;
 
         public string InviteEmailBody => _inviteEmailBody.Value;
 

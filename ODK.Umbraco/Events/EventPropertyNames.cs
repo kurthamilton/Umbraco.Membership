@@ -5,7 +5,7 @@
         public const string Address = "eventAddress";
         public const string Date = "eventDate";
         public const string Description = "eventDescription";
-        public const string Image = "eventImage";
+        public const string ImageUrl = "eventImageUrl";
         public const string InviteEmailBody = "eventInviteEmailBody";
         public const string InviteEmailSubject = "eventInviteEmailSubject";
         public const string InviteSentDate = "eventInviteSentDate";

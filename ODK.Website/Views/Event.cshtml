@@ -33,9 +33,9 @@
                     <h3>@eventModel.Time</h3>
                 }
 
-                @if (eventModel.Image != null)
+                @if (!string.IsNullOrEmpty(eventModel.ImageUrl))
                 {
-                    <p><img src="@eventModel.Image.Url" /></p>
+                    <p><img src="@eventModel.ImageUrl" /></p>
                 }
 
                 <p>
