@@ -22,7 +22,6 @@
             }
 
             @RenderLatestMembers()
-            @RenderInstagramFeed()
         </div>
 
         <div class="col-lg-3 col-md-4 order-1 order-md-2">
@@ -75,39 +74,6 @@
     </div>
 }
 
-@helper RenderInstagramFeed()
-{
-    string username = Model.Content.GetPropertyValue<string>("instagramUsername");
-    if (string.IsNullOrEmpty(username))
-    {
-        return;
-    }
-
-    int maxItems = Model.Content.GetPropertyValue<int>("instagramMaxItems");
-    if (maxItems <= 0)
-    {
-        maxItems = 8;
-    }
-
-    string apiUrl = "https://apinsta.herokuapp.com/u";
-    string baseUrl = "https://www.instagram.com";
-
-    <div class="content">
-        <h3>Latest Instagram Photos</h3>
-        <div class="feed--instagram content--ajax row" data-instagram-url="@apiUrl/@username" data-instagram-maxitems="@maxItems">
-            @for (int i = 0; i < maxItems; i++)
-            {
-                <div class="media-item col-3">
-                    <a href="@baseUrl/p/{code}" target="_blank"><img class="media-item__image" /></a>
-                </div>
-            }
-        </div>
-        <p class="text-right">
-            <i class="fa fa-instagram"></i>&nbsp;<a href="@baseUrl/@username" target="_blank">@username</a>
-        </p>
-    </div>
-}
-
 @helper RenderLatestMembers()
 {
     int maxItems = Model.Content.GetPropertyValue<int>("numberOfLatestMembers");
@@ -138,4 +104,34 @@
             }
         </div>
     </div>
+}
+
+@section SocialMedia
+{
+    @{
+        string facebook = Model.Content.GetPropertyValue<string>("facebookUsername");
+        string instagram = Model.Content.GetPropertyValue<string>("instagramUsername");
+        string twitter = Model.Content.GetPropertyValue<string>("twitterUsername");
+    }
+
+    @if (!string.IsNullOrEmpty(instagram))
+    {
+        <div>
+            <i class="fa fa-instagram mr-1"></i><a href="https://www.instagram.com/@instagram" target="_blank">@instagram</a>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(facebook))
+    {
+        <div>
+            <i class="fa fa-facebook mr-1"></i><a href="https://www.facebook.com/@facebook" target="_blank">@facebook</a>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(twitter))
+    {
+        <div>
+            <i class="fa fa-twitter mr-1"></i><a href="https://www.twitter.com/@twitter" target="_blank">@twitter</a>
+        </div>
+    }
 }

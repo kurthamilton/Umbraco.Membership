@@ -334,7 +334,6 @@
     <None Include="Properties\PublishProfiles\PrecompiledWeb.pubxml" />
     <None Include="Properties\PublishProfiles\PrecompiledWebUmbraco.pubxml" />
     <Content Include="Views\Register.cshtml" />
-    <Content Include="Views\Partials\Footer.cshtml" />
     <Content Include="Views\Event.cshtml" />
     <Content Include="Views\Events.cshtml" />
     <Content Include="Views\Chapter.cshtml" />

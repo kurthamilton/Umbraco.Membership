@@ -58,7 +58,23 @@
         @RenderBody()
     </main>
     <footer>
-        @Html.Partial("Footer")
+        <section class="section section--footer bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        @foreach (KeyValuePair<string, string> footerLink in Settings.FooterLinks)
+                        {
+                            <div class="col-md-12">
+                                <a href="@footerLink.Key">@footerLink.Value</a>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-6">
+                        @RenderSection("SocialMedia", required: false)
+                    </div>
+                </div>
+            </div>
+        </section>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
