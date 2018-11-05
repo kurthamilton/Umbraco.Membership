@@ -14,6 +14,9 @@ namespace ODK.Website.Models
         [AllowHtml]
         public string Description { get; set; }
 
+        [DisplayName("Image URL")]
+        public string ImageUrl { get; set; }
+
         [Required]
         public string Location { get; set; }
 

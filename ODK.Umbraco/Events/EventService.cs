@@ -20,7 +20,7 @@ namespace ODK.Umbraco.Events
             _eventDataService = eventsDataService;
         }
 
-        public ServiceResult CreateEvent(IPublishedContent chapter, int userId, string name, string location, DateTime date, string time, string address,
+        public ServiceResult CreateEvent(IPublishedContent chapter, int userId, string name, string location, DateTime date, string time, string imageUrl, string address,
             string mapQuery, string description)
         {
             IPublishedContent eventsPage = chapter.GetPropertyValue<IPublishedContent>("eventsPage");
@@ -33,6 +33,11 @@ namespace ODK.Umbraco.Events
             if (!string.IsNullOrEmpty(time))
             {
                 @event.SetValue(EventPropertyNames.Time, time);
+            }
+
+            if (!string.IsNullOrEmpty(imageUrl))
+            {
+                @event.SetValue(EventPropertyNames.ImageUrl, imageUrl);
             }
 
             if (!string.IsNullOrEmpty(address))

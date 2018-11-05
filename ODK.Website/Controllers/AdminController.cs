@@ -55,7 +55,7 @@ namespace ODK.Website.Controllers
             }
 
             _eventService.CreateEvent(HomePage, CurrentMemberModel.AdminUserId.Value,
-                viewModel.Name, viewModel.Location, viewModel.Date, viewModel.Time, viewModel.Address,
+                viewModel.Name, viewModel.Location, viewModel.Date, viewModel.Time, viewModel.ImageUrl, viewModel.Address,
                 viewModel.MapQuery, viewModel.Description);
 
             AddFeedback($"Event {viewModel.Name} created", true);
