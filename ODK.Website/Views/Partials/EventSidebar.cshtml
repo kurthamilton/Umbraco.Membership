@@ -77,9 +77,9 @@
 
 @helper RenderResponseOption(EventResponseType responseType)
 {
-    <span class="event-response-option col-4 align-middle @ActiveIf(Model.MemberResponse == responseType)" data-submit data-value="@responseType">
+    <button type="button" class="btn-icon event-response-option col-4 align-middle @ActiveIf(Model.MemberResponse == responseType)" data-submit data-value="@responseType">
         @Html.Partial("EventResponseIcon", responseType)
-    </span>
+    </button>
 }
 
 @helper ActiveIf(bool condition)

@@ -12,6 +12,11 @@ body {
 	font-family: 'Josefin Sans';
 }
 
+.btn-icon {
+    background-color: transparent;
+    border: none;
+}
+
 img {
     max-width: 100%;
 }
