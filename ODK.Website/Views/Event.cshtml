@@ -75,3 +75,9 @@
 
     <iframe height="450" frameborder="0" style="border:0; width: 100%;" src="@url" allowfullscreen></iframe>
 }
+
+@section Scripts
+{
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+    @Scripts.Render("~/bundles/js/account")
+}

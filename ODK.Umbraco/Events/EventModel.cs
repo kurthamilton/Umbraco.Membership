@@ -15,6 +15,9 @@ namespace ODK.Umbraco.Events
         private readonly Lazy<DateTime?> _inviteSentDate;
         private readonly Lazy<string> _location;
         private readonly Lazy<string> _mapQuery;
+        private readonly Lazy<DateTime?> _ticketDeadline;
+        private readonly Lazy<double?> _ticketCost;
+        private readonly Lazy<int?> _ticketCount;
         private readonly Lazy<string> _time;
 
         public EventModel(IPublishedContent content, Func<string, EventModel, string> replaceMemberProperties = null)
@@ -33,6 +36,9 @@ namespace ODK.Umbraco.Events
             _inviteSentDate = new Lazy<DateTime?>(() => content.GetPropertyValue<DateTime?>(EventPropertyNames.InviteSentDate));
             _location = new Lazy<string>(() => content.GetPropertyValue<string>(EventPropertyNames.Location));
             _mapQuery = new Lazy<string>(() => content.GetPropertyValue<string>(EventPropertyNames.MapQuery));
+            _ticketCost = new Lazy<double?>(() => content.GetPropertyValue<double?>(EventPropertyNames.TicketCost));
+            _ticketCount = new Lazy<int?>(() => content.GetPropertyValue<int?>(EventPropertyNames.TicketCount));
+            _ticketDeadline = new Lazy<DateTime?>(() => content.GetPropertyValue<DateTime?>(EventPropertyNames.TicketDeadline));
             _time = new Lazy<string>(() => content.GetPropertyValue<string>(EventPropertyNames.Time));
         }
 
@@ -59,6 +65,12 @@ namespace ODK.Umbraco.Events
         public string Name { get; }
 
         public bool Public { get; }
+
+        public double? TicketCost => _ticketCost.Value;
+
+        public int? TicketCount => _ticketCount.Value;
+
+        public DateTime? TicketDeadline => _ticketDeadline.Value;        
 
         public string Time => _time.Value;
 

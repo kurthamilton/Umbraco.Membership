@@ -32,12 +32,7 @@ namespace ODK.Payments.Stripe
                 ApiKey = payment.ApiSecretKey
             });
 
-            bool success = charge.Paid;
-            if (success)
-            {
-                _paymentService.CreatePayment(null, member, payment.CurrencyCode, payment.Id, payment.Amount, true, payment.SubscriptionType);
-            }
-
+            bool success = charge.Paid;            
             return new ServiceResult(success, charge.FailureMessage);
         }
     }

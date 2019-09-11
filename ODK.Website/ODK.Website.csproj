@@ -314,7 +314,9 @@
     <Content Include="scripts\lib\trumbowyg.min.js" />
     <Content Include="scripts\Payments\stripe.js" />
     <Content Include="scripts\script.js" />
-    <Content Include="Views\Web.config" />
+    <Content Include="Views\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\Partials\Grid\Editors\Textstring.cshtml" />
     <Content Include="Views\Partials\Grid\Editors\Rte.cshtml" />
     <Content Include="Views\Partials\Grid\Editors\Media.cshtml" />
@@ -354,8 +356,8 @@
     <Content Include="Views\Account.cshtml" />
     <Content Include="Views\Admin.cshtml" />
     <Content Include="Views\Partials\BlogpostMeta.cshtml" />
-    <Content Include="Views\Partials\EventSidebar.cshtml" />
-    <Content Include="Views\Partials\EventResponseIcon.cshtml" />
+    <Content Include="Views\Partials\Events\EventSidebar.cshtml" />
+    <Content Include="Views\Partials\Events\EventResponseIcon.cshtml" />
     <Content Include="Views\Partials\Form.cshtml" />
     <Content Include="Views\Partials\PaymentButton.cshtml" />
     <Content Include="Views\Partials\Admin\_ImportMemberPictures.cshtml" />
@@ -367,6 +369,9 @@
     <Content Include="Views\ResetPassword.cshtml" />
     <Content Include="Views\Partials\Admin\_CreateEvent.cshtml" />
     <Content Include="Views\Partials\Admin\_EventInvite.cshtml" />
+    <Content Include="Views\Partials\Events\_ResponseForm.cshtml" />
+    <Content Include="Views\Partials\Events\_TicketForm.cshtml" />
+    <Content Include="Views\Partials\Events\_Attendees.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -64,7 +64,7 @@
 
 @helper SubscriptionAccordionItem(IPublishedContent subscription, bool expanded, MemberModel member)
 {
-    PaymentModel payment = new PaymentModel(subscription, HomePage, member);
+    SubscriptionPaymentModel payment = new SubscriptionPaymentModel(subscription, HomePage, member);
     int id = payment.Id;
 
     <div class="card">

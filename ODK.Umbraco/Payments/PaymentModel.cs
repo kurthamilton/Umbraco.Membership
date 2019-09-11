@@ -1,35 +1,24 @@
-﻿using System;
-using ODK.Payments;
+﻿using ODK.Payments;
 using ODK.Umbraco.Members;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 
 namespace ODK.Umbraco.Payments
 {
-    public class PaymentModel
+    public abstract class PaymentModel
     {
-        public PaymentModel(IPublishedContent content, IPublishedContent homePage, MemberModel member)
+        protected PaymentModel(IPublishedContent content, IPublishedContent homePage, MemberModel member)
         {
-            Amount = content.GetPropertyValue<double>("amount");
             ApiPublicKey = homePage.GetPropertyValue<string>("paymentsApiPublicKey");
             ApiSecretKey = homePage.GetPropertyValue<string>("paymentsApiSecretKey");
-            CurrencyCode = homePage.GetPropertyValue<string>("paymentsCurrencyCode");
-            CurrencyString = PaymentsHelper.ToCurrencyString(CurrencyCode, Amount);
-            Description = content.GetPropertyValue<string>("description");
+            CurrencyCode = homePage.GetPropertyValue<string>("paymentsCurrencyCode");            
             Email = member.Email;
             Id = content.Id;
             Provider = homePage.GetPropertyValue<string>("paymentsProvider");
             SiteName = homePage.GetPropertyValue<string>(PropertyNames.SiteName);
-
-            if (content.HasProperty("subscriptionType"))
-            {
-                SubscriptionType = (MemberTypes)Enum.Parse(typeof(MemberTypes), content.GetPropertyValue<string>("subscriptionType"));
-            }
-
-            Title = content.GetPropertyValue<string>("title");
         }
 
-        public double Amount { get; }
+        public abstract double Amount { get; }
 
         public string ApiPublicKey { get; }
 
@@ -37,9 +26,9 @@ namespace ODK.Umbraco.Payments
 
         public string CurrencyCode { get; }
 
-        public string CurrencyString { get; }
+        public string CurrencyString => PaymentsHelper.ToCurrencyString(CurrencyCode, Amount);
 
-        public string Description { get; }
+        public abstract string Description { get; }
 
         public string Email { get; }
 
@@ -47,10 +36,8 @@ namespace ODK.Umbraco.Payments
 
         public string Provider { get; }
 
-        public string SiteName { get; }
+        public string SiteName { get; }        
 
-        public MemberTypes? SubscriptionType { get; }
-
-        public string Title { get; }
+        public abstract string Title { get; }
     }
 }

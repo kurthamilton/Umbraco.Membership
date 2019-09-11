@@ -35,7 +35,7 @@
                 <h2>
                     @if (responses != null && responses.ContainsKey(ev.Id))
                     {
-                        @Html.Partial("EventResponseIcon", responses[ev.Id])
+                        @Html.Partial("Events/EventResponseIcon", responses[ev.Id])
                     }
                     <a href="@ev.Url">@ev.Name</a>
                 </h2>

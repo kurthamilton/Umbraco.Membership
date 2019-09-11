@@ -112,6 +112,8 @@
     <Compile Include="Payments\MemberPayment.cs" />
     <Compile Include="Payments\PaymentModel.cs" />
     <Compile Include="Payments\PaymentService.cs" />
+    <Compile Include="Payments\EventPaymentModel.cs" />
+    <Compile Include="Payments\SubscriptionPaymentModel.cs" />
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Settings\SiteSettings.cs" />
     <Compile Include="Web\Mvc\HtmlHelpers.cs" />
@@ -127,7 +129,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ODK.Data\ODK.Data.csproj">

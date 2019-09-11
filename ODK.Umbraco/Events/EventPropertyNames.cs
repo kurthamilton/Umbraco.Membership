@@ -12,6 +12,9 @@
         public const string Location = "eventLocation";
         public const string MapQuery = "eventMapQuery";
         public const string Public = "eventPublic";
+        public const string TicketCost = "eventTicketCost";
+        public const string TicketCount = "eventTicketCount";
+        public const string TicketDeadline = "eventTicketDeadline";
         public const string Time = "eventTime";
     }
 }

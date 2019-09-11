@@ -19,7 +19,7 @@ namespace ODK.Umbraco.Events
             _contentService = contentService;
             _eventDataService = eventsDataService;
         }
-
+        
         public ServiceResult CreateEvent(IPublishedContent chapter, int userId, string name, string location, DateTime date, string time, string imageUrl, string address,
             string mapQuery, string description)
         {
@@ -60,6 +60,11 @@ namespace ODK.Umbraco.Events
             _contentService.Publish(@event, userId);
 
             return new ServiceResult(true);
+        }
+
+        public EventModel GetEvent(IPublishedContent @event)
+        {
+            return new EventModel(@event, ReplaceEventProperties);
         }
 
         public Dictionary<EventResponseType, IReadOnlyCollection<MemberModel>> GetEventResponses(int eventId, UmbracoHelper helper)
@@ -104,6 +109,41 @@ namespace ODK.Umbraco.Events
             return nextEvents;
         }
 
+        public ServiceResult HasTicketsAvailable(EventModel @event)
+        {
+            if (!IsTicketedEvent(@event))
+            {
+                return new ServiceResult(false, "Event is not ticketed");
+            }
+
+            if (@event.TicketCount == null)
+            {
+                return new ServiceResult(false, "No tickets are available");
+            }
+
+            if (@event.TicketDeadline != null && DateTime.Today > @event.TicketDeadline)
+            {
+                return new ServiceResult(false, "The ticket deadline has passed");
+            }
+
+            IReadOnlyCollection<EventResponse> responses = _eventDataService.GetEventResponses(@event.Id)
+                .Where(x => x.ResponseTypeId == (int)EventResponseType.Yes)
+                .ToArray();
+
+            int ticketsAvailable = @event.TicketCount.Value - responses.Count;
+            if (ticketsAvailable <= 0)
+            {
+                return new ServiceResult(false, "No tickets are available");
+            }
+
+            return new ServiceResult(true);
+        }
+
+        public bool IsTicketedEvent(EventModel @event)
+        {
+            return @event?.TicketCost != null;
+        }
+
         public void LogSentEventInvite(int eventId, UmbracoHelper helper)
         {
             IContent @event = _contentService.GetById(eventId);
@@ -113,10 +153,11 @@ namespace ODK.Umbraco.Events
 
         public IEnumerable<EventModel> SearchEvents(IPublishedContent eventsPage, IPublishedContent member, EventSearchCriteria criteria)
         {
-            IEnumerable<EventModel> events = eventsPage.Children
-                                                       .Select(x => new EventModel(x, ReplaceEventProperties))
-                                                       .Where(x => member != null || x.Public)
-                                                       .OrderBy(x => x.Date);
+            IEnumerable<EventModel> events = eventsPage
+                .Children
+                .Select(GetEvent)
+                .Where(x => member != null || x.Public)
+                .OrderBy(x => x.Date);
 
             if (criteria.FutureOnly == true)
             {
@@ -141,14 +182,15 @@ namespace ODK.Umbraco.Events
             if (@event == null)
             {
                 return;
-            }
+            }            
 
             if (!Enum.IsDefined(typeof(EventResponseType), responseType) || responseType == EventResponseType.None)
             {
                 return;
             }
 
-            EventModel eventModel = new EventModel(@event, ReplaceEventProperties);
+            EventModel eventModel = GetEvent(@event);            
+
             if (eventModel.Date == DateTime.MinValue)
             {
                 return;
