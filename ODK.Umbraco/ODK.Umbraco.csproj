@@ -44,13 +44,13 @@
     <PackageReference Include="Markdown" Version="1.14.7" />
     <PackageReference Include="Microsoft.AspNet.Identity.Core" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNet.Identity.Owin" Version="2.2.2" />
-    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.6" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.3" />
     <PackageReference Include="Microsoft.AspNet.Razor" Version="3.2.6" />
     <PackageReference Include="Microsoft.AspNet.SignalR.Core" Version="2.3.0" />
-    <PackageReference Include="Microsoft.AspNet.WebApi" Version="5.2.6" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.6" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.6" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.2.6" />
+    <PackageReference Include="Microsoft.AspNet.WebApi" Version="5.2.3" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.3" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.3" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.WebHost" Version="5.2.3" />
     <PackageReference Include="Microsoft.AspNet.WebPages" Version="3.2.6" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="1.2.2" />
     <PackageReference Include="Microsoft.Owin" Version="3.1.0" />
