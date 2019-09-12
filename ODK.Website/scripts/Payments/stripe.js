@@ -1,31 +1,22 @@
 ﻿(function () {
-    $('.js-payment-button--stripe').on('click', function(e) {
-        var button = $(this);
+    makePayment();
+    
+    function makePayment() {
+        var $paymentId = $('.js-payment-id');
+        var $apiKey = $('.js-api-key');
 
-        var handler = StripeCheckout.configure({
-            key: button.data('api-key'),
-            allowRememberMe: false,
-            description: button.data('description'),
-            email: button.data('email'),
-            locale: 'auto',
-            name: button.data('site-name'),
-            token: function (token, args) {
-                $('.js-payment-token').val(token.id);
-                button.closest('form').submit();
-            }
+        if ($paymentId.length === 0 || $apiKey.length === 0) {
+            return;
+        }
+
+        var paymentId = $paymentId.val();
+        var apiKey = $apiKey.val();
+
+        var stripe = Stripe(apiKey);
+
+        stripe.redirectToCheckout({
+            sessionId: paymentId
+        }).then(function (result) {
         });
-
-        // Open Checkout with further options:
-        handler.open({
-            currency: button.data('currency'),
-            amount: button.data('amount')
-        });
-
-        // Close Checkout on page navigation:
-        window.addEventListener('popstate', function () {
-            handler.close();
-        });
-
-        e.preventDefault();
-    });
+    }
 })();

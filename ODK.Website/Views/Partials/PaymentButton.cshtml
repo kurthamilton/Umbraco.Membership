@@ -11,23 +11,17 @@
 
 @if (provider == PaymentProviderType.Stripe)
 {
-    string buttonId = string.Format("payment-button-{0}", Model.Id);
-    string tokenId = string.Format("stripe-token-{0}", Model.Id);
     string formId = string.Format("stripe-form-{0}", Model.Id);
 
     using (Html.BeginUmbracoForm("Create", "Stripe", null, new { id = formId }, FormMethod.Post))
     {
         <div>
             <input type="hidden" name="id" value="@Model.Id" />
-            <input type="hidden" class="js-payment-token" name="stripeToken" />
+            <input type="hidden" class="js-cancel-url" name="cancelUrl" value="@Request.Url" />
 
-            <button id="@buttonId" class="btn btn-primary js-payment-button--stripe"
-                    data-api-key="@Model.ApiPublicKey"
-                    data-description="@Model.Title"
-                    data-email="@Model.Email"
-                    data-currency="@Model.CurrencyCode"
-                    data-amount="@(Model.Amount * 100)"
-                    data-site-name="@Model.SiteName">Purchase</button>
+            <button class="btn btn-primary">
+                Purchase
+            </button>
             <span>@Model.CurrencyString</span>
         </div>
     }

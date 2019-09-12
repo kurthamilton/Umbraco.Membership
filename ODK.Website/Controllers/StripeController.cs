@@ -8,6 +8,7 @@ using ODK.Umbraco.Members;
 using ODK.Umbraco.Payments;
 using ODK.Umbraco.Settings;
 using ODK.Umbraco.Web.Mvc;
+using ODK.Website.Models.Payments;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 
@@ -29,26 +30,47 @@ namespace ODK.Website.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(int id, string stripeToken)
+        public async Task<ActionResult> Create(int id, string cancelUrl)
         {
             IPublishedContent content = Umbraco.Content(id);
-            ServiceResult result;
+            PaymentModel payment = GetPaymentModel(content.Id);
 
-            switch (content.DocumentTypeAlias)
+            string paymentId = await CreatePayment(payment, cancelUrl);
+            if (paymentId == null)
             {
-                case "subscription":
-                    result = await MakeSubscriptionPayment(content, stripeToken);
-                    break;
-                case "event":
-                    result = await MakeEventPayment(content, stripeToken);
-                    break;
-                default:
-                    AddFeedback("Invalid request", false);
-                    return RedirectToCurrentUmbracoPage();
+                AddFeedback("Invalid request", false);
+                return Redirect(cancelUrl);
             }
             
+            return View(nameof(RedirectToCheckout), new RedirectToCheckoutModel(content)
+            {
+                Payment = payment,
+                PaymentId = paymentId
+            });
+        }        
+
+        [HttpGet]
+        public ActionResult RedirectToCheckout(int id, string paymentId)
+        {
+            IPublishedContent content = Umbraco.Content(id);
+
+            return View(new RedirectToCheckoutModel(content)
+            {
+                PaymentId = paymentId
+            });
+        }
+
+        [HttpGet]
+        public ActionResult Complete(int id, Guid token, string url)
+        {
+            IPublishedContent content = Umbraco.Content(id);
+
+            ServiceResult result = _paymentService.CompletePayment(token, CurrentMemberModel, id);
+
             if (result.Success)
             {
+                CompletePayment(content);
+
                 string message = content.GetPropertyValue<string>("successMessage");
                 AddFeedback(message, result.Success);
             }
@@ -57,49 +79,80 @@ namespace ODK.Website.Controllers
                 AddFeedback(result.ErrorMessage, result.Success);
             }
 
-            return RedirectToCurrentUmbracoPage();
+            return Redirect(url);
         }
 
-        private async Task<ServiceResult> MakeSubscriptionPayment(IPublishedContent content, string stripeToken)
+        private async Task<string> CreatePayment(PaymentModel payment, string cancelUrl)
         {
-            SubscriptionPaymentModel payment = new SubscriptionPaymentModel(content, content.HomePage(), CurrentMemberModel);
-
-            ServiceResult result = await _provider.MakePayment(CurrentMemberModel, payment, stripeToken);
-
-            if (result.Success)
+            if (payment == null)
             {
-                _paymentService.CreatePayment(null, CurrentMemberModel, payment.CurrencyCode, payment.Id, payment.Amount, true);
+                return null;
+            }            
 
-                if (payment.SubscriptionType.HasValue)
-                {
-                    _memberService.UpdateSubscription(CurrentMemberModel, payment.SubscriptionType.Value, DateTime.Today.AddYears(1) - DateTime.Today, payment.Amount);
-                }
-            }
-            
-            return result;
+            Guid token = Guid.NewGuid();
+
+            string successUrl = Url.RouteUrl("", new { action = nameof(Complete), controller = "Stripe" }, Request.Url.Scheme);
+            successUrl += $"?id={payment.Id}&token={token}&url={cancelUrl}";
+
+            string paymentId = await _provider.CreatePayment(CurrentMemberModel, payment, successUrl, cancelUrl);
+
+            _paymentService.CreatePayment(token, CurrentMemberModel, payment.CurrencyCode, payment.Id, payment.Amount);
+
+            return paymentId;
         }
 
-        private async Task<ServiceResult> MakeEventPayment(IPublishedContent content, string stripeToken)
+        private void CompletePayment(IPublishedContent content)
+        {
+            switch (content.DocumentTypeAlias)
+            {
+                case "subscription":
+                    SubscriptionPaymentModel subscription = GetSubscriptionPaymentModel(content);
+                    if (subscription.SubscriptionType.HasValue)
+                    {
+                        _memberService.UpdateSubscription(CurrentMemberModel, subscription.SubscriptionType.Value, DateTime.Today.AddYears(1) - DateTime.Today, subscription.Amount);
+                    }
+
+                    break;
+
+                case "event":
+                    EventPaymentModel eventPayment = GetEventPaymentModel(content);
+                    _paymentService.CreatePayment(null, CurrentMemberModel, eventPayment.CurrencyCode, eventPayment.Id, eventPayment.Amount, true);
+                    _eventService.UpdateEventResponse(content, CurrentMember, EventResponseType.Yes);
+
+                    break;
+            }            
+        }
+
+        private EventPaymentModel GetEventPaymentModel(IPublishedContent content)
         {
             EventModel @event = new EventModel(content);
-
             ServiceResult ticketResult = _eventService.HasTicketsAvailable(@event);
             if (!ticketResult.Success)
             {
-                return ticketResult;
+                return null;
             }
 
-            EventPaymentModel payment = new EventPaymentModel(content, content.HomePage(), CurrentMemberModel, @event);
+            return new EventPaymentModel(content, content.HomePage(), CurrentMemberModel, @event);
+        }
 
-            ServiceResult result = await _provider.MakePayment(CurrentMemberModel, payment, stripeToken);
+        private PaymentModel GetPaymentModel(int id)
+        {
+            IPublishedContent content = Umbraco.Content(id);
 
-            if (result.Success)
+            switch (content.DocumentTypeAlias)
             {
-                _paymentService.CreatePayment(null, CurrentMemberModel, payment.CurrencyCode, payment.Id, payment.Amount, true);
-                _eventService.UpdateEventResponse(content, CurrentMember, EventResponseType.Yes);
+                case "subscription":
+                    return GetSubscriptionPaymentModel(content);
+                case "event":
+                    return GetEventPaymentModel(content);
+                default:
+                    return null;
             }
+        }
 
-            return result;
+        private SubscriptionPaymentModel GetSubscriptionPaymentModel(IPublishedContent content)
+        {
+            return new SubscriptionPaymentModel(content, content.HomePage(), CurrentMemberModel);
         }
     }
 }

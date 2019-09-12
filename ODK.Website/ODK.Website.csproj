@@ -372,6 +372,7 @@
     <Content Include="Views\Partials\Events\_ResponseForm.cshtml" />
     <Content Include="Views\Partials\Events\_TicketForm.cshtml" />
     <Content Include="Views\Partials\Events\_Attendees.cshtml" />
+    <Content Include="Views\Stripe\RedirectToCheckout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -418,6 +419,7 @@
     <Compile Include="Models\CreateEventViewModel.cs" />
     <Compile Include="Models\EmailViewModel.cs" />
     <Compile Include="Models\PasswordResetViewModel.cs" />
+    <Compile Include="Models\Payments\MakePaymentRenderModel.cs" />
     <Compile Include="Models\RequestPasswordResetViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\EventSidebarViewModel.cs" />

@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
-using ODK.Umbraco;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using ODK.Umbraco.Members;
 using ODK.Umbraco.Payments;
 using Stripe;
+using Stripe.Checkout;
 
 namespace ODK.Payments.Stripe
 {
@@ -15,25 +16,35 @@ namespace ODK.Payments.Stripe
             _paymentService = paymentService;
         }
 
-        public async Task<ServiceResult> MakePayment(MemberModel member, PaymentModel payment, string stripeToken)
+        public async Task<string> CreatePayment(MemberModel member, PaymentModel payment, string successUrl, string cancelUrl)
         {
-            var options = new StripeChargeCreateOptions
+            StripeConfiguration.ApiKey = payment.ApiSecretKey;
+
+            var options = new SessionCreateOptions
             {
-                Amount = (int)(payment.Amount * 100),
-                Currency = payment.CurrencyCode,
-                Description = payment.Title,
-                ReceiptEmail = member.Email,
-                SourceTokenOrExistingSourceId = stripeToken
+                PaymentMethodTypes = new List<string>
+                {
+                    "card",
+                },
+                LineItems = new List<SessionLineItemOptions>
+                {
+                    new SessionLineItemOptions
+                    {
+                        Name = payment.Title,
+                        Description = payment.Description,
+                        Amount = (int)(payment.Amount * 100),
+                        Currency = payment.CurrencyCode,
+                        Quantity = 1
+                    },
+                },
+                CustomerEmail = member.Email,
+                SuccessUrl = successUrl,
+                CancelUrl = cancelUrl
             };
 
-            var service = new StripeChargeService();
-            StripeCharge charge = await service.CreateAsync(options, new StripeRequestOptions
-            {
-                ApiKey = payment.ApiSecretKey
-            });
-
-            bool success = charge.Paid;            
-            return new ServiceResult(success, charge.FailureMessage);
-        }
+            var service = new SessionService();
+            Session session = await service.CreateAsync(options);
+            return session.Id;
+        }              
     }
 }
