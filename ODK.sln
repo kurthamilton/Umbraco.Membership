@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2036
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODK.Umbraco", "ODK.Umbraco\ODK.Umbraco.csproj", "{81F2DD71-46D7-4D52-A571-324CC799C8F2}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODK.Payments", "ODK.Payments\ODK.Payments.csproj", "{86549C88-F0BE-4DA5-A169-8D646066FC0A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODK.Payments.Stripe", "ODK.Payments.Stripe\ODK.Payments.Stripe.csproj", "{818E286B-EFC7-4F3D-83B3-F721E5B774EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODK.Umbraco8", "ODK.Umbraco8\ODK.Umbraco8.csproj", "{BC573D56-5330-4D45-962A-6A361BE23A51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{818E286B-EFC7-4F3D-83B3-F721E5B774EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{818E286B-EFC7-4F3D-83B3-F721E5B774EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{818E286B-EFC7-4F3D-83B3-F721E5B774EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC573D56-5330-4D45-962A-6A361BE23A51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC573D56-5330-4D45-962A-6A361BE23A51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC573D56-5330-4D45-962A-6A361BE23A51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC573D56-5330-4D45-962A-6A361BE23A51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
